@@ -1,0 +1,31 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+using WebDashbord.Controllers.Unit;
+
+namespace WebDashbord.Controllers.AFI
+{
+    public class AFISanadAnbarController : Controller
+    {
+        // GET: SanadAnbarList
+        public ActionResult Index()
+        {
+            return View();
+        }
+
+        // GET: SanadAnbar
+        public ActionResult AddIdoc()
+        {
+            ViewBag.apiAddress = UnitPublic.apiAddress;
+            return View();
+        }
+
+        public ActionResult AddIdoc_New()
+        {
+            return View();
+        }
+
+    }
+}

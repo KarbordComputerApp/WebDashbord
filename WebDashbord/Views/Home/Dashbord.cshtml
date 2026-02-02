@@ -1,0 +1,160 @@
+﻿@using WebDashbord.Controllers.Unit;
+@{
+
+    ViewBag.Title = "خانه";
+    Layout = "~/Views/Shared/_LayoutNew.cshtml";
+}
+
+<div class="row clearfix">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card" style="margin-bottom: 0px;margin-top: 0px;">
+            <div class="header" style="margin: 0px;">
+                <div class="row">
+                    <div class="col">
+                        <div class="row">
+                            <h4 id="userNameHome"></h4>
+                            <h4 id="dateTimeHome" style="padding-right: 15px;">زمان سرور</h4>
+                        </div>
+                    </div>
+
+                    <div class="col">
+                        <a class="dropdown-toggle" data-toggle="modal" data-backdrop="static" data-target="#modal-DesktopItem"
+                           style="left: 0px;position: absolute;">
+                            <img src="/Content/img/streamline-icon-cog-1@48x48.png" width="20" height="20">
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div id="objectBase" class="row" style="margin-bottom: 0px;margin-top: 10px;">
+        </div>
+
+
+        <div id="objectGrid"></div>
+        <div id="objectReport"></div>
+        <div id="objectReport1"></div>
+
+
+        <div class="card" style="box-shadow:none">
+            <div class="grid-stack" style="background: #f1f2f7;">
+            </div>
+        </div>
+    </div>
+</div>
+
+<main></main>
+
+
+
+<div class="modal fade" id="modal-DesktopItem" tabindex="-1" role="dialog" aria-labelledby="formModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button data-bind="attr: {title:text_Close}" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" data-bind="text:translate('تنظیم آیتم ها')"></h4>
+                <a id="AddItem" class="dropdown-toggle" data-toggle="modal" data-backdrop="static" data-target="#modal-DesktopAddItem" title="جدید">
+                    <img src="/Content/img/list/streamline-icon-add-circle-alternate@48x48.png" width="20" height="20">
+                </a>
+
+            </div>
+            <div class="modal-body">
+                <div style="height:300px;overflow:auto;border: 1px #ddd solid;">
+                    <table class="table">
+                        <thead style="cursor: pointer;">
+                            <tr>
+                                <td style="width:250px;padding-top: 8px;" data-bind="text:translate('نام')"> </td>
+                                <td class="panel_AllSettingItem" style="text-align: left;padding: 0px 10px 0px 10px;">
+                                    <label for="AllSettingItem" data-bind="text:translate('انتخاب همه')" style="top: 10px;position: absolute;left: 38px;"></label>
+                                    <input id="AllSettingItem" type="checkbox" />
+                                </td>
+                            </tr>
+                        </thead>
+                        <tbody id="TableDesktopItem"></tbody>
+                    </table>
+                </div>
+            </div>
+            <div style="padding: 0px; margin: 10px;">
+                <div class="row">
+                    <div class="col-md-6">
+                        <button data-bind="text:translate('پیش فرض')" type="button" id="DefultItems" class="btn btn-primary btn-block" style="background-color: #eb8121 !important;"></button>
+                    </div>
+                    <div class="col-md-6">
+                        <button data-bind="text:translate('تایید')" type="button" id="SaveItems" class="btn btn-primary btn-block" style="background-color: #eb8121 !important;"></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="modal-DesktopAddItem" tabindex="-1" role="dialog" aria-labelledby="formModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <!--style="max-width:700px"-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">افزودن آیتم</h4>
+                <a></a>
+
+            </div>
+            <div class="modal-body">
+                <div class="row" style="margin-bottom:1.5rem !important">
+                    <span style="padding: 10px 0px 10px 5px;">گروه</span>
+                    <select id="GroupDesktopItem" class="col"></select>
+                    <span style="padding: 10px">سال</span>
+                    <select id="SalDesktopItem" class="col-3"></select>
+                </div>
+
+                <div class="row" style="margin-bottom:1.5rem !important">
+                    <span style="padding: 10px 0px 10px 5px;">نام</span>
+                    <select id="ModeDesktopItem" class="col"></select>
+                </div>
+
+                <div class="row">
+                    <div class="form-group form-float">
+                        <div class="form-line focused date fix">
+                            <input type="text" id="CaptionItem" class="form-control">
+                            <label class="form-label active">عنوان</label>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div style="padding: 0px; margin: 10px;">
+                <div class="row">
+                    <div class="col-md-8"></div>
+                    <div class="col-md">
+                        <button type="button" id="SaveItem" class="btn btn-primary btn-block" style="background-color: #eb8121 !important;">تایید</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+@section scripts{
+    <script src="~/Content/js/gridstack-all.js"></script>
+    <script src="~/Content/js/Chart.js"></script>
+    <script src="~/Scripts/Widget/Widget_Dashbord.js?dt=@(WebDashbord.Controllers.Unit.UnitPublic.titleVerNumber)"></script>
+    <script src="~/Scripts/Widget/Base/Widget_Public.js?dt=@(WebDashbord.Controllers.Unit.UnitPublic.titleVerNumber)"></script>
+    <script src="~/Scripts/Widget/Base/Widget_Table.js?dt=@(WebDashbord.Controllers.Unit.UnitPublic.titleVerNumber)"></script>
+    <script src="~/Scripts/Widget/Base/Widget_Input.js?dt=@(WebDashbord.Controllers.Unit.UnitPublic.titleVerNumber)"></script>
+    <script src="~/Scripts/Widget/Base/Widget_Select.js?dt=@(WebDashbord.Controllers.Unit.UnitPublic.titleVerNumber)"></script>
+    <script src="~/Scripts/Widget/Base/Widget_Select_Entesab.js?dt=@(WebDashbord.Controllers.Unit.UnitPublic.titleVerNumber)"></script>
+    <script src="~/Scripts/Widget/Base/Widget_DatePicker.js?dt=@(WebDashbord.Controllers.Unit.UnitPublic.titleVerNumber)"></script>
+    <script src="~/Scripts/Widget/Base/Widget_Print.js?dt=@(WebDashbord.Controllers.Unit.UnitPublic.titleVerNumber)"></script>
+    <script src="~/Scripts/Widget/Report/Widget_Report_TrzAcc.js?dt=@(WebDashbord.Controllers.Unit.UnitPublic.titleVerNumber)"></script>
+    <script src="~/Scripts/Widget/Report/Widget_Report_Dftr.js?dt=@(WebDashbord.Controllers.Unit.UnitPublic.titleVerNumber)"></script>
+    <script src="~/Scripts/Dashbord.js?dt=@(WebDashbord.Controllers.Unit.UnitPublic.titleVerNumber)"></script>
+}
+
