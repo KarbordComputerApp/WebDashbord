@@ -19,7 +19,7 @@
     //    localStorage.setItem("ModeCode", "ADOC");
     //}
 
-    salAcc = localStorage.getItem("SalAcc");
+    salAcc = localStorage.getItem("SalAcc"); 
     if (salAcc != '' && salAcc != null)
         sal = salAcc;
 
