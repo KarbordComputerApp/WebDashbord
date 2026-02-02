@@ -21,7 +21,7 @@
 
     salAcc = localStorage.getItem("SalAcc"); 
     if (salAcc != '' && salAcc != null)
-        sal = salAcc;
+        sal = salAcc; 
 
     var RelatedGroup = localStorage.getItem("RelatedGroup_Acc");
 
