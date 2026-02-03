@@ -474,8 +474,8 @@ function BoxDashbord_Create(obj, divHead, divBody) {
     itemData.baseValue = o.baseValue;
 
     o.o = divCart[0];
-    grid.el.appendChild(divCart[0]);
-    let w = grid.makeWidget(divCart[0], o.position.x, o.position.y, o.position.w, o.position.h);
+    grid.el.appendChild(o.o);
+    let w = grid.makeWidget(o.o, { x: o.position.x, y: o.position.y, w: o.position.w, h: o.position.h, minW: o.position.w } );
 }
 
 function BoxDashbord_Refresh(obj) {

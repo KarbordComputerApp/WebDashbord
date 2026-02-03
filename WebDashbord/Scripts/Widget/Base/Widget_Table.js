@@ -4,6 +4,7 @@
         data: [],
         headBtn: [],
         headBtnDefult: [],//['Columns', 'Print','Control'],
+        showHeadBtnDefult: false,  // نمایش دکمه ها بالای جدول
         allData: [],
         columns: [],
         action: [],
@@ -13,7 +14,7 @@
         pageCount: 0,
         pageSize: 0,
         currentPageIndex: 0,
-        keyField: '',
+        keyField: '', 
         keyRow: null,
         radif: false, // دارای ردیف
         sumFields: [], //فیلد های جمع 
@@ -55,7 +56,8 @@
         var _divFinal = $('<div class="TableContent">')
         var _divTable = $('<div style="height:' + o.height + ';overflow:auto;border: 1px #ddd solid;">');
         var _table = $('<table class="table table-hover ' + (o.striped == false ? '' : 'table-striped') + ' K_DataGrid ' + (o.isTableFix ? 'table-responsive-md tableFix' : '') + '">'); //tableFixList
-        var _divBtn = $('<div class="divBtn" style="height: 30px;text-align: left;">');
+
+        var _divBtn = $('<div class="divBtn" style="height: 30px;text-align: left;' + (o.showHeadBtnDefult ? '' : 'display:none;') + '">');
 
         // btn head
         if (o.headBtnDefult.length > 0) {

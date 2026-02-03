@@ -9,7 +9,6 @@
         },
         objects: null,
         objGrid: null,
-        showControl: false,
         externalModal: true
     },
 
@@ -33,17 +32,10 @@
         }
 
         var controlBody = null;
-        if (o.showControl == true)
-            divContent.append(obj._CreateControl_Top());
 
-        //if (o.showControl == true) {
-        //o.externalModal = false;
-        //divContent.append(obj._CreateControl_Top());
-        //}
-        //else {
-        //o.externalModal = true;
-        controlBody = obj._CreateControl_Modal();
-        //}
+         divContent.append(obj._CreateControl());
+
+       
 
         divContent.append(divGrid);
         obj.element.append(divContent);
@@ -61,7 +53,8 @@
                 id: o.rprtId,
                 data: [],
                 headBtn: [],
-                headBtnDefult: [f_GetData, f_Control, f_Print, f_Columns],
+                headBtnDefult: [f_GetData, f_Print, f_Columns],
+                showHeadBtnDefult: false,
                 columns: columns,
                 sort: 'AccCode',
                 sortMode: '',
@@ -94,7 +87,7 @@
     },
 
 
-
+/*
     _CreateControl_Modal: function (c) {
         var obj = this;
         var o = obj.options;
@@ -138,16 +131,16 @@
         obj._BuildControl(c);
         return divControl;
     },
+    */
 
-
-    _CreateControl_Top: function () {
+    _CreateControl: function () {
         var obj = this;
         var o = obj.options;
         var c = {};
-        var divControl = $('<div class="containerGrid" style="">');
+        var divControl = $('<div>');
 
 
-        var divRow = $('<div class="form-inline">');
+        var divRow = $('<div class="form-inline" style="margin-bottom: 5px;">');
 
         var divCol = $('<div class="form-inline col-lg-3 col-md-3 col-sm-12 col-xs-12">');
         c.fromDate = $('<div class="col-6">');
@@ -189,7 +182,7 @@
         divRow.append(divBtn);
 
         divControl.append(divRow);
-        divControl.append('<hr>');
+        //divControl.append('<hr>');
 
         obj._BuildControl(c);
         return divControl;

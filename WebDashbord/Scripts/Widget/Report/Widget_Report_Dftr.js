@@ -9,7 +9,7 @@
         },
         objects: null,
         objGrid: null,
-        showControl: false
+        externalModal: true
     },
 
     _create: function () {
@@ -37,14 +37,8 @@
 
         var controlBody = null;
 
-        if (o.showControl == true) {
-            o.externalModal = false;
-            divContent.append(obj._CreateControl_Top());
-        }
-        else {
-            o.externalModal = true;
-            controlBody = obj._CreateControl_Modal();
-        }
+           // divContent.append(obj._CreateControl());
+
 
         divContent.append(divGrid);
         obj.element.append(divContent);
@@ -60,7 +54,8 @@
                 id: o.rprtId,
                 data: [],
                 headBtn: [],
-                headBtnDefult: [f_GetData, f_Control, f_Print, f_Columns],
+                headBtnDefult: [f_GetData, f_Print, f_Columns],
+                showHeadBtnDefult: false,
                 columns: columns,
                 sort: 'AccCode',
                 sortMode: '',
@@ -93,7 +88,7 @@
 
 
 
-    _CreateControl_Modal: function (c) {
+   /* _CreateControl_Modal: function (c) {
         var obj = this;
         var o = obj.options;
         var c = {};
@@ -150,9 +145,9 @@
         obj._BuildControl(c);
         return divControl;
     },
+    */
 
-
-    _CreateControl_Top: function () {
+    _CreateControl: function () {
         var obj = this;
         var o = obj.options;
         var c = {};
@@ -256,115 +251,6 @@
         CreateObjectSelectEntesab(c, objects, 'status', null, o.externalModal);
         CreateObjectSelectEntesab(c, objects, 'mkz', null, o.externalModal);
         CreateObjectSelectEntesab(c, objects, 'opr', null, o.externalModal);
-
-       /* c.fromNumber.Input(
-            {
-                caption: objects.fromNumber.caption,
-                value: objects.fromNumber.value,
-                dataType: objects.fromNumber.dataType,
-                maxlength: objects.fromNumber.maxlength,
-                Create: function (e, record) {
-                    objects.fromNumber.element = record;
-                },
-                Change: function (e, record) {
-                    objects.fromNumber.value = record.value;
-                },
-            },
-        );
-
-        c.toNumber.Input(
-            {
-                caption: objects.toNumber.caption,
-                value: objects.toNumber.value,
-                dataType: objects.toNumber.dataType,
-                maxlength: objects.toNumber.maxlength,
-                Create: function (e, record) {
-                    objects.toNumber.element = record;
-                },
-                Change: function (e, record) {
-                    objects.toNumber.value = record.value;
-                },
-            },
-        );
-
-        c.acc.Select(
-            {
-                id: objects.acc.id,
-                caption: objects.acc.caption,
-                baseValue: objects.acc.baseValue,
-                keyField: objects.acc.keyField,
-                keyCaption: objects.acc.keyCaption,
-                keyRow: objects.acc.keyRow,
-                param: objects.acc.param,
-                striped: false,
-                externalModal: o.externalModal,
-                filter: [{ key: "Level", value: objects.dispBands.value, act: '==' }],
-                Select: function (e, record) {
-                    objects.acc.value = record.dataString;
-                    //objects.acc.value = record.;
-                },
-            }
-        );
-
-        c.aMode.Select_Entesab(
-            {
-                id: objects.aMode.id,
-                caption: objects.aMode.caption,
-                baseValue: objects.aMode.baseValue,
-                keyField: objects.aMode.keyField,
-                keyCaption: objects.aMode.keyCaption,
-                param: objects.aMode.param,
-                externalModal: o.externalModal,
-                Select: function (e, record) {
-                    objects.aMode.value = record.dataString;
-                },
-            }
-        );
-
-        c.status.Select_Entesab(
-            {
-                id: objects.status.id,
-                caption: objects.status.caption,
-                baseValue: objects.status.baseValue,
-                keyField: objects.status.keyField,
-                keyCaption: objects.status.keyCaption,
-                param: objects.status.param,
-                externalModal: o.externalModal,
-                Select: function (e, record) {
-                    objects.status.value = record.dataString;
-                },
-            }
-        );
-
-        c.mkz.Select_Entesab(
-            {
-                id: objects.mkz.id,
-                caption: objects.mkz.caption,
-                baseValue: objects.mkz.baseValue,
-                keyField: objects.mkz.keyField,
-                keyCaption: objects.mkz.keyCaption,
-                param: objects.mkz.param,
-                externalModal: o.externalModal,
-                Select: function (e, record) {
-                    objects.mkz.value = record.dataString;
-                },
-            }
-        );
-
-        c.opr.Select_Entesab(
-            {
-                id: objects.opr.id,
-                caption: objects.opr.caption,
-                baseValue: objects.opr.baseValue,
-                keyField: objects.opr.keyField,
-                keyCaption: objects.opr.keyCaption,
-                param: objects.opr.param,
-                externalModal: o.externalModal,
-                Select: function (e, record) {
-                    objects.opr.value = record.dataString;
-                },
-            }
-        );*/
 
     },
 
