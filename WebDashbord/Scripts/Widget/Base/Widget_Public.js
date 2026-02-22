@@ -59,6 +59,19 @@ const f_Control = 'Control';
 const f_GetData = 'GetData';
 const f_Print = 'Print';
 const f_Select = 'Select';
+const f_Refresh = 'Refresh';
+const f_Setting = 'Setting';
+const f_Maximum = 'Maximum';
+const f_Defult = 'Defult';
+const f_ShowControl = 'ShowControl';
+const f_Close = 'Close';
+
+const margin_Input = '10px';
+
+const btn_Close = '<a action-name="' + f_Close + '" title="بستن" ><i class="bi bi-x"></i></a>';
+const btn_CloseModal = '<a action-name="' + f_Close + '" title="بستن" data-dismiss="modal" aria-label="Close" ><i class="bi bi-x"></i></a>';
+const btn_Refresh = '<a action-name="' + f_Refresh + '" style="padding-left: 5px;" title="بروز رسانی"><i class="bi bi-arrow-repeat"></i></a>';
+const btn_Defult = '<a action-name="' + f_Defult + '" title="پیش فرض"><i class="bi bi-person-gear"></i></a>';
 
 const widgetPublic = '#WidgetPublic';
 
@@ -105,6 +118,61 @@ var tableBtnDefult = [
     { name: "Print", caption: "چاپ", icon: "/Content/img/sanad/streamline-icon-print-text@48x48.png" },
     { name: f_Columns, caption: "تنظیم ستون ها", icon: "/Content/img/sanad/list-add.png" },
 ];
+
+
+const _viewDataFull = 0;
+const _viewDataLow = 1;
+
+const caption_GetAutoData = "گزارش گیری در شروع"
+const caption_ShowControl = "نمایش کنترل گزارش در شروع"
+const caption_ViewData = "نمایش اطلاعات"
+
+var dataSettingDefult = {
+    all: [
+        { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "دریافت همه" }, { key: 1, value: "دریافت دستی" }, { key: 2, value: "غیر فعال" }] },
+        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "نمایش" }, { key: 1, value: "مخفی" }] },
+    ],
+    TChk: [
+        { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "خودکار" }, { key: 1, value: "دستی" }] },
+        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 1, value: 1, items: [{ key: 0, value: "نمایش" }, { key: 1, value: "مخفی" }] },
+        { code: "ViewData", caption: caption_ViewData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "کامل" }, { key: 1, value: "خلاصه" }] },
+    ],
+    TChk_Sum: [
+        { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 1, value: 1, items: [{ key: 0, value: "خودکار" }, { key: 1, value: "دستی" }] },
+        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "نمایش" }, { key: 1, value: "مخفی" }] },
+    ],
+    TrzFCust: [
+        { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 1, value: 1, items: [{ key: 0, value: "خودکار" }, { key: 1, value: "دستی" }] },
+        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "نمایش" }, { key: 1, value: "مخفی" }] },
+        { code: "ViewData", caption: caption_ViewData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "کامل" }, { key: 1, value: "خلاصه" }] },
+    ],
+    TrzAcc: [
+        { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "خودکار" }, { key: 1, value: "دستی" }] },
+        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 1, value: 1, items: [{ key: 0, value: "نمایش" }, { key: 1, value: "مخفی" }] },
+        { code: "ViewData", caption: caption_ViewData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "کامل" }, { key: 1, value: "خلاصه" }] },
+    ],
+    Dftr: [
+        { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 1, value: 1, items: [{ key: 0, value: "خودکار" }, { key: 1, value: "دستی" }] },
+        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "نمایش" }, { key: 1, value: "مخفی" }] },
+        { code: "ViewData", caption: caption_ViewData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "کامل" }, { key: 1, value: "خلاصه" }] },
+    ],
+
+
+};
+
+
+// دستور فرمت
+if (!String.prototype.format) {
+    String.prototype.format = function () {
+        var args = arguments;
+        return this.replace(/{(\d+)}/g, function (match, number) {
+            return typeof args[number] != 'undefined'
+                ? args[number]
+                : match
+                ;
+        });
+    };
+}
 
 
 async function GetData(o, refresh, param) {
@@ -386,33 +454,46 @@ function BoxDashbord_Create(obj, divHead, divBody) {
         o.position = itemData.position;
     }
 
-    var divCart = $('<div class="grid-stack-item ui-draggable ui-resizable ui-resizable-autohide" style ="visibility:' +
+    var divCart = $('<div class="grid-stack-item ui-draggable ui-resizable ui-resizable-autohide" style ="visibility:' + //min-height: 505px; min-width: 450px; 
         (o.visible == false ? 'hidden' : 'visible') + '" id="' + o.id + '"  gs-x="' + o.position.x + '" gs-y="' + o.position.y +
         '" gs-w="' + o.position.w + '" gs-h="' + o.position.h + '" minW="3"  minH="3">');
     var divContent = $('<div class="grid-stack-item-content" style="background-color:white">');
 
     //Header
     var divHeader = $('<div class="modal-header form-inline focused" style="position: sticky;top: 0px;background: white;z-index: 10;">');
-    var div = $('<div>');
-    var li_Setting = $('<li><a><img src="/Content/img/streamline-icon-cog-1@48x48.png" width="20" height="20"><span> تنظیمات </span></a></li>');
-    var li_Refresh = $('<li><a><img src="/Content/img/list/streamline-icon-synchronize-arrows-1@48x48.png" width="20" height="20"><span> بروز رسانی </span></a></li>');
-    var li_Line = $('<li class="divider"></li>');
-    var li_Close = $('<li><a href="#">بستن</a></li>');
 
-    var b_Maximum = $('<a style="padding-left: 5px;"><img src="/Content/img/window-max.png" width ="17" title="تغییر سایز"></span>');
-    var b_Menu = $('<button class="dropdown dropdown-toggle" data-toggle="dropdown" style="border: none;background-color: white;height: 24px;"><span class="caret"></span>');
+    var div = $('<div class="headButton">');
 
-    var ui_Menu = $('<ul class="dropdown-menu dropdown-menu-dashbord">');
-    ui_Menu.append(li_Refresh);
-    ui_Menu.append(li_Setting);
-    ui_Menu.append(li_Line);
-    ui_Menu.append(li_Close);
+    if (o.headButton != null) {
+        for (var i = 0; i < o.headButton.length; i++) {
+            var btn;
+            if (o.headButton[i] == f_Print) {
+                btn = $('<a action-name="' + o.headButton[i] + '" style="padding-left: 5px;" title="چاپ"><span class="bi bi-printer"></a>');
+            }
+            else if (o.headButton[i] == f_Columns) {
+                btn = $('<a action-name="' + o.headButton[i] + '" style="padding-left: 5px;" title="تنظیم ستون ها"><span class="bi bi-list-check"></a>');
+            }
+            else if (o.headButton[i] == f_Refresh) {
+                btn = $('<a action-name="' + o.headButton[i] + '" style="padding-left: 5px;" title="بروز رسانی"><span class="bi bi-arrow-repeat"></a>');
+            }
+            else if (o.headButton[i] == f_Setting) {
+                btn = $('<a action-name="' + o.headButton[i] + '" style="padding-left: 5px;" title="تنظیمات"><span class="bi bi-gear"></a>');
+            }
+            if (btn != null) {
+                div.append(btn);
+            }
+        }
+    }
 
-    b_Menu.append(ui_Menu);
+    var b_Close = $('<a action-name="Close" style="padding-left: 5px;" title="بستن"><i class="bi bi-x-lg"></a>');
+    var b_Maximum = $('<a action-name="Maximum" style="padding-left: 5px;" title="تغییر سایز"><i class="bi bi-window"></a>');
+    var b_ShowControl = $('<a action-name="ShowControl" style="padding-left: 5px;" title="کنترل گزارش"><i class="bi bi-caret-down"></a>');
+
+    div.append(b_Close);
     div.append(b_Maximum);
-    div.append(b_Menu);
+    div.append(b_ShowControl);
 
-    var h4 = $('<h4 class="modal-title" style="width: 90%;">' + o.caption + '</h4>');
+    var h4 = $('<h4 class="modal-title" style="">' + o.caption + '</h4>');
 
     divHeader.append(h4);
     divHeader.append(div);
@@ -422,7 +503,7 @@ function BoxDashbord_Create(obj, divHead, divBody) {
     }
     divContent.append(divHeader);
 
-             //End Header
+    //End Header
 
     //Content
 
@@ -431,34 +512,60 @@ function BoxDashbord_Create(obj, divHead, divBody) {
 
     var styleMaximum;
 
-    b_Maximum.click(function (e) {
-        var a = $("#" + o.id);
-        styleMaximum = a[0].style;
-        var zIndex = a.css("z-index");
+    var headButton = divCart.find('.headButton a');
 
-        if (zIndex == "auto") {
-            $("#" + o.id).css(cssMaximin);
-            var path = "/Content/img/window.png";
+    headButton.click(function (e) {
+        var actionName = $(this).attr("action-name");
+        if (actionName == f_Close) {
+            BoxDashbord_Close(obj);
         }
-        else {
-            var path = "/Content/img/window-max.png";
-            a[0].style = styleMaximum;
+        else if (actionName == f_ShowControl) {
+            BoxDashbord_ShowControl(obj);
         }
-        $(this).find("img").attr("src", path);
+        else if (actionName == f_Refresh) {
+            BoxDashbord_Refresh(obj);
+        }
+        else if (actionName == f_Setting) {
+            BoxDashbord_Setting(obj);
+        }
+        else if (actionName == f_Print) {
+            BoxDashbord_Print(obj);
+        }
+        else if (actionName == f_Columns) {
+            BoxDashbord_Columns(obj);
+        }
+        else if (actionName == f_Maximum) {
+            var a = $("#" + o.id);
+            styleMaximum = a[0].style;
+            var zIndex = a.css("z-index");
+            var i = $(this).find("i");
+            if (zIndex == "auto") {
+                $("#" + o.id).css(cssMaximin);
+                i.removeClass("bi-window");
+                i.addClass("bi-window-stack");
+            }
+            else {
+                a[0].style = styleMaximum;
+                i.addClass("bi-window");
+                i.removeClass("bi-window-stack");
+            }
+        } else if (actionName == f_Maximum) {
+            var a = $("#" + o.id);
+            styleMaximum = a[0].style;
+            var zIndex = a.css("z-index");
+            var i = $(this).find("i");
+            if (zIndex == "auto") {
+                $("#" + o.id).css(cssMaximin);
+                i.removeClass("bi-window");
+                i.addClass("bi-window-stack");
+            }
+            else {
+                a[0].style = styleMaximum;
+                i.addClass("bi-window");
+                i.removeClass("bi-window-stack");
+            }
+        }
     });
-
-    li_Setting.click(function (e) {
-        BoxDashbord_Setting(obj);
-    });
-
-    li_Refresh.click(function (e) {
-        BoxDashbord_Refresh(obj);
-    });
-
-    li_Close.click(function (e) {
-        BoxDashbord_Close(obj);
-    });
-
 
     grid.on('change', function (event, items) {
         var element = $("#" + o.id);
@@ -475,7 +582,8 @@ function BoxDashbord_Create(obj, divHead, divBody) {
 
     o.o = divCart[0];
     grid.el.appendChild(o.o);
-    let w = grid.makeWidget(o.o, { x: o.position.x, y: o.position.y, w: o.position.w, h: o.position.h, minW: o.position.w } );
+    let w = grid.makeWidget(o.o, { x: o.position.x, y: o.position.y, w: o.position.w, h: o.position.h, minW: 4 });
+    //let w = grid.addWidget({content: o.o, x: o.position.x, y: o.position.y, w: o.position.w, h: o.position.h, minW: 4 });
 }
 
 function BoxDashbord_Refresh(obj) {
@@ -526,6 +634,17 @@ function BoxDashbord_Setting(obj) {
     // $("#" + o.id + "_modal").modal('show');
 };
 
+function BoxDashbord_ShowControl(obj) {
+    obj._ShowControl();
+};
+
+function BoxDashbord_Print(obj) {
+    obj._ShowPrint();
+};
+function BoxDashbord_Columns(obj) {
+    obj._ShowColumns();
+};
+
 
 function CreateObjectInput(elements, objects, name) {
     return elements[name].Input(
@@ -570,6 +689,7 @@ function CreateObjectSelect(elements, objects, name, filter, externalModal, stri
             keyField: objects[name].keyField,
             keyCaption: objects[name].keyCaption,
             keyRow: objects[name].keyRow,
+            sort: objects[name].sort,
             param: objects[name].param == null ? null : objects[name].param,
             striped: striped == null ? true : striped,
             externalModal: externalModal == null ? false : externalModal,
@@ -590,13 +710,112 @@ function CreateObjectSelectEntesab(elements, objects, name, filter, externalModa
             keyField: objects[name].keyField,
             keyCaption: objects[name].keyCaption,
             keyRow: objects[name].keyRow,
+            sort: objects[name].sort,
             param: objects[name].param == null ? null : objects[name].param,
             striped: striped == null ? true : striped,
             externalModal: externalModal == null ? false : externalModal,
             filter: filter,
+            selected: objects[name].selected,
             Select: function (e, record) {
                 objects[name].value = record.dataString;
             },
         }
     );
 };
+
+function CreateObjectPrint(obj) {
+    var o = obj.options;
+    var _div = $('<div class="' + 'K_DivModal' + f_Print + '">');
+    _div.Print(
+        {
+            id: o.rprtId,
+            caption: "چاپ",
+            baseValue: o.baseValue,
+            data: o.data,
+            columns: o.columns,
+            printVariable: "",
+            Select: function (e, record) {
+            },
+        }
+    );
+    obj.element.append(_div);
+};
+
+function ShowObjectPrint(obj) {
+    var o = obj.options;
+    if (o.data.length > 0) {
+        var objPrint = $(obj.bindings[0]).find('.K_DivModal' + f_Print);
+
+        var printVariable = o.controlData;
+        printVariable["ReportDate"] = localStorage.getItem("DateNow");
+
+        for (var i = 0; i < o.columns.length; i++) {
+            if (o.columns[i].Sum != null) {
+                printVariable['Sum' + o.columns[i].Code] = o.columns[i].Sum;
+            }
+        }
+
+        objPrint.Print("option", "printVariable", printVariable);
+        objPrint.Print("option", "data", o.data);
+        objPrint.Print("ShowModalPrint");
+    }
+    else {
+        return showNotification('اطلاعاتی برای چاپ وجود ندارد. ابتدا گزارش گیری کنید', 0);
+    }
+};
+
+
+
+function CreateObjectSetting(obj) {
+    var o = obj.options;
+    var _div = $('<div class="' + 'K_DivModal' + f_Setting + '">');
+    var dataSetting = dashbordData.filter(c => c.uuid == o.uuidSetting);
+
+    dataSetting = dataSetting[0].dataSetting != null ? dataSetting[0].dataSetting : dataSettingDefult[o.rprtId];
+    //reset setting 
+    //dataSetting = dataSettingDefult[o.rprtId];
+
+    _div.Setting(
+        {
+            id: null,
+            caption: "تنظیمات",
+            dataSetting: dataSetting,
+            externalModal: false,
+            baseValue: {
+                ace: ace,
+                group: group,
+                sal: sal
+            },
+            Save: function (e, record) {
+                var uuid = o.uuidSetting;
+                var itemSetting = dashbordData.filter(c => c.uuid == uuid)[0];
+                itemSetting["dataSetting"] = record.data;
+                o.dataSetting = record.data;
+            },
+        },
+    );
+    obj.element.append(_div);
+};
+
+function ShowObjectSetting(obj) {
+    var o = obj.options;
+    var objSetting = $(obj.bindings[0]).find('.K_DivModal' + f_Setting);
+    objSetting.Setting("ShowModalSetting");
+};
+
+function GetSetting(uuidSetting) {
+    var setting = dashbordData.filter(c => c.uuid == uuidSetting)[0]["dataSetting"];
+    var data = {};
+    if (setting != null) {
+        for (var i = 0; i < setting.length; i++) {
+            var code = setting[i]["code"];
+            var value = setting[i]["value"];
+            if (code == "GetAutoData") data.getAutoData = value == "0" ? true : false;
+            if (code == "ShowControl") data.showControl = value == "0" ? true : false;
+            if (code == "ViewData") data.viewData = value == "0" ? _viewDataFull : _viewDataLow;
+        }
+    }
+    return data;
+}
+
+

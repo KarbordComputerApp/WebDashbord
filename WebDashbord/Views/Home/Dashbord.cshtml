@@ -5,6 +5,8 @@
     Layout = "~/Views/Shared/_LayoutNew.cshtml";
 }
 
+
+
 <div class="row clearfix">
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
         <div class="card" style="margin-bottom: 0px;margin-top: 0px;">
@@ -17,11 +19,8 @@
                         </div>
                     </div>
 
-                    <div class="col">
-                        <a class="dropdown-toggle" data-toggle="modal" data-backdrop="static" data-target="#modal-DesktopItem"
-                           style="left: 0px;position: absolute;">
-                            <img src="/Content/img/streamline-icon-cog-1@48x48.png" width="20" height="20">
-                        </a>
+                    <div id="objectBtnDashbord" class="form-inline">
+
                     </div>
                 </div>
             </div>
@@ -91,7 +90,6 @@
     </div>
 </div>
 
-
 <div class="modal fade" id="modal-DesktopAddItem" tabindex="-1" role="dialog" aria-labelledby="formModal" aria-hidden="true">
     <div class="modal-dialog">
         <!--style="max-width:700px"-->
@@ -145,16 +143,22 @@
 @section scripts{
     <script src="~/Content/js/gridstack-all.js"></script>
     <script src="~/Content/js/Chart.js"></script>
-    <script src="~/Scripts/Widget/Widget_Dashbord.js?dt=@(WebDashbord.Controllers.Unit.UnitPublic.titleVerNumber)"></script>
     <script src="~/Scripts/Widget/Base/Widget_Public.js?dt=@(WebDashbord.Controllers.Unit.UnitPublic.titleVerNumber)"></script>
+    <script src="~/Scripts/Widget/Widget_Dashbord.js?dt=@(WebDashbord.Controllers.Unit.UnitPublic.titleVerNumber)"></script>
     <script src="~/Scripts/Widget/Base/Widget_Table.js?dt=@(WebDashbord.Controllers.Unit.UnitPublic.titleVerNumber)"></script>
     <script src="~/Scripts/Widget/Base/Widget_Input.js?dt=@(WebDashbord.Controllers.Unit.UnitPublic.titleVerNumber)"></script>
     <script src="~/Scripts/Widget/Base/Widget_Select.js?dt=@(WebDashbord.Controllers.Unit.UnitPublic.titleVerNumber)"></script>
     <script src="~/Scripts/Widget/Base/Widget_Select_Entesab.js?dt=@(WebDashbord.Controllers.Unit.UnitPublic.titleVerNumber)"></script>
     <script src="~/Scripts/Widget/Base/Widget_DatePicker.js?dt=@(WebDashbord.Controllers.Unit.UnitPublic.titleVerNumber)"></script>
     <script src="~/Scripts/Widget/Base/Widget_Print.js?dt=@(WebDashbord.Controllers.Unit.UnitPublic.titleVerNumber)"></script>
+    <script src="~/Scripts/Widget/Base/Widget_Setting.js?dt=@(WebDashbord.Controllers.Unit.UnitPublic.titleVerNumber)"></script>
+    <script src="~/Scripts/Widget/Report/Widget_Report_TChk.js?dt=@(WebDashbord.Controllers.Unit.UnitPublic.titleVerNumber)"></script>
+    <script src="~/Scripts/Widget/Report/Widget_TChk_Sum.js?dt=@(WebDashbord.Controllers.Unit.UnitPublic.titleVerNumber)"></script>
+    <script src="~/Scripts/Widget/Report/Widget_TarazFasli.js?dt=@(WebDashbord.Controllers.Unit.UnitPublic.titleVerNumber)"></script>
+    <script src="~/Scripts/Widget/Report/Widget_TrzFCust.js?dt=@(WebDashbord.Controllers.Unit.UnitPublic.titleVerNumber)"></script>
     <script src="~/Scripts/Widget/Report/Widget_Report_TrzAcc.js?dt=@(WebDashbord.Controllers.Unit.UnitPublic.titleVerNumber)"></script>
     <script src="~/Scripts/Widget/Report/Widget_Report_Dftr.js?dt=@(WebDashbord.Controllers.Unit.UnitPublic.titleVerNumber)"></script>
+    <script src="~/Scripts/Widget/Report/Widget_Report_TrzFCust.js?dt=@(WebDashbord.Controllers.Unit.UnitPublic.titleVerNumber)"></script>
     <script src="~/Scripts/Dashbord.js?dt=@(WebDashbord.Controllers.Unit.UnitPublic.titleVerNumber)"></script>
 }
 

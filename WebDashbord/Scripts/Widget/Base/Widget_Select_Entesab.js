@@ -16,6 +16,7 @@ $.widget("ui.Select_Entesab", {
         filter: null,
         objGrid: null,
         striped: true,
+        sort: null,
         data: [],
         externalModal: false
     },
@@ -24,11 +25,12 @@ $.widget("ui.Select_Entesab", {
         var obj = this;
         var o = obj.options;
         o.o = o;
-        var divObject = $('<div class="input-group">');
+        var divObject = $('<div class="input-group" style="margin-bottom:' + margin_Input +';">');
         var divBtn = $('<div class="input-group-addon">');
-        var aBtn = $('<a class="dropdown-toggle">');
-        var iconBtn = $('<img src="/Content/img/list/SearchKala.png" class="icon" height="20" width="20" title="انتخاب">');
-        aBtn.append(iconBtn);
+        var aBtn = $('<a style="padding-right: 5px;padding-left: 5px;" title="انتخاب"><i class="bi bi-search-heart"></i></a>');
+        //var aBtn = $('<a class="dropdown-toggle">');
+       // var iconBtn = $('<img src="/Content/img/list/SearchKala.png" class="icon" height="20" width="20" title="انتخاب">');
+       // aBtn.append(iconBtn);
         divBtn.append(aBtn);
 
         var divInput = $('<div class="form-group form-float" style="margin-bottom: 5px;">');
@@ -106,12 +108,12 @@ $.widget("ui.Select_Entesab", {
 
         //head
         _header = $('<div class="modal-header">');
-        _buttonExit = $('<button type="button" class="close" aria-label="Close" title="بستن"><span aria-hidden="true">×</span></button >');
+        _buttonExit = $(btn_Close); //$('<button type="button" class="close" aria-label="Close" title="بستن"><i class="bi bi-x-lg"></button >');
         _header.append(_buttonExit);
         title = $('<p class="modal-title" style="width: 90%;text-align: center;">لیست ' + o.caption + '</p>');
         _header.append(title);
 
-        _aRefresh = $('<a> <img src="/Content/img/list/streamline-icon-synchronize-arrows-1@48x48.png" width="20" height="20" style="margin-left: 10px;" title="به روز رسانی"></a>')
+        _aRefresh = $(btn_Refresh);// $('<a> <img src="/Content/img/list/streamline-icon-synchronize-arrows-1@48x48.png" width="20" height="20" style="margin-left: 10px;" title="به روز رسانی"></a>')
         _header.append(_aRefresh);
 
         // end head
@@ -129,11 +131,11 @@ $.widget("ui.Select_Entesab", {
         _divCentered = $('<div class="row centered">');
         _divHeightSelect = $('<div style="height:130px; width:20px"></div>');
         _aAddAll = $('<a style="height:18px;padding-right: 3px;">');
-        _imgAdd = $('<img src="/Content/img/list/streamline-icon-navigation-last.png" style="width:22px;height:18px;">');
+        _imgAdd = $('<i class="bi bi-chevron-double-left"></i>');
         _aAddAll.append(_imgAdd);
         _divHeightSelect1 = $('<div style="height:60px"></div>');
         _aDelAll = $('<a style="height:18px;padding-right: 3px;">');
-        _imgDell = $('<img src="/Content/img/list/streamline-icon-navigation-first.png" style="width:22px;height:18px;">');
+        _imgDell = $('<i class="bi bi-chevron-double-right"></i>'); 
         _aDelAll.append(_imgDell);
         _divCentered.append(_divHeightSelect);
         _divCentered.append(_aAddAll);
@@ -298,7 +300,7 @@ $.widget("ui.Select_Entesab", {
                 columns: columns,
                 headBtn: [],
                 headBtnDefult: [],
-                sort: 'Code',
+                sort: o.sort == null ? 'code' : o.sort,
                 sortMode: '',
                 pageCount: 0,
                 pageSize: 10,

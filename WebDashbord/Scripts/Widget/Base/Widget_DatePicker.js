@@ -8,7 +8,7 @@
         var obj = this;
         var o = obj.options;
 
-        var divObject = $('<div class="input-group">');
+        var divObject = $('<div class="input-group" style="margin-bottom:' + margin_Input +';">');
 
         var divBtn = $('<div class="input-group-addon">');
         var span = $('<span class="input-group-btn">');

@@ -21,11 +21,11 @@ $.widget("ui.Select", {
         var obj = this;
         var o = obj.options;
 
-        var divObject = $('<div class="input-group">');
+        var divObject = $('<div class="input-group" style="margin-bottom:' + margin_Input +';">');
         var divBtn = $('<div class="input-group-addon">');
-        var aBtn = $('<a class="dropdown-toggle">');
-        var iconBtn = $('<img src="/Content/img/list/SearchKala.png" class="icon" height="20" width="20" title="انتخاب">');
-        aBtn.append(iconBtn);
+        var aBtn = $('<a style="padding-right: 5px;padding-left: 5px;" title="انتخاب"><i class="bi bi-search-heart"></i></a>');
+       // var iconBtn = $('<img src="/Content/img/list/SearchKala.png" class="icon" height="20" width="20" title="انتخاب">');
+       // aBtn.append(iconBtn);
         divBtn.append(aBtn);
 
         var divInput = $('<div class="form-group form-float" style="margin-bottom: 5px;">');
@@ -80,12 +80,12 @@ $.widget("ui.Select", {
 
         //head
         _header = $('<div class="modal-header">');
-        _buttonExit = $('<button type="button" class="close" aria-label="Close" title="بستن"><span aria-hidden="true">×</span></button >');
+        _buttonExit = $('<button type="button" class="close" aria-label="Close" title="بستن"><i class="bi bi-x-lg"></button >');
         _header.append(_buttonExit);
         title = $('<p class="modal-title" style="width: 90%;text-align: center;">لیست ' + o.caption + '</p>');
         _header.append(title);
 
-        _aRefresh = $('<a> <img src="/Content/img/list/streamline-icon-synchronize-arrows-1@48x48.png" width="20" height="20" style="margin-left: 10px;" title="به روز رسانی"></a>')
+        var _aRefresh = $(btn_Refresh);
         _header.append(_aRefresh);
 
         // end head

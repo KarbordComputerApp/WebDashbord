@@ -33,7 +33,7 @@ $.widget("ui.Print", {
         //modal
         o.classModal = 'K_Modal' + f_Print;
 
-        var _modal = $('<div class="modal fade ' + o.classModal + '" tabindex="-1" aria-hidden="true">');
+        var _modal = $('<div class="modal fade ' + o.classModal + '" tabindex="-1" aria-hidden="true" style="position: absolute;">');
         o.modalElement = _modal;
 
         var dialog = $('<div class="modal-dialog" style="max-width: 400px;"></div>');
@@ -42,14 +42,14 @@ $.widget("ui.Print", {
 
         //head
         var _header = $('<div class="modal-header">');
-        var _buttonExit = $('<button type="button" class="close" data-dismiss="modal" aria-label="Close" title="بستن"><span aria-hidden="true">×</span></button >');
+        var _buttonExit = $('<a data-dismiss="modal" aria-label="Close" title="بستن"><i class="bi bi-x-lg"></a>');
         _header.append(_buttonExit);
         var title = $('<p class="modal-title" style="width: 90%;text-align: center;">' + o.caption + '</p>');
         _header.append(title);
 
         var _divBtn = $('<div style="position: absolute;left: 0px;">')
-        var _aSetting = $('<a> <img src="/Content/img/streamline-icon-cog-1@48x48.png" width="20" height="20" style="margin-left: 5px;" title="تنظیمات فرم چاپ"></a>')
-        var _aRefresh = $('<a> <img src="/Content/img/list/streamline-icon-synchronize-arrows-1@48x48.png" width="20" height="20" style="margin-left: 15px;" title="به روز رسانی"></a>')
+        var _aSetting = $('<a style="margin-left: 5px;" title="تنظیمات فرم چاپ"><i class="bi bi-gear"></a>')
+        var _aRefresh = $(btn_Refresh);
         o.aSettingElement = _aSetting;
         _divBtn.append(_aSetting);
         _divBtn.append(_aRefresh);
@@ -166,12 +166,9 @@ $.widget("ui.Print", {
     _PrintPreview: function (item) {
         var obj = this;
         var o = obj.options;
-        obj._CreateViewer();
+        obj._CreateViewer(item.namefa, item.isPublic);
         obj._SetReport(o.data, item.Data, o.printVariable);
     },
-
-
-
 
 
     _CreateModalSetting: function () {
@@ -181,7 +178,7 @@ $.widget("ui.Print", {
         //modal
         o.classModal = 'K_Modal' + f_Print + '_Setting';
 
-        var _modal = $('<div class="modal fade ' + o.classModal + '" tabindex="-1" aria-hidden="true">');
+        var _modal = $('<div class="modal fade ' + o.classModal + '" tabindex="-1" aria-hidden="true" style="position: absolute;">');
         o.modalSettingElement = _modal;
 
         var dialog = $('<div class="modal-dialog" style="max-width: 400px;"></div>');
@@ -190,14 +187,14 @@ $.widget("ui.Print", {
 
         //head
         var _header = $('<div class="modal-header">');
-        var _buttonExit = $('<button type="button" class="close" data-dismiss="modal" aria-label="Close" title="بستن"><span aria-hidden="true">×</span></button >');
+        var _buttonExit = $('<button type="button" class="close" data-dismiss="modal" aria-label="Close" title="بستن"><i class="bi bi-x-lg"></button >');
         _header.append(_buttonExit);
         var title = $('<p class="modal-title" style="width: 90%;text-align: center;">تنظیمات ' + o.caption + '</p>');
         _header.append(title);
 
         var _divBtn = $('<div style="position: absolute;left: 0px;">')
-        var _aAdd = $('<a><img src="/Content/img/list/streamline-icon-add-circle-alternate@48x48.png" width="20" height="20" style="margin-left: 5px;" title="تنظیمات فرم چاپ"></a>')
-        var _aRefresh = $('<a><img src="/Content/img/list/streamline-icon-synchronize-arrows-1@48x48.png" width="20" height="20" style="margin-left: 15px;" title="به روز رسانی"></a>')
+        var _aAdd = $('<a style="margin-left: 5px;" title="جدید فرم چاپ" ><i class="bi bi-plus-circle"></a>')
+        var _aRefresh = $(btn_Refresh);
         _divBtn.append(_aAdd);
         _divBtn.append(_aRefresh);
 
@@ -391,7 +388,7 @@ $.widget("ui.Print", {
         }
 
         o.designer.onSaveReport = async function (e) {
-            if (isPublic == false) {
+            if (isPublic == 0) {
                 var jsonStr = e.report.saveToJsonString();
                 await obj._SavePrintForm(e.fileName, jsonStr)
             }

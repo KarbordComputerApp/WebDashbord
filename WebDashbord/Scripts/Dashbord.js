@@ -55,7 +55,7 @@ dashbordData_Save = `[{"id":"TChk-1","valueControl":{"day":"5000500"},"position"
 
 //dashbordData_Save = `[{"id":"TChk_Sum-1","valueControl":{"day":"10000000"},"position":{"x":0,"y":12,"w":4,"h":3},"caption":"صورت خلاصه چک های پرداختی - گروه 97 - سال 1384","visible":true,"baseValue":{"ace":"Web8","group":"97","sal":"1384"}},{"id":"TChk_Sum-2","valueControl":{"day":"10000000"},"position":{"x":4,"y":3,"w":4,"h":3},"caption":"صورت خلاصه چک های پرداختی - گروه 97 - سال 1403","visible":true,"baseValue":{"ace":"Web8","group":"97","sal":"1403"}},{"id":"TrzFCust_S-1","valueControl":{"top":10,"fromDate":"1384/01/01","modeItem":"S"},"position":{"x":8,"y":0,"w":4,"h":3},"caption":"مانده حساب خریداران - گروه 97 - سال 1403","visible":true,"baseValue":{"ace":"Web8","group":"97","sal":"1403"}},{"id":"TrzFCust_P-1","valueControl":{"top":10,"fromDate":"1384/01/01","modeItem":"P"},"position":{"x":0,"y":3,"w":4,"h":3},"caption":"مانده حساب فروشندگان - گروه 97 - سال 1403","visible":true,"baseValue":{"ace":"Web8","group":"97","sal":"1403"}},{"id":"TChk-3","valueControl":{"day":"1000000"},"position":{"x":0,"y":0,"w":4,"h":3},"caption":"چک های پرداختی - گروه 97 - سال 1403","visible":true,"baseValue":{"ace":"Web8","group":"97","sal":"1403"}},{"id":"TChk-4","valueControl":{"day":"10000000"},"position":{"x":8,"y":3,"w":4,"h":3},"caption":"چک های پرداختی - گروه 97 - سال 1384","visible":true,"baseValue":{"ace":"Web8","group":"97","sal":"1384"}},{"id":"TrzFCust_P-2","valueControl":{"top":10,"fromDate":"1384/01/01","modeItem":"P"},"position":{"x":4,"y":0,"w":4,"h":3},"caption":"مانده حساب فروشندگان - گروه 97 - سال 1384","visible":true,"baseValue":{"ace":"Web8","group":"97","sal":"1384"}}]`
 //dashbordData_Save = `[{"id":"TrzAcc-1","valueControl":{"mode":0,"fromDate":"1384/01/01","modeItem":"S"},"position":{"x":0,"y":0,"w":4,"h":3},"caption":"تراز حساب - گروه 97 - سال 1384","visible":true,"baseValue":{"ace":"Web8","group":"97","sal":"1384"}}]`
-
+//dashbordData_Save = `[{"id":"TChk-1","uuid":"1","valueControl":{},"position":{"x":0,"y":6,"w":4,"h":3},"caption":"چک های پرداختی - گروه 07 - سال 1404","visible":true,"baseValue":{"ace":"Web8","group":"07","sal":"1404"}},{"id":"TrzAcc-1","uuid":"2","valueControl":{"mode":0,"fromDate":"1384/01/01","modeItem":"S"},"position":{"x":0,"y":0,"w":6,"h":6},"caption":"تراز حساب - گروه 97 - سال 1384","visible":true,"baseValue":{"ace":"Web8","group":"97","sal":"1384"}},{"id":"Dftr-1","uuid":"3","valueControl":{"mode":0},"position":{"x":6,"y":0,"w":6,"h":6},"caption":"دفتر حساب - گروه 97 - سال 1384","visible":true,"baseValue":{"ace":"Web8","group":"97","sal":"1384"}}]`;
 if (dashbordData_Save != null && dashbordData_Save.toString() != "null" && dashbordData_Save.toString() != "") {
     dashbordData = JSON.parse(dashbordData_Save);
     for (var i = 0; i < dashbordData.length; i++) {
@@ -103,6 +103,31 @@ $('#modal-DesktopItem').on('show.bs.modal', function () {
             '</tr> ';
         $('#TableDesktopItem').append(col);
     }
+});
+
+var objectSetting = $('<a style="padding-left: 5px;"><i class="bi bi-gear"></i></a>');
+$("#objectBtnDashbord").append(objectSetting);
+
+$("#objectBtnDashbord").append('<a class="dropdown-toggle" data-toggle="modal" data-backdrop="static" data-target="#modal-DesktopItem"><i class="bi bi-plus-circle"></i></a>');
+
+
+objectSetting.Setting(
+    {
+        id: null,
+        caption: "تنظیمات",
+        dataSetting: dataSettingDefult["all"],
+        externalModal: true,
+        baseValue: {
+            ace: ace,
+            group: group,
+            sal: sal
+        },
+    },
+);
+
+
+objectSetting.click(function () {
+    objectSetting.Setting("ShowModalSetting");
 });
 
 /*
@@ -617,12 +642,14 @@ $("#widget_table1").Table(
 
 function AddIteminGrid(itemObject) {
     id = itemObject.id;
+    uuid = itemObject.uuid;
     var object = $('<div id="widget_' + id + '">');
     $("#objectGrid").append(object);
 
     if (id.contains("TChk_Sum")) {
         $("#widget_" + id).D_TChk_Sum({
             id: id,
+            uuidSetting: uuid,
             caption: itemObject.caption,
             visible: itemObject.visible,
             baseValue: itemObject.baseValue,
@@ -633,6 +660,7 @@ function AddIteminGrid(itemObject) {
     else if (id.contains("TChk")) {
         $("#widget_" + id).D_TChk({
             id: id,
+            uuidSetting: uuid,
             caption: itemObject.caption,
             visible: itemObject.visible,
             baseValue: itemObject.baseValue,
@@ -643,16 +671,19 @@ function AddIteminGrid(itemObject) {
     else if (id.contains("TrzFCust")) {
         $("#widget_" + id).D_TrzFCust({
             id: id,
+            uuidSetting: uuid,
             caption: itemObject.caption,
             visible: itemObject.visible,
             baseValue: itemObject.baseValue,
             valueControl: itemObject.valueControl,
             position: itemObject.position,
+            isForosh: itemObject.isForosh,
         });
     }
     else if (id.contains("TarazFasli")) {
         $("#widget_" + id).D_TarazFasli({
             id: id,
+            uuidSetting: uuid,
             caption: itemObject.caption,
             visible: itemObject.visible,
             baseValue: itemObject.baseValue,
@@ -663,6 +694,7 @@ function AddIteminGrid(itemObject) {
     } else if (id.contains("TrzAcc")) {
         $("#widget_" + id).D_TrzAcc({
             id: id,
+            uuidSetting: uuid,
             caption: itemObject.caption,
             visible: itemObject.visible,
             baseValue: itemObject.baseValue,
@@ -673,6 +705,7 @@ function AddIteminGrid(itemObject) {
     else if (id.contains("Dftr")) {
         $("#widget_" + id).D_Dftr({
             id: id,
+            uuidSetting: uuid,
             caption: itemObject.caption,
             visible: itemObject.visible,
             baseValue: itemObject.baseValue,
@@ -768,156 +801,160 @@ $("#SaveItem").click(function () {
         var lastItems = dashbordData.filter(o => o.id.contains(modeItem));
         index = lastItems.length + 1;
     }
+    var uuid = dashbordData.length + 1;
 
     var idItem = modeItem + "-" + index;
     var item = {};
     if (modeItem == "TChk") {
         item = {
-            "id": idItem,
-            "valueControl": {
-                "day": "10"
+            id: idItem,
+            uuid: uuid,
+            position: {
+                x: 0,
+                y: 0,
+                w: 4,
+                h: 3
             },
-            "position": {
-                "x": 0,
-                "y": 0,
-                "w": 4,
-                "h": 3
-            },
-            "caption": captionItem,
-            "visible": true,
-            "baseValue": {
-                "ace": ace,
-                "group": groupDesktopItem,
-                "sal": salDesktopItem
+            caption: captionItem,
+            visible: true,
+            baseValue: {
+                ace: ace,
+                group: groupDesktopItem,
+                sal: salDesktopItem
             }
         };
     }
     else if (modeItem == "TChk_Sum") {
         item = {
-            "id": idItem,
-            "valueControl": {
-                "day": "10000000"
+            id: idItem,
+            uuid: uuid,
+            position: {
+                x: 0,
+                y: 0,
+                w: 4,
+                h: 3
             },
-            "position": {
-                "x": 0,
-                "y": 0,
-                "w": 4,
-                "h": 3
-            },
-            "caption": captionItem,
-            "visible": true,
-            "baseValue": {
-                "ace": ace,
-                "group": groupDesktopItem,
-                "sal": salDesktopItem
+            caption: captionItem,
+            visible: true,
+            baseValue: {
+                ace: ace,
+                group: groupDesktopItem,
+                sal: salDesktopItem
             }
         };
     } else if (modeItem == "TrzFCust_S") {
         item = {
-            "id": idItem,
-            "valueControl": {
-                "top": 10,
-                "fromDate": "1384/01/01",//localStorage.getItem("BeginDateFct"),
-                "modeItem": "S"
+            id: idItem,
+            uuid: uuid,
+            /*valueControl: {
+                //top: 10,
+                //fromDate: "1384/01/01",//localStorage.getItem("BeginDateFct"),
+                modeItem: "S"
+            },*/
+            isForosh : true,
+            position: {
+                x: 0,
+                y: 0,
+                w: 4,
+                h: 3
             },
-            "position": {
-                "x": 0,
-                "y": 0,
-                "w": 4,
-                "h": 3
-            },
-            "caption": captionItem,
-            "visible": true,
-            "baseValue": {
-                "ace": ace,
-                "group": groupDesktopItem,
-                "sal": salDesktopItem
+            caption: captionItem,
+            visible: true,
+            baseValue: {
+                ace: ace,
+                group: groupDesktopItem,
+                sal: salDesktopItem
             }
         };
     } else if (modeItem == "TrzFCust_P") {
         item = {
-            "id": idItem,
-            "valueControl": {
-                "top": 10,
-                "fromDate": "1384/01/01",//localStorage.getItem("BeginDateFct"),
-                "modeItem": "P"
+            id: idItem,
+            uuid: uuid,
+           /* valueControl: {
+                top: 10,
+                fromDate: "1384/01/01",//localStorage.getItem("BeginDateFct"),
+                modeItem: "P"
+            },*/
+            isForosh: false,
+            position: {
+                x: 0,
+                y: 0,
+                w: 4,
+                h: 3
             },
-            "position": {
-                "x": 0,
-                "y": 0,
-                "w": 4,
-                "h": 3
-            },
-            "caption": captionItem,
-            "visible": true,
-            "baseValue": {
-                "ace": ace,
-                "group": groupDesktopItem,
-                "sal": salDesktopItem
+            caption: captionItem,
+            visible: true,
+            baseValue: {
+                ace: ace,
+                group: groupDesktopItem,
+                sal: salDesktopItem
             }
         };
     } else if (modeItem == "TarazFasli") {
         item = {
-            "id": idItem,
-            "valueControl": {
-                "mode": 0,
-                "fromDate": "1384/01/01",
-                "modeItem": "S"
+            id: idItem,
+            uuid: uuid,
+            valueControl: {
+                mode: 0,
+                fromDate: "1384/01/01",
+                modeItem: "S"
             },
-            "position": {
-                "x": 0,
-                "y": 0,
-                "w": 4,
-                "h": 3
+            position: {
+                x: 0,
+                y: 0,
+                w: 4,
+                h: 3
             },
-            "caption": captionItem,
-            "visible": true,
-            "baseValue": {
-                "ace": ace,
-                "group": groupDesktopItem,
-                "sal": salDesktopItem
+            caption: captionItem,
+            visible: true,
+            baseValue: {
+                ace: ace,
+                group: groupDesktopItem,
+                sal: salDesktopItem
             }
         };
     } else if (modeItem == "TrzAcc") {
         item = {
-            "id": idItem,
-            "valueControl": {
-                "mode": 0,
-                "fromDate": "1384/01/01",
-                "modeItem": "S"
+            id: idItem,
+            uuid: uuid,
+            valueControl: {
+                mode: 0,
+                fromDate: "1384/01/01",
+                modeItem: "S"
             },
-            "position": {
-                "x": 0,
-                "y": 0,
-                "w": 4,
-                "h": 3
+            position: {
+                x: 0,
+                y: 0,
+                w: 4,
+                h: 3
             },
-            "caption": captionItem,
-            "visible": true,
-            "baseValue": {
-                "ace": ace,
-                "group": groupDesktopItem,
-                "sal": salDesktopItem
+            caption: captionItem,
+            visible: true,
+            baseValue: {
+                ace: ace,
+                group: groupDesktopItem,
+                sal: salDesktopItem
             }
         };
     } else if (modeItem == "Dftr") {
         item = {
-            "id": idItem,
-            "valueControl": {
-                "mode": 0,
+            id: idItem,
+            uuid: uuid,
+            valueControl: {
+                mode: 0,
             },
-            "position": {
-                "x": 0,
-                "y": 0,
-                "w": 4,
-                "h": 3
+            position: {
+                x: 0,
+                y: 0,
+                w: 4,
+                h: 3
             },
-            "caption": captionItem,
-            "visible": true,
-            "baseValue": {
-                "ace": ace,
-                "group": groupDesktopItem,
-                "sal": salDesktopItem
+            caption: captionItem,
+            visible: true,
+            baseValue: {
+                ace: ace,
+                group: groupDesktopItem,
+                sal: salDesktopItem
             }
         };
     }

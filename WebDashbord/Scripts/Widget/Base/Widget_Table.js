@@ -3,7 +3,7 @@
         id: null,
         data: [],
         headBtn: [],
-        headBtnDefult: [],//['Columns', 'Print','Control'],
+        headBtnDefult: [],//['Columns', 'Control'],
         showHeadBtnDefult: false,  // نمایش دکمه ها بالای جدول
         allData: [],
         columns: [],
@@ -14,7 +14,7 @@
         pageCount: 0,
         pageSize: 0,
         currentPageIndex: 0,
-        keyField: '', 
+        keyField: '',
         keyRow: null,
         radif: false, // دارای ردیف
         sumFields: [], //فیلد های جمع 
@@ -24,7 +24,10 @@
         actionDropdown: false,
         showInBoxControl: false,
         controlData: null, // اطلاعات کنترل گزارش
-        dataPrint: { data: null, classModal: null, modalElement: null },
+        viewData: _viewDataFull,  // نمایش جدول کامل یا مختصر موبایلی
+        viewDataLowTemplate: null,  // نحوه نمایش در حالت مختصر
+
+        //dataPrint: { data: null, classModal: null, modalElement: null },
         baseValue: {
             ace: null,
             group: null,
@@ -40,10 +43,16 @@
             o.allData.add(o.data[i]);
         }
 
+        if (o.viewData == _viewDataLow) o.isTableFix = false;
+
         var table = obj._CreateTable();
         this.element.append(table);
         obj._Sort(o.sort, o.sortMode);
-        obj._Paint();
+        if (o.viewData == _viewDataFull)
+            obj._PaintFull();
+        else {
+            obj._PaintLow();
+        }
         if (o.sumFields.length > 0) obj._Sum();
     },
 
@@ -75,9 +84,9 @@
                 else if (o.headBtnDefult[i] == f_Control) {
                     obj._CreateModalControl(itemBtn[0]);
                 }
-                else if (o.headBtnDefult[i] == f_Print) {
-                    obj._CreateObjectPrint(itemBtn[0], _a);
-                }
+                //else if (o.headBtnDefult[i] == f_Print) {
+                // obj._CreateObjectPrint(itemBtn[0], _a);
+                //}
             }
             _divFinal.append(_divBtn);
         }
@@ -98,10 +107,7 @@
         });
 
 
-        //_tHead = obj._CreateHead();
         var _tBody = $('<tbody data-dismiss="' + (o.action.length == 0 ? "modal" : "") + '" style="cursor: default;">');
-
-        // _tfoot = obj._CreateFooter();
 
         // _table.append(_tHead);
         _table.append(_tBody);
@@ -137,11 +143,11 @@
         var last = o.pageSize;
         last = last >= rowAllCount ? rowAllCount : last;
 
-        var _aFirstPage = $('<a><img class="firstPage-img" src="/Content/img/list/streamline-icon-navigation-first.png" width="14" height="14" title="اولین"></a>');
-        var _aPreviousPage = $('<a><img class="previousPage-img"  src="/Content/img/list/streamline-icon-navigation-back.png" width="14" height="14" style="margin: 0px 5px 0px 5px;" title="قبلی"></a>');
+        var _aFirstPage = $('<a title="اولین"><i class="bi bi-chevron-double-right"></i></a>');
+        var _aPreviousPage = $('<a title="قبلی"> <i class="bi bi-chevron-right"></i></a>');
         var _bPage = $('<b class="l_PageCount" style="margin: 0px 5px 0px 5px; color: #ec8121;">' + (o.currentPageIndex + 1) + ' از ' + (rowAllCount > 0 ? Math.ceil(rowAllCount / o.pageSize) : 1) + '</b>');
-        var _aNextPage = $('<a><img class="nextPage-img" src="/Content/img/list/streamline-icon-navigation-next.png" width="14" height="14" style="margin: 0px 5px 0px 5px;" title="بعدی"></a>');
-        var _aLastPage = $('<a><img class="lastPage-img" src="/Content/img/list/streamline-icon-navigation-last.png" width="14" height="14" title="آخرین"></a>');
+        var _aNextPage = $('<a title="بعدی"><i class="bi bi-chevron-left"></i></a>');
+        var _aLastPage = $('<a title="آخرین"><i class="bi bi-chevron-double-left"></i></a>');
 
         _divArrow.append(_aFirstPage);
         _divArrow.append(_aPreviousPage);
@@ -219,7 +225,7 @@
         return _tHead;
     },
 
-    _CreateBody: function (first, last) {
+    _CreateBodyFull: function (first, last) {
         var obj = this;
         var o = obj.options;
         var list = o.data;
@@ -364,6 +370,118 @@
 
     },
 
+
+
+    _CreateBodyLow: function (first, last) {
+        var obj = this;
+        var o = obj.options;
+        var list = o.data;
+
+        var temp = o.viewDataLowTemplate;
+        var table = $(obj.bindings[0]).find('.K_DataGrid');
+
+        body = table.find('tbody');
+        if (body.length > 0) {
+            body.empty();
+        }
+
+        last = list.length < last ? list.length : (list.length == 0 ? 0 : last);
+
+        for (var i = first; i < last; i++) {
+            var _tr = $('<tr>');
+            for (var j = 0; j < temp.length; j++) {
+
+                var objects = $(temp[j]).find("[data-name]");
+                var value = [];
+                for (var k = 0; k < objects.length; k++) {
+                    var _name = $(objects[k]).attr("data-name");
+                    var _type = $(objects[k]).attr("data-type");
+                    var valueData = list[i][_name];
+                    if (_type == type_Currency) {
+                        valueData = NumberToNumberString(parseFloat(valueData))
+                    }
+                    value[k] = valueData;
+                }
+                tdValue = temp[j].format(value[0], value[1], value[2], value[3], value[4]);
+                var td = $(tdValue);
+                _tr.append(td);
+            }
+
+            // var td = '<td style="width:0px"><center><img src="' + GetIconBank(data[i].Bank) + '" width="35" /><p style="color: darkgray;">' + data[i].Shobe + '</p></center>';
+            // var td[1] = $('<td><div><h5 style="padding-right:5px">' + data[i].TrafName + '</h5><h5 style="padding-right:5px;padding-top: 10px;">چک : ' + data[i].CheckNo + '</h5></div></td>')
+            // var td[2] = $('<td style="width:0px"><h5 style="text-align:center">' + NumberToNumberString(data[i].Value) + '</h5><div class="DashbordDateChek">' + data[i].CheckDate + '</div></td>')
+
+
+            // bands
+
+            /*
+            
+             <tr>
+                <td style="width:0px"><img src="/Content/img/profile.png" width="35"></td>
+                <td data-name="AccCode"></td>
+                <td data-name="AccName" style="width:0px"></td>
+            </tr>
+            
+            <tr style="">
+                <td data-name="AccCode" data-value="110" class="" style="">110</td>
+                <td data-name="AccName" data-value="موجودی نقدی و بانک" class="ellipsis" style="">موجودی نقدی و بانک</td>
+            </tr>
+            
+            
+            <tr>
+                <td style="width:0px">
+                    <center>
+                        <img src="/Content/img/bank/saderat.png" width="35">
+                        <p style="color: darkgray;"></p>
+                    </center>
+                </td>
+                <td>
+                    <div>
+                        <h5 style="padding-right:5px">مالیات و عوارض بر ارزش افزوده فروش </h5>
+                        <h5 style="padding-right:5px;padding-top: 10px;">چک : 181199</h5>
+                    </div>
+                </td>
+                <td style="width:0px">
+                    <h5 style="text-align:center">1,428,000,000</h5>
+                    <div class="DashbordDateChek">1404/07/22</div>
+                </td>
+            </tr>
+            
+                    for (var i = 0; i < data.length; i++) {
+                        var tr = $('<tr>');
+                        var tdIcon = $('<td style="width:0px"><center><img src="' + GetIconBank(data[i].Bank) + '" width="35" /><p style="color: darkgray;">' + data[i].Shobe + '</p></center>')
+                        var tdTrafName = $('<td><div><h5 style="padding-right:5px">' + data[i].TrafName + '</h5><h5 style="padding-right:5px;padding-top: 10px;">چک : ' + data[i].CheckNo + '</h5></div></td>')
+                        var tdValue = $('<td style="width:0px"><h5 style="text-align:center">' + NumberToNumberString(data[i].Value) + '</h5><div class="DashbordDateChek">' + data[i].CheckDate + '</div></td>')
+                        tr.append(tdIcon);
+                        tr.append(tdTrafName);
+                        tr.append(tdValue);
+                        tbody.append(tr);
+                    }
+            
+            */
+
+            /*    var _td = $('<td data-name="' + _columns[j].Code + '"' +
+                    'data-value="' + value + '"' +
+                    'class="' + (_columns[j].Type == type_Farsi ? 'ellipsis' : _columns[j].Type == type_Boolean ? 'center' : '') + '"' +
+                    'style="' +
+                    (_columns[j].Type == type_Currency ? 'direction: ltr; ' : '') +
+                    (value < 0 ? ' color: red; ' : '')
+                    + '"' +
+                    '>' + valueShow + '</td>');
+                _tr.append(_td);*/
+
+
+
+            // action
+            body.append(_tr);
+        }
+
+        var tr = table.find('tbody tr');
+        tr.click(function (e) {
+            obj._SelectRow(this);
+        });
+    },
+
     _CreateFooter: function () {
         var obj = this;
         var o = obj.options;
@@ -419,7 +537,7 @@
         return _tfoot;
     },
 
-    _Paint: function () {
+    _PaintFull: function () {
         var obj = this;
         var o = obj.options;
         var _table = $(obj.bindings[0]).find('.K_DataGrid');
@@ -429,7 +547,7 @@
         _table.append(obj._CreateHead());
         _table.append(obj._CreateFooter());
 
-        obj._CreateBody(0, o.pageSize);
+        obj._CreateBodyFull(0, o.pageSize);
 
         var th = _table.find('thead th');
         th.click(function (e) {
@@ -459,6 +577,47 @@
     },
 
 
+    _PaintLow: function () {
+        var obj = this;
+        var o = obj.options;
+        var _table = $(obj.bindings[0]).find('.K_DataGrid');
+        _table.find('thead').remove();
+        _table.find('tfoot').remove();
+
+        //_table.append(obj._CreateHead());
+        //_table.append(obj._CreateFooter());
+
+        obj._CreateBodyLow(0, o.pageSize);
+
+        var th = _table.find('thead th');
+        th.click(function (e) {
+            var columnName = $(this).attr('columnname');
+            if (columnName != null) {
+                var iconMode = $(this).find('.' + mode_Sort_DESC);
+                obj._Sort(columnName, iconMode.length > 0 ? '' : mode_Sort_DESC);
+                obj._FirstPage();
+            }
+        });
+
+        var lockFilter;
+        var inputFilter = _table.find('tfoot input');
+
+        inputFilter.keyup(function (e) {
+            if (lockFilter) {
+                obj._Filter();
+                obj._FirstPage();
+                if (o.sumFields.length > 0) obj._Sum();
+            }
+        });
+
+        inputFilter.keydown(function (e) {
+            lockFilter = KeyPressFilter(e);
+            return lockFilter;
+        });
+    },
+
+
+
     // columns modal
     _CreateModalColumn: function (headBtn) {
         var obj = this;
@@ -466,19 +625,19 @@
 
         //modal
         var body = $('main');
-        var _modal = $('<div class="modal fade K_Modal' + f_Columns + '" tabindex="-1" aria-hidden="true">');
+        var _modal = $('<div class="modal fade K_Modal' + f_Columns + '" tabindex="-1" aria-hidden="true" style="' + (o.showInBoxControl ? 'position: absolute;' : '') + '">');
         var dialog = $('<div class="modal-dialog" style="max-width: fit-content;"></div>');
         _modal.append(dialog);
         var content = $('<div class="modal-content"></div>');
 
         //head
         var _header = $('<div class="modal-header" style="min-width: 300px">');
-        var _buttonExit = $('<button type="button" class="close" data-dismiss="modal" aria-label="Close" title="بستن"><span aria-hidden="true">×</span></button >');
+        var _buttonExit = $('<a data-dismiss="modal" aria-label="Close" title="بستن"><i class="bi bi-x-lg"></button >');
         _header.append(_buttonExit);
         var title = $('<p class="modal-title" style="width: 90%;text-align: center;">' + headBtn.caption + '</p>');
         _header.append(title);
 
-        var _aDefult = $('<a> <img src="/Content/img/sanad/paragraph-two-column.png" width="20" height="20" style="margin-left: 10px;" title="پیش فرض"></a>')
+        var _aDefult = $('<a title="پیش فرض"><i class="bi bi-person-gear"></a>')
         _header.append(_aDefult);
         // end head
 
@@ -590,7 +749,11 @@
         var url = CreateUrl(o.baseValue.ace, o.baseValue.sal, o.baseValue.group, 'RprtColsSave') // آدرس ذخیره ستون ها
         ajaxFunction(url, 'POST', list).done(function (response) {
             localStorage.setItem('RprtCols', JSON.stringify(rprtCols));
-            obj._Paint();
+            if (o.viewData == _viewDataFull)
+                obj._PaintFull();
+            else
+                obj._PaintLow();
+
             if (o.sumFields.length > 0) obj._Sum();
         });
     },
@@ -609,7 +772,7 @@
 
         //head
         var _header = $('<div class="modal-header">');
-        var _buttonExit = $('<button type="button" class="close" data-dismiss="modal" aria-label="Close" title="بستن"><span aria-hidden="true">×</span></button >');
+        var _buttonExit = $('<button type="button" class="close" data-dismiss="modal" aria-label="Close" title="بستن"><i class="bi bi-x-lg"></button >');
         _header.append(_buttonExit);
         var title = $('<p class="modal-title" style="width: 90%;text-align: center;">' + headBtn.caption + '</p>');
         _header.append(title);
@@ -656,53 +819,53 @@
 
 
 
-
-
-    _CreateObjectPrint: function (headBtn, element) {
-        var obj = this;
-        var o = obj.options;
-        var _div = $('<div class="' + 'K_DivModal' + f_Print + '">');
-        _div.Print(
-            {
-                id: o.id,
-                caption: headBtn.caption,
-                baseValue: o.baseValue,
-                data: o.data,
-                columns: o.columns,
-                printVariable: "",
-                Select: function (e, record) {
-                    a = record;
-                },
-            }
-        );
-        obj.element.append(_div);
-    },
-
-    _ShowObjectPrint: function () {
-        var obj = this;
-        var o = obj.options;
-        if (o.data.length > 0) {
-            var objPrint = $(obj.bindings[0]).find('.K_DivModal' + f_Print);
-
-            printVariable = o.controlData;
-            printVariable["ReportDate"] = localStorage.getItem("DateNow");
-
-            for (var i = 0; i < o.columns.length; i++) {
-                if (o.columns[i].Sum != null) {
-                    printVariable['Sum' + o.columns[i].Code] = o.columns[i].Sum;
+    /*
+    
+        _CreateObjectPrint: function (headBtn, element) {
+            var obj = this;
+            var o = obj.options;
+            var _div = $('<div class="' + 'K_DivModal' + f_Print + '">');
+            _div.Print(
+                {
+                    id: o.id,
+                    caption: headBtn.caption,
+                    baseValue: o.baseValue,
+                    data: o.data,
+                    columns: o.columns,
+                    printVariable: "",
+                    Select: function (e, record) {
+                        a = record;
+                    },
                 }
+            );
+            obj.element.append(_div);
+        },
+    
+        _ShowObjectPrint: function () {
+            var obj = this;
+            var o = obj.options;
+            if (o.data.length > 0) {
+                var objPrint = $(obj.bindings[0]).find('.K_DivModal' + f_Print);
+    
+                printVariable = o.controlData;
+                printVariable["ReportDate"] = localStorage.getItem("DateNow");
+    
+                for (var i = 0; i < o.columns.length; i++) {
+                    if (o.columns[i].Sum != null) {
+                        printVariable['Sum' + o.columns[i].Code] = o.columns[i].Sum;
+                    }
+                }
+    
+                objPrint.Print("option", "printVariable", printVariable);
+                objPrint.Print("option", "data", o.data);
+                objPrint.Print("ShowModalPrint");
             }
-
-            objPrint.Print("option", "printVariable", printVariable);
-            objPrint.Print("option", "data", o.data);
-            objPrint.Print("ShowModalPrint");
-        }
-        else {
-            return showNotification('اطلاعاتی برای چاپ وجود ندارد. ابتدا گزارش گیری کنید', 0);
-        }
-    },
-
-
+            else {
+                return showNotification('اطلاعاتی برای چاپ وجود ندارد. ابتدا گزارش گیری کنید', 0);
+            }
+        },
+    
+    */
 
     _FirstPage: function () {
         obj = this;
@@ -716,7 +879,13 @@
 
         var span_AllCount = $(obj.bindings[0]).find('.span_AllCount');
         span_AllCount.text(rowAllCount);
-        obj._CreateBody(0, last);
+
+        if (o.viewData == _viewDataFull)
+            obj._CreateBodyFull(0, last);
+        else
+            obj._CreateBodyLow(0, last);
+
+
     },
 
 
@@ -732,7 +901,11 @@
             l_PageCount.text((o.currentPageIndex + 1) + ' از ' + (rowAllCount > 0 ? Math.ceil(rowAllCount / o.pageSize) : 1));
             last = o.pageSize + first;
             last = last >= rowAllCount ? rowAllCount : last;
-            obj._CreateBody(first, last);
+
+            if (o.viewData == _viewDataFull)
+                obj._CreateBodyFull(first, last);
+            else
+                obj._CreateBodyLow(first, last);
         }
     },
 
@@ -750,7 +923,11 @@
             l_PageCount.text((o.currentPageIndex + 1) + ' از ' + (rowAllCount > 0 ? Math.ceil(rowAllCount / o.pageSize) : 1));
             last = o.pageSize + first;
             last = last >= rowAllCount ? rowAllCount : last;
-            obj._CreateBody(first, last);
+
+            if (o.viewData == _viewDataFull)
+                obj._CreateBodyFull(first, last);
+            else
+                obj._CreateBodyLow(first, last);
         }
 
     },
@@ -768,7 +945,11 @@
             l_PageCount.text(Math.ceil(o.currentPageIndex + 1) + ' از ' + (rowAllCount > 0 ? Math.ceil(rowAllCount / o.pageSize) : 1));
             first = currentIndexTemp * o.pageSize;
             last = rowAllCount;
-            obj._CreateBody(first, last);
+
+            if (o.viewData == _viewDataFull)
+                obj._CreateBodyFull(first, last);
+            else
+                obj._CreateBodyLow(first, last);
         }
     },
 
@@ -801,12 +982,12 @@
         if (actionName == f_Columns) {
             obj._ShowModalColumn();
         }
-        if (actionName == f_Control) {
+        else if (actionName == f_Control) {
             obj._ShowModalControl();
         }
-        if (actionName == f_Print) {
-            obj._ShowObjectPrint();
-        }
+        //if (actionName == f_Print) {
+        // obj._ShowObjectPrint();
+        //}
         var actionValue = { actionName: actionName, data: [] };
         obj._trigger("ActionHeadClick", event, actionValue);
     },
@@ -826,6 +1007,12 @@
         var actionValue = { actionName: actionName, data: rowData }
 
         obj._trigger("ActionClick", event, actionValue);
+    },
+
+    _ExportData: function (data, columns) {
+        obj = this;
+        var value = { data: data, columns: columns }
+        obj._trigger("ExportData", event, value);
     },
 
     _TdCheckBoxClick: function (e) {
@@ -941,6 +1128,8 @@
             var _td = table.find("[columnname=" + _columns[i].Code + "][mode='sum']");
             $(_td).text(NumberToNumberString(parseFloat(_columns[i].Sum)));
         }
+
+        obj._ExportData(list, _columns);
     },
 
     RefreshTable: function () {
@@ -960,5 +1149,17 @@
         var o = obj.options;
         obj._ShowModalControl();
     },
+
+    ShowModalColumn: function () {
+        obj = this;
+        var o = obj.options;
+        obj._ShowModalColumn();
+    },
+
+    /*  ShowObjectPrint: function () {
+          obj = this;
+          var o = obj.options;
+          obj._ShowObjectPrint();
+      },*/
 });
 
