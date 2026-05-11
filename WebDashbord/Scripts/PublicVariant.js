@@ -1,5 +1,7 @@
 ﻿var dataGroup = {};
-
+var dashbordData = [];
+var publicData = {};
+var loginData = {};
 
 var valueDropDownKalaExf = null;
 var LinkFDocADocUri;

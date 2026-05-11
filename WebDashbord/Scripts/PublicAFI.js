@@ -37,8 +37,7 @@ if (hrefWindows[3] != "") {
     var hrefPage = '/' + hrefWindows[3] + '/' + hrefWindows[4];
 }
 
-var publicData = {};
-var loginData =
+var loginDataDefult =
 {
     machineId: null,
     lastMachineId: null,
@@ -67,23 +66,32 @@ var loginData =
 
 
 var loginData_Save = localStorage.getItem("Karbord_LoginData");
-if (loginData_Save != null && loginData_Save.toString() != "null" && loginData_Save.toString() != "") {
+if (loginData_Save != null && loginData_Save != "[{}]" && loginData_Save.toString() != "null" && loginData_Save.toString() != "") {
     loginData = JSON.parse(loginData_Save);
-    loginData = loginData[0];
-    var server = loginData.apiAddress;
-    var ace = loginData.baseValue.ace;
-    var userName = loginData.userName;
-    var userNameFa = loginData.userNameFa;
-    var companyName = loginData.companyName;
-    var password = loginData.password;
-    account_UserName = loginData.account_UserName;
-    account_Password = loginData.account_Password;
-    defultGroup = loginData.baseValue.defultGroup;
+    if (loginData.length > 0) {
+        if (loginData[0].apiAddress == null) {
+            loginData = loginDataDefult;
+        }
+        else {
+            loginData = loginData[0];
+            var server = loginData.apiAddress;
+            var ace = loginData.baseValue.ace;
+            var userName = loginData.userName;
+            var userNameFa = loginData.userNameFa;
+            var companyName = loginData.companyName;
+            var password = loginData.password;
+            account_UserName = loginData.account_UserName;
+            account_Password = loginData.account_Password;
+            defultGroup = loginData.baseValue.defultGroup;
 
-    $('#userNameFa').text(userNameFa);
-    $('#coName_TitleMenu').val(companyName);
-    $('#ace_TitleMenu').val('نرم افزار ' + loginData.progCaption);
-
+            $('#userNameFa').text(userNameFa);
+            $('#coName_TitleMenu').val(companyName);
+            $('#ace_TitleMenu').val('نرم افزار ' + loginData.progCaption);
+        }
+    }
+    else {
+        loginData = loginDataDefult;
+    }
     /*$('#userNameHome').text(
         sessionStorage.CoName + ' - سال ' + (sal == "0" ? "" : sal)
     );
@@ -98,7 +106,7 @@ else {
 
 //localStorage.removeItem("Karbord_PublicData");
 var publicData_Save = localStorage.getItem("Karbord_PublicData");
-if (publicData_Save != null && publicData_Save.toString() != "null" && publicData_Save.toString() != "") {
+if (publicData_Save != null && publicData_Save != "[{}]" && publicData_Save.toString() != "null" && publicData_Save.toString() != "") {
     publicData = JSON.parse(publicData_Save);
     publicData = publicData[0];
     var sal = '';

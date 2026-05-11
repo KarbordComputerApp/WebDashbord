@@ -42,6 +42,8 @@ function LoginAccount(userAccount, passAccount, flagMessage = false) {
                 localStorage.removeItem("Karbord_LoginData");
                 localStorage.removeItem("Karbord_PublicData");
                 localStorage.removeItem("Karbord_DashbordData");
+                publicData = {};
+                loginData = loginDataDefult;
             }
 
             var ace = (data.AFI1_Group != null && data.AFI8_Group == null) ? prog_Web1 : (data.AFI1_Group == null && data.AFI8_Group != null) ? prog_Web8 : prog_Web2;
