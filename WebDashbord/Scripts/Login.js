@@ -38,6 +38,12 @@ function LoginAccount(userAccount, passAccount, flagMessage = false) {
             return showNotification(translate('نام مجوز ورود یا کلمه عبور اشتباه است'), 0);
         }
         else {
+            if (flagMessage) {
+                localStorage.removeItem("Karbord_LoginData");
+                localStorage.removeItem("Karbord_PublicData");
+                localStorage.removeItem("Karbord_DashbordData");
+            }
+
             var ace = (data.AFI1_Group != null && data.AFI8_Group == null) ? prog_Web1 : (data.AFI1_Group == null && data.AFI8_Group != null) ? prog_Web8 : prog_Web2;
             account_UserName = userAccount;
             account_Password = passAccount;
@@ -55,7 +61,7 @@ function LoginAccount(userAccount, passAccount, flagMessage = false) {
 
             loginData.baseValue.ace = ace;
             loginData.baseValue.groups = ace == prog_Web1 ? data.AFI1_Group : ace == prog_Web8 ? data.AFI8_Group : ace == prog_Web2 ? data.ERJ_Group : "";
-            
+
             loginData.progCaption = ace == prog_Web1 ? "مالی بازرگانی" : ace == prog_Web8 ? "سیستم جامع" : ace == prog_Web2 ? "اتوماسیون" : "سایر";
             loginData.lockNumber = data.lockNumber;
             loginData.multilang = data.multilang;
