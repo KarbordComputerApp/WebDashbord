@@ -4560,6 +4560,10 @@ table .checkbox [type="checkbox"] + label {
 }
 
 .light .sidemenu-collapse i {
+    color: #3f4853 /* #ec8121*/;
+}
+
+.sidemenu-collapse p {
     color: #ec8121;
 }
 

@@ -27,22 +27,28 @@ $.widget("ui.D_TChk", {
         visible: true,
         data: null,
         element: null,
-        headButton: [f_Setting]
+        headButton: [f_Print, f_Columns, f_Setting],
+        controlData: null,
+        objects: null,
+        getAutoData: null,
+        showControl: null,
     },
 
     _create: function () {
         var obj = this;
         var o = obj.options;
 
-        var setting = GetSetting(o.uuidSetting);
+        var setting = GetSetting(o);
 
         var divReport = $('<div style="padding: 5px;">');
-        divReport.TChk({
+        divReport.Report_TChk({
             uuidSetting: o.uuidSetting,
             baseValue: o.baseValue,
-            showControl: setting.showControl,
-            getAutoData: setting.getAutoData,
+            showControl: o.showControl == null ? setting.showControl : o.showControl,
+            getAutoData: o.getAutoData == null ? setting.getAutoData : o.getAutoData,
             viewData: setting.viewData,
+            controlData: o.controlData,
+            objects: o.objects,
         });
 
         o.element = divReport;
@@ -53,19 +59,31 @@ $.widget("ui.D_TChk", {
     _Refresh: function () {
         var obj = this;
         var o = obj.options.element;
-        o.TChk("Refresh");
+        o.Report_TChk("Refresh");
     },
 
     _Setting: function () {
         var obj = this;
         var o = obj.options.element;
-        o.TChk("ShowSetting");
+        o.Report_TChk("ShowSetting");
     },
 
     _ShowControl: function () {
         var obj = this;
         var o = obj.options.element;
-        o.TChk("ShowControl");
+        o.Report_TChk("ShowControl");
+    },
+
+    _ShowPrint: function () {
+        var obj = this;
+        var o = obj.options.element;
+        o.Report_TChk("ShowPrint");
+    },
+
+    _ShowColumns: function () {
+        var obj = this;
+        var o = obj.options.element;
+        o.Report_TChk("ShowColumns");
     },
 
 });
@@ -80,22 +98,28 @@ $.widget("ui.D_TChk_Sum", {
         visible: true,
         data: null,
         element: null,
-        headButton: [f_Setting]
+        headButton: [f_Setting],
+        controlData: null,
+        objects: null,
+        getAutoData: null,
+        showControl: null,
     },
 
     _create: function () {
         var obj = this;
         var o = obj.options;
 
-        var setting = GetSetting(o.uuidSetting);
+        var setting = GetSetting(o);
 
         var divReport = $('<div style="padding: 5px;">');
         divReport.TChk_Sum({
             uuidSetting: o.uuidSetting,
             baseValue: o.baseValue,
-            showControl: setting.showControl,
-            getAutoData: setting.getAutoData,
+            showControl: o.showControl == null ? setting.showControl : o.showControl,
+            getAutoData: o.getAutoData == null ? setting.getAutoData : o.getAutoData,
             viewData: setting.viewData,
+            controlData: o.controlData,
+            objects: o.objects,
         });
 
         o.element = divReport;
@@ -134,23 +158,29 @@ $.widget("ui.D_TrzFCust", {
         visible: true,
         data: null,
         element: null,
-        headButton: [f_Print, f_Columns, f_Setting]
+        headButton: [f_Print, f_Columns, f_Setting],
+        controlData: null,
+        objects: null,
+        getAutoData: null,
+        showControl: null,
     },
 
     _create: function () {
         var obj = this;
         var o = obj.options;
 
-        var setting = GetSetting(o.uuidSetting);
+        var setting = GetSetting(o);
 
         var divReport = $('<div style="padding: 5px;">');
         divReport.Report_TrzFCust({
             uuidSetting: o.uuidSetting,
             baseValue: o.baseValue,
-            showControl: setting.showControl,
-            getAutoData: setting.getAutoData,
+            showControl: o.showControl == null ? setting.showControl : o.showControl,
+            getAutoData: o.getAutoData == null ? setting.getAutoData : o.getAutoData,
             viewData: setting.viewData,
             isForosh: o.isForosh,
+            controlData: o.controlData,
+            objects: o.objects,
         });
 
         o.element = divReport;
@@ -194,12 +224,7 @@ $.widget("ui.D_TarazFasli", {
     options: {
         id: null,
         caption: null,
-        position: {
-            x: 0,
-            y: 0,
-            w: 0,
-            h: 0
-        },
+        position: positionGrid_Defult,
         valueControl: {
             mode: 0,
         },
@@ -211,7 +236,11 @@ $.widget("ui.D_TarazFasli", {
         visible: true,
         data: null,
         o: null,
-        chart: null
+        chart: null,
+        controlData: null,
+        objects: null,
+        getAutoData: null,
+        showControl: null,
     },
 
     _create: function () {
@@ -238,11 +267,11 @@ $.widget("ui.D_TarazFasli", {
 
     _createModal: function () {
         var obj = this;
-        var options = obj.options;
+        var o = obj.options;
         body = $('main');
-        $("#" + options.id + "_modal").remove();
+        $("#" + o.id + "_modal").remove();
         //modal
-        _modal = $('<div class="modal fade" id="' + options.id + '_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"">');
+        _modal = $('<div class="modal fade" id="' + o.id + '_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"">');
         dialog = $('<div class="modal-dialog"></div>');
         _modal.append(dialog);
         content = $('<div class="modal-content"></div>');
@@ -252,7 +281,7 @@ $.widget("ui.D_TarazFasli", {
         _header = $('<div class="modal-header">');
         _buttonExit = $('<button type="button" class="close" data-dismiss="modal" aria-label="Close" title="بستن"><i class="bi bi-x-lg"></button >');
         _header.append(_buttonExit);
-        title = $('<p class="modal-title" style="width: 90%;text-align: center;">' + options.caption + '</p>');
+        title = $('<p class="modal-title" style="width: 90%;text-align: center;">' + o.caption + '</p>');
         _header.append(title);
         _header.append($('<div>'));
         // end head
@@ -261,7 +290,7 @@ $.widget("ui.D_TarazFasli", {
         _body = $('<div class="modal-body">');
         _rowBody = $('<div class="row" style="padding-top:20px">');
 
-        _selectMode = $('<select id="' + options.id + '_mode" class="col-6"  style="margin-bottom:2rem">');
+        _selectMode = $('<select id="' + o.id + '_mode" class="col-6"  style="margin-bottom:2rem">');
         _selectMode.append('<option value="0">فصلی</option>');
         _selectMode.append('<option value="1">ماهانه</option>');
         _selectMode.append('<option value="2">روزانه</option>');
@@ -294,19 +323,19 @@ $.widget("ui.D_TarazFasli", {
         //end modal
 
         //script
-        _selectMode.val(options.valueControl.mode);
+        _selectMode.val(o.valueControl.mode);
 
         _buttonSave.click(function (e) {
-            var mode = $("#" + options.id + "_mode").val();
-            obj.options.valueControl.mode = mode;
-            obj._GetData(mode, options.valueControl.fromDate);
+            var mode = $("#" + o.id + "_mode").val();
+            obj.o.valueControl.mode = mode;
+            obj._GetData(mode, o.valueControl.fromDate);
 
-            $("#" + options.id + "_modal").modal('hide');
-            obj._Button("SaveModal", obj.options);
+            $("#" + o.id + "_modal").modal('hide');
+            obj._Button("SaveModal", obj.o);
         });
 
-        $("#" + options.id + "_modal").on('show.bs.modal', function () {
-            $("#" + options.id + "_mode").val(options.valueControl.mode);
+        $("#" + o.id + "_modal").on('show.bs.modal', function () {
+            $("#" + o.id + "_mode").val(o.valueControl.mode);
         })
 
 
@@ -314,8 +343,8 @@ $.widget("ui.D_TarazFasli", {
 
     _GetData: function (mode, fromDate) {
         var obj = this;
-        var options = obj.options;
-        var ctrl = options.valueControl;
+        var o = obj.options;
+        var ctrl = o.valueControl;
         var uri = server + '/api/ReportFct/TrzFDoreh/'; // آدرس گزارش 
 
         var tObject = {
@@ -323,7 +352,7 @@ $.widget("ui.D_TarazFasli", {
             taTarikh: LowDay(0),
             mode: mode,
         };
-        ajaxFunction(uri + options.baseValue.ace + '/' + options.baseValue.sal + '/' + options.baseValue.group, 'POST', tObject, false).done(function (response) {
+        ajaxFunction(uri + o.baseValue.ace + '/' + o.baseValue.sal + '/' + o.baseValue.group, 'POST', tObject, false).done(function (response) {
             trzFDoreh_labels = []
             trzFDoreh_data = []
             sum = 0;
@@ -332,14 +361,14 @@ $.widget("ui.D_TarazFasli", {
                 trzFDoreh_data[i] = response[i].totalvalue;
                 sum += response[i].totalvalue
             }
-            $("#" + options.id + "_LSum").text(NumberToNumberString(sum) + ' ریال');
-            $("#" + options.id + "_LTitle").text(date_TarazFasli + ' - ' + LowDay(0));
+            $("#" + o.id + "_LSum").text(NumberToNumberString(sum) + ' ریال');
+            $("#" + o.id + "_LTitle").text(date_TarazFasli + ' - ' + LowDay(0));
 
 
-            $("#" + options.id + "_Chart").empty();
-            $(options.Chart).remove();
-            //if (options.Chart == null) {
-            options.Chart = new Chart(options.id + "_Chart", {
+            $("#" + o.id + "_Chart").empty();
+            $(o.Chart).remove();
+            //if (o.Chart == null) {
+            o.Chart = new Chart(o.id + "_Chart", {
                 type: 'bar',
                 data: {
                     labels: trzFDoreh_labels,
@@ -417,9 +446,9 @@ $.widget("ui.D_TarazFasli", {
             //}
 
 
-            options.data = response;
-            var itemData = dashbordData.find(c => c.id == options.id);
-            itemData.valueControl = options.valueControl;
+            o.data = response;
+            var itemData = dashbordData.find(c => c.uuid == o.uuidSetting);
+            itemData.valueControl = o.valueControl;
         });
     },
 
@@ -444,22 +473,28 @@ $.widget("ui.D_TrzAcc", {
         visible: true,
         data: null,
         element: null,
-        headButton: [f_Print, f_Columns, f_Setting]
+        headButton: [f_Print, f_Columns, f_Setting],
+        controlData: null,
+        objects: null,
+        getAutoData : null,
+        showControl : null,
         //headButton: [f_GetData, f_Print, f_Columns, f_Maximum, f_ShowControl, f_Refresh, f_Setting]
     },
 
     _create: function () {
         var obj = this;
         var o = obj.options;
-        var setting = GetSetting(o.uuidSetting);
+        var setting = GetSetting(o);
 
         var divReport = $('<div style="padding: 10px;">');
         divReport.Report_TrzAcc({
             uuidSetting: o.uuidSetting,
             baseValue: o.baseValue,
-            showControl: setting.showControl,
-            getAutoData: setting.getAutoData,
+            showControl: o.showControl == null ? setting.showControl : o.showControl,   
+            getAutoData: o.getAutoData == null ? setting.getAutoData : o.getAutoData ,
             viewData: setting.viewData,
+            controlData: o.controlData,
+            objects: o.objects,
         });
 
         o.element = divReport;
@@ -505,33 +540,37 @@ $.widget("ui.D_Dftr", {
         uuidSetting: null,
         caption: null,
         position: [],
-        valueControl: {
-            mode: 0,
-        },
         baseValue: [],
         visible: true,
         data: null,
         element: null,
-        headButton: [f_Print, f_Columns, f_Setting]
+        headButton: [f_Print, f_Columns, f_Setting],
+        controlData: null,
+        objects: null,
+        getAutoData: null,
+        showControl: null,
     },
 
     _create: function () {
         var obj = this;
         var o = obj.options;
-        var setting = GetSetting(o.uuidSetting);
+        var setting = GetSetting(o);
 
         var divReport = $('<div style="padding: 10px;">');
 
         divReport.Report_Dftr({
             uuidSetting: o.uuidSetting,
             baseValue: o.baseValue,
-            showControl: setting.showControl,
-            getAutoData: setting.getAutoData,
+            showControl: o.showControl == null ? setting.showControl : o.showControl,
+            getAutoData: o.getAutoData == null ? setting.getAutoData : o.getAutoData,
             viewData: setting.viewData,
+            controlData: o.controlData,
+            objects: o.objects,
         });
 
         o.element = divReport;
         BoxDashbord_Create(obj, null, divReport);
+        //obj._trigger("CreateElement", event, obj);
     },
 
     _Refresh: function () {
@@ -563,6 +602,864 @@ $.widget("ui.D_Dftr", {
         var obj = this;
         var o = obj.options.element;
         o.Report_Dftr("ShowColumns");
+    },
+
+});
+
+$.widget("ui.D_ADocR", {
+    options: {
+        id: null,
+        uuidSetting: null,
+        caption: null,
+        position: [],
+        baseValue: [],
+        visible: true,
+        data: null,
+        element: null,
+        headButton: [f_Print, f_Columns, f_Setting],
+        controlData: null,
+        objects: null,
+        getAutoData: null,
+        showControl: null,
+    },
+
+    _create: function () {
+        var obj = this;
+        var o = obj.options;
+        var setting = GetSetting(o);
+
+        var divReport = $('<div style="padding: 10px;">');
+
+        divReport.Report_ADocR({
+            uuidSetting: o.uuidSetting,
+            baseValue: o.baseValue,
+            showControl: o.showControl == null ? setting.showControl : o.showControl,
+            getAutoData: o.getAutoData == null ? setting.getAutoData : o.getAutoData,
+            viewData: setting.viewData,
+            controlData: o.controlData,
+            objects: o.objects,
+        });
+
+        o.element = divReport;
+        BoxDashbord_Create(obj, null, divReport);
+        //obj._trigger("CreateElement", event, obj);
+    },
+
+    _Refresh: function () {
+        var obj = this;
+        var o = obj.options.element;
+        o.Report_ADocR("Refresh");
+    },
+
+    _Setting: function () {
+        var obj = this;
+        var o = obj.options.element;
+        o.Report_ADocR("ShowSetting");
+    },
+
+
+    _ShowControl: function () {
+        var obj = this;
+        var o = obj.options.element;
+        o.Report_ADocR("ShowControl");
+    },
+
+    _ShowPrint: function () {
+        var obj = this;
+        var o = obj.options.element;
+        o.Report_ADocR("ShowPrint");
+    },
+
+    _ShowColumns: function () {
+        var obj = this;
+        var o = obj.options.element;
+        o.Report_ADocR("ShowColumns");
+    },
+
+});
+
+
+$.widget("ui.D_AGMkz", {
+    options: {
+        id: null,
+        uuidSetting: null,
+        caption: null,
+        position: [],
+        baseValue: [],
+        visible: true,
+        data: null,
+        element: null,
+        headButton: [f_Print, f_Columns, f_Setting],
+        controlData: null,
+        objects: null,
+        getAutoData: null,
+        showControl: null,
+    },
+
+    _create: function () {
+        var obj = this;
+        var o = obj.options;
+
+        var setting = GetSetting(o);
+
+        var divReport = $('<div style="padding: 5px;">');
+        divReport.Report_AGMkz({
+            uuidSetting: o.uuidSetting,
+            baseValue: o.baseValue,
+            showControl: o.showControl == null ? setting.showControl : o.showControl,
+            getAutoData: o.getAutoData == null ? setting.getAutoData : o.getAutoData,
+            viewData: setting.viewData,
+            controlData: o.controlData,
+            objects: o.objects,
+        });
+
+        o.element = divReport;
+        BoxDashbord_Create(obj, null, divReport);
+    },
+
+
+    _Refresh: function () {
+        var obj = this;
+        var o = obj.options.element;
+        o.Report_AGMkz("Refresh");
+    },
+
+    _Setting: function () {
+        var obj = this;
+        var o = obj.options.element;
+        o.Report_AGMkz("ShowSetting");
+    },
+
+    _ShowControl: function () {
+        var obj = this;
+        var o = obj.options.element;
+        o.Report_AGMkz("ShowControl");
+    },
+
+    _ShowPrint: function () {
+        var obj = this;
+        var o = obj.options.element;
+        o.Report_AGMkz("ShowPrint");
+    },
+
+    _ShowColumns: function () {
+        var obj = this;
+        var o = obj.options.element;
+        o.Report_AGMkz("ShowColumns");
+    },
+
+});
+
+$.widget("ui.D_AGOpr", {
+    options: {
+        id: null,
+        uuidSetting: null,
+        caption: null,
+        position: [],
+        baseValue: [],
+        visible: true,
+        data: null,
+        element: null,
+        headButton: [f_Print, f_Columns, f_Setting],
+        controlData: null,
+        objects: null,
+        getAutoData: null,
+        showControl: null,
+    },
+
+    _create: function () {
+        var obj = this;
+        var o = obj.options;
+
+        var setting = GetSetting(o);
+
+        var divReport = $('<div style="padding: 5px;">');
+        divReport.Report_AGOpr({
+            uuidSetting: o.uuidSetting,
+            baseValue: o.baseValue,
+            showControl: o.showControl == null ? setting.showControl : o.showControl,
+            getAutoData: o.getAutoData == null ? setting.getAutoData : o.getAutoData,
+            viewData: setting.viewData,
+            controlData: o.controlData,
+            objects: o.objects,
+        });
+
+        o.element = divReport;
+        BoxDashbord_Create(obj, null, divReport);
+    },
+
+
+    _Refresh: function () {
+        var obj = this;
+        var o = obj.options.element;
+        o.Report_AGOpr("Refresh");
+    },
+
+    _Setting: function () {
+        var obj = this;
+        var o = obj.options.element;
+        o.Report_AGOpr("ShowSetting");
+    },
+
+    _ShowControl: function () {
+        var obj = this;
+        var o = obj.options.element;
+        o.Report_AGOpr("ShowControl");
+    },
+
+    _ShowPrint: function () {
+        var obj = this;
+        var o = obj.options.element;
+        o.Report_AGOpr("ShowPrint");
+    },
+
+    _ShowColumns: function () {
+        var obj = this;
+        var o = obj.options.element;
+        o.Report_AGOpr("ShowColumns");
+    },
+
+});
+
+$.widget("ui.D_GrdZAcc", {
+    options: {
+        id: null,
+        uuidSetting: null,
+        caption: null,
+        position: [],
+        baseValue: [],
+        visible: true,
+        data: null,
+        element: null,
+        headButton: [f_Print, f_Columns, f_Setting],
+        controlData: null,
+        objects: null,
+        getAutoData: null,
+        showControl: null,
+    },
+
+    _create: function () {
+        var obj = this;
+        var o = obj.options;
+
+        var setting = GetSetting(o);
+
+        var divReport = $('<div style="padding: 5px;">');
+        divReport.Report_GrdZAcc({
+            uuidSetting: o.uuidSetting,
+            baseValue: o.baseValue,
+            showControl: o.showControl == null ? setting.showControl : o.showControl,
+            getAutoData: o.getAutoData == null ? setting.getAutoData : o.getAutoData,
+            viewData: setting.viewData,
+            controlData: o.controlData,
+            objects: o.objects,
+        });
+
+        o.element = divReport;
+        BoxDashbord_Create(obj, null, divReport);
+    },
+
+
+    _Refresh: function () {
+        var obj = this;
+        var o = obj.options.element;
+        o.Report_GrdZAcc("Refresh");
+    },
+
+    _Setting: function () {
+        var obj = this;
+        var o = obj.options.element;
+        o.Report_GrdZAcc("ShowSetting");
+    },
+
+    _ShowControl: function () {
+        var obj = this;
+        var o = obj.options.element;
+        o.Report_GrdZAcc("ShowControl");
+    },
+
+    _ShowPrint: function () {
+        var obj = this;
+        var o = obj.options.element;
+        o.Report_GrdZAcc("ShowPrint");
+    },
+
+    _ShowColumns: function () {
+        var obj = this;
+        var o = obj.options.element;
+        o.Report_GrdZAcc("ShowColumns");
+    },
+
+});
+
+$.widget("ui.D_KhlAcc", {
+    options: {
+        id: null,
+        uuidSetting: null,
+        caption: null,
+        position: [],
+        baseValue: [],
+        visible: true,
+        data: null,
+        element: null,
+        headButton: [f_Print, f_Columns, f_Setting],
+        controlData: null,
+        objects: null,
+        getAutoData: null,
+        showControl: null,
+    },
+
+    _create: function () {
+        var obj = this;
+        var o = obj.options;
+
+        var setting = GetSetting(o);
+
+        var divReport = $('<div style="padding: 5px;">');
+        divReport.Report_KhlAcc({
+            uuidSetting: o.uuidSetting,
+            baseValue: o.baseValue,
+            showControl: o.showControl == null ? setting.showControl : o.showControl,
+            getAutoData: o.getAutoData == null ? setting.getAutoData : o.getAutoData,
+            viewData: setting.viewData,
+            controlData: o.controlData,
+            objects: o.objects,
+        });
+
+        o.element = divReport;
+        BoxDashbord_Create(obj, null, divReport);
+    },
+
+
+    _Refresh: function () {
+        var obj = this;
+        var o = obj.options.element;
+        o.Report_KhlAcc("Refresh");
+    },
+
+    _Setting: function () {
+        var obj = this;
+        var o = obj.options.element;
+        o.Report_KhlAcc("ShowSetting");
+    },
+
+    _ShowControl: function () {
+        var obj = this;
+        var o = obj.options.element;
+        o.Report_KhlAcc("ShowControl");
+    },
+
+    _ShowPrint: function () {
+        var obj = this;
+        var o = obj.options.element;
+        o.Report_KhlAcc("ShowPrint");
+    },
+
+    _ShowColumns: function () {
+        var obj = this;
+        var o = obj.options.element;
+        o.Report_KhlAcc("ShowColumns");
+    },
+
+});
+
+$.widget("ui.D_KhlZAcc", {
+    options: {
+        id: null,
+        uuidSetting: null,
+        caption: null,
+        position: [],
+        baseValue: [],
+        visible: true,
+        data: null,
+        element: null,
+        headButton: [f_Print, f_Columns, f_Setting],
+        controlData: null,
+        objects: null,
+        getAutoData: null,
+        showControl: null,
+    },
+
+    _create: function () {
+        var obj = this;
+        var o = obj.options;
+
+        var setting = GetSetting(o);
+
+        var divReport = $('<div style="padding: 5px;">');
+        divReport.Report_KhlZAcc({
+            uuidSetting: o.uuidSetting,
+            baseValue: o.baseValue,
+            showControl: o.showControl == null ? setting.showControl : o.showControl,
+            getAutoData: o.getAutoData == null ? setting.getAutoData : o.getAutoData,
+            viewData: setting.viewData,
+            controlData: o.controlData,
+            objects: o.objects,
+        });
+
+        o.element = divReport;
+        BoxDashbord_Create(obj, null, divReport);
+    },
+
+
+    _Refresh: function () {
+        var obj = this;
+        var o = obj.options.element;
+        o.Report_KhlZAcc("Refresh");
+    },
+
+    _Setting: function () {
+        var obj = this;
+        var o = obj.options.element;
+        o.Report_KhlZAcc("ShowSetting");
+    },
+
+    _ShowControl: function () {
+        var obj = this;
+        var o = obj.options.element;
+        o.Report_KhlZAcc("ShowControl");
+    },
+
+    _ShowPrint: function () {
+        var obj = this;
+        var o = obj.options.element;
+        o.Report_KhlZAcc("ShowPrint");
+    },
+
+    _ShowColumns: function () {
+        var obj = this;
+        var o = obj.options.element;
+        o.Report_KhlZAcc("ShowColumns");
+    },
+
+});
+
+$.widget("ui.D_TrzFKala", {
+    options: {
+        id: null,
+        uuidSetting: null,
+        caption: null,
+        isForosh: null,
+        position: [],
+        baseValue: [],
+        visible: true,
+        data: null,
+        element: null,
+        headButton: [f_Print, f_Columns, f_Setting],
+        controlData: null,
+        objects: null,
+        getAutoData: null,
+        showControl: null,
+    },
+
+    _create: function () {
+        var obj = this;
+        var o = obj.options;
+
+        var setting = GetSetting(o);
+
+        var divReport = $('<div style="padding: 5px;">');
+        divReport.Report_TrzFKala({
+            uuidSetting: o.uuidSetting,
+            baseValue: o.baseValue,
+            showControl: o.showControl == null ? setting.showControl : o.showControl,
+            getAutoData: o.getAutoData == null ? setting.getAutoData : o.getAutoData,
+            viewData: setting.viewData,
+            isForosh: o.isForosh,
+            controlData: o.controlData,
+            objects: o.objects,
+        });
+
+        o.element = divReport;
+        BoxDashbord_Create(obj, null, divReport);
+    },
+
+
+    _Refresh: function () {
+        var obj = this;
+        var o = obj.options.element;
+        o.Report_TrzFKala("Refresh");
+    },
+
+    _Setting: function () {
+        var obj = this;
+        var o = obj.options.element;
+        o.Report_TrzFKala("ShowSetting");
+    },
+
+    _ShowControl: function () {
+        var obj = this;
+        var o = obj.options.element;
+        o.Report_TrzFKala("ShowControl");
+    },
+
+    _ShowPrint: function () {
+        var obj = this;
+        var o = obj.options.element;
+        o.Report_TrzFKala("ShowPrint");
+    },
+
+    _ShowColumns: function () {
+        var obj = this;
+        var o = obj.options.element;
+        o.Report_TrzFKala("ShowColumns");
+    },
+
+});
+
+$.widget("ui.D_FDocR", {
+    options: {
+        id: null,
+        uuidSetting: null,
+        caption: null,
+        isForosh: null,
+        position: [],
+        baseValue: [],
+        visible: true,
+        data: null,
+        element: null,
+        headButton: [f_Print, f_Columns, f_Setting],
+        controlData: null,
+        objects: null,
+        getAutoData: null,
+        showControl: null,
+    },
+
+    _create: function () {
+        var obj = this;
+        var o = obj.options;
+
+        var setting = GetSetting(o);
+
+        var divReport = $('<div style="padding: 5px;">');
+        divReport.Report_FDocR({
+            uuidSetting: o.uuidSetting,
+            baseValue: o.baseValue,
+            showControl: o.showControl == null ? setting.showControl : o.showControl,
+            getAutoData: o.getAutoData == null ? setting.getAutoData : o.getAutoData,
+            viewData: setting.viewData,
+            isForosh: o.isForosh,
+            controlData: o.controlData,
+            objects: o.objects,
+        });
+
+        o.element = divReport;
+        BoxDashbord_Create(obj, null, divReport);
+    },
+
+
+    _Refresh: function () {
+        var obj = this;
+        var o = obj.options.element;
+        o.Report_FDocR("Refresh");
+    },
+
+    _Setting: function () {
+        var obj = this;
+        var o = obj.options.element;
+        o.Report_FDocR("ShowSetting");
+    },
+
+    _ShowControl: function () {
+        var obj = this;
+        var o = obj.options.element;
+        o.Report_FDocR("ShowControl");
+    },
+
+    _ShowPrint: function () {
+        var obj = this;
+        var o = obj.options.element;
+        o.Report_FDocR("ShowPrint");
+    },
+
+    _ShowColumns: function () {
+        var obj = this;
+        var o = obj.options.element;
+        o.Report_FDocR("ShowColumns");
+    },
+
+});
+
+$.widget("ui.D_Krdx", {
+    options: {
+        id: null,
+        uuidSetting: null,
+        caption: null,
+        position: [],
+        baseValue: [],
+        visible: true,
+        data: null,
+        element: null,
+        headButton: [f_Print, f_Columns, f_Setting],
+        controlData: null,
+        objects: null,
+        getAutoData: null,
+        showControl: null,
+    },
+
+    _create: function () {
+        var obj = this;
+        var o = obj.options;
+
+        var setting = GetSetting(o);
+
+        var divReport = $('<div style="padding: 5px;">');
+        divReport.Report_Krdx({
+            uuidSetting: o.uuidSetting,
+            baseValue: o.baseValue,
+            showControl: o.showControl == null ? setting.showControl : o.showControl,
+            getAutoData: o.getAutoData == null ? setting.getAutoData : o.getAutoData,
+            viewData: setting.viewData,
+            controlData: o.controlData,
+            objects: o.objects,
+        });
+
+        o.element = divReport;
+        BoxDashbord_Create(obj, null, divReport);
+    },
+
+
+    _Refresh: function () {
+        var obj = this;
+        var o = obj.options.element;
+        o.Report_Krdx("Refresh");
+    },
+
+    _Setting: function () {
+        var obj = this;
+        var o = obj.options.element;
+        o.Report_Krdx("ShowSetting");
+    },
+
+    _ShowControl: function () {
+        var obj = this;
+        var o = obj.options.element;
+        o.Report_Krdx("ShowControl");
+    },
+
+    _ShowPrint: function () {
+        var obj = this;
+        var o = obj.options.element;
+        o.Report_Krdx("ShowPrint");
+    },
+
+    _ShowColumns: function () {
+        var obj = this;
+        var o = obj.options.element;
+        o.Report_Krdx("ShowColumns");
+    },
+
+});
+
+$.widget("ui.D_TrzIKala", {
+    options: {
+        id: null,
+        uuidSetting: null,
+        caption: null,
+        position: [],
+        baseValue: [],
+        visible: true,
+        data: null,
+        element: null,
+        headButton: [f_Print, f_Columns, f_Setting],
+        controlData: null,
+        objects: null,
+        getAutoData: null,
+        showControl: null,
+    },
+
+    _create: function () {
+        var obj = this;
+        var o = obj.options;
+
+        var setting = GetSetting(o);
+
+        var divReport = $('<div style="padding: 5px;">');
+        divReport.Report_TrzIKala({
+            uuidSetting: o.uuidSetting,
+            baseValue: o.baseValue,
+            showControl: o.showControl == null ? setting.showControl : o.showControl,
+            getAutoData: o.getAutoData == null ? setting.getAutoData : o.getAutoData,
+            viewData: setting.viewData,
+            controlData: o.controlData,
+            objects: o.objects,
+        });
+
+        o.element = divReport;
+        BoxDashbord_Create(obj, null, divReport);
+    },
+
+
+    _Refresh: function () {
+        var obj = this;
+        var o = obj.options.element;
+        o.Report_TrzIKala("Refresh");
+    },
+
+    _Setting: function () {
+        var obj = this;
+        var o = obj.options.element;
+        o.Report_TrzIKala("ShowSetting");
+    },
+
+    _ShowControl: function () {
+        var obj = this;
+        var o = obj.options.element;
+        o.Report_TrzIKala("ShowControl");
+    },
+
+    _ShowPrint: function () {
+        var obj = this;
+        var o = obj.options.element;
+        o.Report_TrzIKala("ShowPrint");
+    },
+
+    _ShowColumns: function () {
+        var obj = this;
+        var o = obj.options.element;
+        o.Report_TrzIKala("ShowColumns");
+    },
+
+});
+
+$.widget("ui.D_TrzIKalaExf", {
+    options: {
+        id: null,
+        uuidSetting: null,
+        caption: null,
+        position: [],
+        baseValue: [],
+        visible: true,
+        data: null,
+        element: null,
+        headButton: [f_Print, f_Columns, f_Setting],
+        controlData: null,
+        objects: null,
+        getAutoData: null,
+        showControl: null,
+    },
+
+    _create: function () {
+        var obj = this;
+        var o = obj.options;
+
+        var setting = GetSetting(o);
+
+        var divReport = $('<div style="padding: 5px;">');
+        divReport.Report_TrzIKalaExf({
+            uuidSetting: o.uuidSetting,
+            baseValue: o.baseValue,
+            showControl: o.showControl == null ? setting.showControl : o.showControl,
+            getAutoData: o.getAutoData == null ? setting.getAutoData : o.getAutoData,
+            viewData: setting.viewData,
+            controlData: o.controlData,
+            objects: o.objects,
+        });
+
+        o.element = divReport;
+        BoxDashbord_Create(obj, null, divReport);
+    },
+
+
+    _Refresh: function () {
+        var obj = this;
+        var o = obj.options.element;
+        o.Report_TrzIKalaExf("Refresh");
+    },
+
+    _Setting: function () {
+        var obj = this;
+        var o = obj.options.element;
+        o.Report_TrzIKalaExf("ShowSetting");
+    },
+
+    _ShowControl: function () {
+        var obj = this;
+        var o = obj.options.element;
+        o.Report_TrzIKalaExf("ShowControl");
+    },
+
+    _ShowPrint: function () {
+        var obj = this;
+        var o = obj.options.element;
+        o.Report_TrzIKalaExf("ShowPrint");
+    },
+
+    _ShowColumns: function () {
+        var obj = this;
+        var o = obj.options.element;
+        o.Report_TrzIKalaExf("ShowColumns");
+    },
+
+});
+
+$.widget("ui.D_IDocR", {
+    options: {
+        id: null,
+        uuidSetting: null,
+        caption: null,
+        position: [],
+        baseValue: [],
+        visible: true,
+        data: null,
+        element: null,
+        headButton: [f_Print, f_Columns, f_Setting],
+        controlData: null,
+        objects: null,
+        getAutoData: null,
+        showControl: null,
+    },
+
+    _create: function () {
+        var obj = this;
+        var o = obj.options;
+
+        var setting = GetSetting(o);
+
+        var divReport = $('<div style="padding: 5px;">');
+        divReport.Report_IDocR({
+            uuidSetting: o.uuidSetting,
+            baseValue: o.baseValue,
+            showControl: o.showControl == null ? setting.showControl : o.showControl,
+            getAutoData: o.getAutoData == null ? setting.getAutoData : o.getAutoData,
+            viewData: setting.viewData,
+            controlData: o.controlData,
+            objects: o.objects,
+        });
+
+        o.element = divReport;
+        BoxDashbord_Create(obj, null, divReport);
+    },
+
+
+    _Refresh: function () {
+        var obj = this;
+        var o = obj.options.element;
+        o.Report_IDocR("Refresh");
+    },
+
+    _Setting: function () {
+        var obj = this;
+        var o = obj.options.element;
+        o.Report_IDocR("ShowSetting");
+    },
+
+    _ShowControl: function () {
+        var obj = this;
+        var o = obj.options.element;
+        o.Report_IDocR("ShowControl");
+    },
+
+    _ShowPrint: function () {
+        var obj = this;
+        var o = obj.options.element;
+        o.Report_IDocR("ShowPrint");
+    },
+
+    _ShowColumns: function () {
+        var obj = this;
+        var o = obj.options.element;
+        o.Report_IDocR("ShowColumns");
     },
 
 });

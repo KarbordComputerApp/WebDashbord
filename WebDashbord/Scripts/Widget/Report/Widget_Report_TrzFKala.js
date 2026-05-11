@@ -1,6 +1,6 @@
-﻿$.widget("ui.Report_Dftr", {
+﻿$.widget("ui.Report_TrzFKala", {
     options: {
-        rprtId: 'Dftr',
+        rprtId: 'TrzFKala',
         uuidSetting: null,
         caption: null,
         baseValue: {
@@ -14,6 +14,7 @@
         externalModal: true,
         showControl: false,
         getAutoData: false,
+        isForosh: false,
         viewData: _viewDataFull,
         // exports
         columns: null,
@@ -33,21 +34,24 @@
         divHeader.append(h2);
 
         //Grid
-        var divGrid = $('<div> ');
+
+        var divGrid = $('<div>');
         o.objGrid = divGrid;
 
         if (o.caption != null) {
             divContent.append(divHeader);
         }
+
         var controlBody = null;
         divContent.append(obj._CreateControl());
         divContent.append(divGrid);
         obj.element.append(divContent);
 
-        var columns = getRprtCols(o.rprtId, sessionStorage.userName);
+        getRprtAllCols(o.baseValue.ace, o.baseValue.group, o.baseValue.sal, userName);
+        o.columns = getRprtCols(o.baseValue.group, o.baseValue.sal, o.rprtId, userName);
 
         var action = [
-            { code: "ADoc", name: "نمایش سند", icon: "/Content/img/view.svg" },
+            { code: "ADocR", name: "دفتر روزنامه", icon: "/Content/img/view.svg" },
         ];
 
         divGrid.Table(
@@ -57,16 +61,16 @@
                 headBtn: [],
                 headBtnDefult: [f_GetData, f_Print, f_Columns],
                 showHeadBtnDefult: false,
-                columns: columns,
-                sort: 'AccCode',
+                columns: o.columns,
+                sort: 'KalaCode',
                 sortMode: '',
                 pageCount: 0,
                 pageSize: 10,
-                keyField: 'AccCode',
+                keyField: 'KalaCode',
                 isTableFix: true,
-                keyRow: null,
+                keyRow: [],
                 radif: true,
-                sumFields: ['Bede', 'Best', 'MonBede', 'MonBest', 'MonTotal'],
+                sumFields: ['Amount1', 'Amount2', 'Amount3', 'Price', 'Discount', 'AddMinPrice1', 'AddMinPrice1', 'AddMinPrice2', 'AddMinPrice3', 'AddMinPrice4', 'AddMinPrice5', 'AddMinPrice6', 'AddMinPrice7', 'AddMinPrice8', 'AddMinPrice9', 'AddMinPrice10', 'OnlyDiscountPrice', 'FinalPrice'],
                 height: '375px',
                 striped: false,
                 action: action,
@@ -77,11 +81,10 @@
                 viewData: o.viewData,
                 deghat: param.Deghat == "" ? 0 : parseInt(param.Deghat),
                 viewDataLowTemplate: [
-                    '<td style="width:0px"><h5 data-name="AccCode">{0}</h5></td>',
-                    '<td style="padding: 10px;" ><h5 data-name="AccName" style="word-break: break-word;white-space: normal;">{0}</h5></td>',
-                    '<td style="width:0px"><h5 data-name="MonTotal" data-type="' + type_Currency + '" style="direction: ltr;text-align:end;">{0}</h5></td>',
+                    '<td style="width:0px"><h5 data-name="KalaCode">{0}</h5></td>',
+                    '<td style="padding: 10px;" ><h5 data-name="KalaName" style="word-break: break-word;white-space: normal;">{0}</h5></td>',
+                    '<td style="width:0px"><h5 data-name="FinalPrice" data-type="' + type_Currency + '" style="direction: ltr;text-align:end;">{0}</h5></td>',
                 ],
-
                 ActionHeadClick: function (e, records) {
                     var name = records.actionName;
                     var items = records.data;
@@ -95,12 +98,12 @@
                     o.columns = records.columns;
                     o.data = records.data;
                 },
-            });
+            },
+        );
         CreateObjectPrint(obj);
         CreateObjectSetting(obj);
         if (o.getAutoData) obj._GetData();
     },
-
 
     _CreateControl: function () {
         var obj = this;
@@ -127,35 +130,44 @@
 
 
         var divCol = $('<div class="form-inline col-lg-6 col-md-6 col-sm-12 col-xs-12" >');
-        c.dispBands = $('<div class="col-md-6">');
-        c.naghl = $('<div class="col-md-6">');
-        divCol.append(c.dispBands);
-        divCol.append(c.naghl);
+        c.modeCode = $('<div class="col-md-6">');
+        divCol.append(c.modeCode);
         divRow.append(divCol);
 
 
         var divCol = $('<div class="form-inline col-lg-12 col-md-12 col-sm-12 col-xs-12">');
-        c.acc = $('<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">');
-        c.aMode = $('<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">');
-        c.status = $('<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">');
+        c.status = $('<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">');
+        c.inv = $('<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">');
+        c.kGru = $('<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">');
+        c.kala = $('<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">');
 
-        divCol.append(c.acc);
-        divCol.append(c.aMode);
+
         divCol.append(c.status);
+        divCol.append(c.inv);
+        divCol.append(c.kGru);
+        divCol.append(c.kala);
         divRow.append(divCol);
 
-        var divCol = $('<div class="form-inline col-lg-12 col-md-12 col-sm-12 col-xs-12"">');
-        c.mkz = $('<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">');
-        c.opr = $('<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">');
+        var divCol = $('<div class="form-inline col-lg-12 col-md-12 col-sm-12 col-xs-12">');
+        c.cGru = $('<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">');
+        c.cust = $('<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">');
+        c.mkz = $('<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">');
+        c.opr = $('<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">');
 
-        var divBtn = $('<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">');
+        divCol.append(c.cGru);
+        divCol.append(c.cust);
+        divCol.append(c.mkz);
+        divCol.append(c.opr);
+        divRow.append(divCol);
+
+
+        var divCol = $('<div class="form-inline col-lg-12 col-md-12 col-sm-12 col-xs-12"">');
+        var divBtn = $('<div class="col-lg-12 col-md-3 col-sm-12 col-xs-12">');
         var divBtn1 = $('<div class="pull-left">');
         c.btnReport = $('<button type="button" class="btn btn-primary">گزارش گیری</button>');
         divBtn1.append(c.btnReport);
         divBtn.append(divBtn1);
 
-        divCol.append(c.mkz);
-        divCol.append(c.opr);
         divCol.append(divBtn);
         divRow.append(divCol);
 
@@ -164,9 +176,38 @@
         return divControl;
     },
 
+
     _SetObjects: function (param) {
         var obj = this;
         var o = obj.options;
+
+        var itemsModeCode = null;
+        var selectedModeCode = null;
+        if (o.isForosh) {
+            itemsModeCode = [
+                { key: "SFCT", value: "فاکتور فروش" },
+                { key: "SPFCT", value: "پیش فاکتور فروش" },
+                { key: "SRFCT", value: "برگشت از فروش" },
+                { key: "SORD", value: "سفارش فروش" },
+                { key: "SHVL", value: "حواله فروش" },
+                { key: "SEXT", value: "برگه خروج" },
+                { key: "SFCT*SRFCT", value: "فاکتور فروش با احتساب برگشتی" }
+            ];
+            selectedModeCode = "SFCT*SRFCT";
+            modeGru = 2;
+        }
+        else {
+            itemsModeCode = [
+                { key: "PFCT", value: "فاکتور خرید" },
+                { key: "PPFCT", value: "پیش فاکتور خرید" },
+                { key: "PORD", value: "سفارش خرید" },
+                { key: "PRFCT", value: "برگشت از خرید" },
+                { key: "PFCT*PRFCT", value: "فاکتور خرید با احتساب برگشتی" }
+            ];
+            selectedModeCode = "PFCT*PRFCT";
+            modeGru = 1;
+        }
+
 
         object = {
             fromDate: {
@@ -195,41 +236,12 @@
                 dataType: type_BigInt,
                 caption: "تا شماره",
             },
-            dispBands: {
+            modeCode: {
                 element: null,
-                value: -1,
+                value: selectedModeCode,
                 type: "select",
-                caption: "نمایش بند ها",
-                items: [{ key: '-1', value: "ریز حساب ها" }, { key: 1, value: "حساب های کل" }, { key: 2, value: "حساب های معین" }],
-            },
-            naghl: {
-                element: null,
-                value: 0,
-                type: "select",
-                caption: "نقل از قبل",
-                items: [{ key: 0, value: "محاسبه نشود" }, { key: 1, value: "محاسبه شود" }],
-            },
-
-            acc: {
-                id: d_acc,
-                type: "Selected",
-                caption: 'حساب',
-                keyField: 'Code',
-                keyCaption: 'Name',
-                keyRow: [{ column: 'Level', value: 1, act: '==' }],
-                baseValue: o.baseValue,
-                param: { mode: 0 },
-                value: ""
-            },
-            aMode: {
-                id: d_aMode,
-                type: "Select_Entesab",
-                caption: "نوع سند",
-                keyField: 'Code',
-                keyCaption: 'Name',
-                baseValue: o.baseValue,
-                selected: [],
-                value: ""
+                caption: "نوع فاکتور",
+                items: itemsModeCode,
             },
             status: {
                 id: d_status,
@@ -238,10 +250,81 @@
                 keyField: 'Status',
                 keyCaption: '',
                 baseValue: o.baseValue,
-                param: { progName: getProgName('A') },
-                selected: [],
                 value: "تصویب*تایید*موقت",
+                param: { progName: getProgName('S') },
+                selected: [{ code: 'تصویب', name: '' }, { code: 'تایید', name: '' }, { code: 'موقت', name: '' }]
             },
+            inv: {
+                id: d_inv,
+                type: "Select_Entesab",
+                caption: 'انبارها',
+                keyField: 'Code',
+                keyCaption: 'Name',
+                baseValue: o.baseValue,
+                value: "",
+                selected: [],
+            },
+            kGru: {
+                id: d_kGru,
+                type: "Select_Entesab",
+                caption: 'گروه کالا',
+                keyField: 'Code',
+                keyCaption: 'Name',
+                keyRow: [{ column: 'Level', value: 1, act: '==' }],
+                baseValue: o.baseValue,
+                value: "",
+                param: { Mode: 0 },
+                selected: [],
+            },
+            kala: {
+                id: d_kala,
+                type: "Select_Entesab",
+                caption: 'کالا',
+                keyField: 'Code',
+                keyCaption: 'Name',
+                baseValue: o.baseValue,
+                value: "",
+                param: {
+                    withimage: false,
+                    updatedate: null,
+                    mode: 0,
+                    kalaCode: "",
+                },
+                selected: [],
+            },
+
+            cGru: {
+                id: d_cGru,
+                type: "Select_Entesab",
+                caption: 'گروه خریدار/فروشنده',
+                keyField: 'Code',
+                keyCaption: 'Name',
+                keyRow: [{ column: 'Level', value: 1, act: '==' }],
+                baseValue: o.baseValue,
+                value: "",
+                param: {
+                    mode: 0,
+                    modeGru: modeGru,
+                },
+                selected: [],
+            },
+            cust: {
+                id: d_cust,
+                type: "Select_Entesab",
+                caption: 'خریدار فروشنده',
+                keyField: 'Code',
+                keyCaption: 'Name',
+                baseValue: o.baseValue,
+                value: "",
+                param: {
+                    forSale: null,
+                    updatedate: null,
+                    mode: 0,
+                    custCode: ''
+                },
+                selected: [],
+            },
+
             mkz: {
                 id: d_mkz,
                 type: "Select_Entesab",
@@ -249,7 +332,6 @@
                 keyField: 'Code',
                 keyCaption: 'Name',
                 baseValue: o.baseValue,
-                selected: [],
                 value: ""
             },
             opr: {
@@ -259,32 +341,11 @@
                 keyField: 'Code',
                 keyCaption: 'Name',
                 baseValue: o.baseValue,
-                selected: [],
                 value: ""
             },
         }
-
-        if (o.objects != null) {
-            object.acc.value = o.objects.userData.AccCode;
-            object.fromDate = o.objects.fromDate;
-            object.toDate = o.objects.toDate;
-            object.aMode = o.objects.aMode;
-            object.mkz = o.objects.mkz;
-            if (o.objects.userData.MkzCode != null) {
-                object.mkz.value = o.objects.userData.MkzCode;
-                object.mkz.selected = [{ code: o.objects.userData.MkzCode, name: o.objects.userData.MkzName }];
-            }
-            
-            object.opr = o.objects.opr;
-        }
-
-        if (o.controlData != null) {
-            object.acc.value = o.controlData.acc;
-        }
-
         return object;
     },
-
 
     _BuildControl: function (c) {
         var obj = this;
@@ -299,39 +360,27 @@
         CreateObjectDate(c, objects, 'toDate');
         CreateObjectInput(c, objects, 'fromNumber');
         CreateObjectInput(c, objects, 'toNumber');
-        c.dispBands.ComboBox(
+        c.modeCode.ComboBox(
             {
-                caption: objects.dispBands.caption,
-                items: objects.dispBands.items,
-                value: objects.dispBands.value,
-                sizeSelect: 7,
+                caption: objects.modeCode.caption,
+                items: objects.modeCode.items,
+                value: objects.modeCode.value,
+                sizeSelect: 9,
                 Create: function (e, record) {
-                    objects.dispBands.element = record.input[0];
+                    objects.modeCode.element = record.input[0];
                 },
                 Change: function (e, record) {
-                    objects.dispBands.value = record.value;
-                    c.acc.Select("option", "filter", [{ key: "Level", value: objects.dispBands.value, act: '==' }]);
+                    objects.modeCode.value = record.value;
                 },
             },
         );
-
-        c.naghl.ComboBox(
-            {
-                caption: objects.naghl.caption,
-                items: objects.naghl.items,
-                value: objects.naghl.value,
-                Create: function (e, record) {
-                    objects.naghl.element = record.input[0];
-                },
-                Change: function (e, record) {
-                    objects.naghl.value = record.value;
-                },
-            },
-        );
-
-        CreateObjectSelect(c, objects, 'acc', [{ key: "Level", value: objects.dispBands.value, act: '==' }], o.externalModal, false);
-        CreateObjectSelectEntesab(c, objects, 'aMode', null, o.externalModal);
         CreateObjectSelectEntesab(c, objects, 'status', null, o.externalModal);
+        CreateObjectSelectEntesab(c, objects, 'inv', null, o.externalModal);
+        CreateObjectSelectEntesab(c, objects, 'kGru', null, o.externalModal, false);
+        CreateObjectSelectEntesab(c, objects, 'kala', null, o.externalModal);
+
+        CreateObjectSelectEntesab(c, objects, 'cGru', null, o.externalModal, false);
+        CreateObjectSelectEntesab(c, objects, 'cust', null, o.externalModal);
         CreateObjectSelectEntesab(c, objects, 'mkz', null, o.externalModal);
         CreateObjectSelectEntesab(c, objects, 'opr', null, o.externalModal);
 
@@ -342,40 +391,42 @@
         var o = obj.options;
         var data = o.objects;
 
-        if (data.acc.value == "") {
-            return showNotification(translate('حساب را انتخاب کنید'), 0);
-        }
+        var modeCode = data.modeCode.value.split("*");
+        var modeCode1 = modeCode[0];
+        var modeCode2 = modeCode[1];
+        if (modeCode.length == 1)
+            modeCode2 = '';
 
         var object = {
             azTarikh: data.fromDate.value.toEnglishDigit(),
             taTarikh: data.toDate.value.toEnglishDigit(),
             azShomarh: data.fromNumber.value,
             taShomarh: data.toNumber.value,
-            AccCode: data.acc.value,
-            AModeCode: data.aMode.value,
-            StatusCode: data.status.value,
+            ModeCode1: modeCode1,
+            ModeCode2: modeCode2,
+            CGruCode: data.cGru.value,
+            CustCode: data.cust.value,
+            InvCode: data.inv.value,
+            KGruCode: data.kGru.value,
+            KalaCode: data.kala.value,
             MkzCode: data.mkz.value,
             OprCode: data.opr.value,
-            DispBands: data.dispBands.value < 0 ? 0 : data.dispBands.value,
-            JamRooz: 0,
-            Naghl: data.naghl.value,
+            StatusCode: data.status.value,
+            ZeroValue: "0"
         };
-        var uri = server + '/api/ReportAcc/Dftr/' + o.baseValue.ace + '/' + o.baseValue.sal + '/' + o.baseValue.group;
+
+
+
+        var uri = server + '/api/ReportFct/TrzFKala/' + o.baseValue.ace + '/' + o.baseValue.sal + '/' + o.baseValue.group;
         ajaxFunction(uri, 'POST', object, true).done(function (response) {
             o.controlData = object;
             o.data = response;
-            //o.objGrid.Table("option", "controlData", object);
+            o.objGrid.Table("option", "controlData", object);
             o.objGrid.Table("option", "data", response);
             o.objGrid.Table("RefreshTable");
-
-            var uuid = o.uuidSetting;
-            var itemSetting = dashbordData.filter(c => c.uuid == uuid);
-            if (itemSetting.length > 0) {
-                itemSetting[0]["controlData"] = object;
-            }
         });
-
     },
+
 
 
     Refresh: function () {

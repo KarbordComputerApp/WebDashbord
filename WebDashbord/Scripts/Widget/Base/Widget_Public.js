@@ -1,5 +1,5 @@
 ﻿var baseData = {};
-
+var objectDashbord = [];
 
 const d_inv = 'Inv';
 const d_kGru = 'KGru';
@@ -9,8 +9,14 @@ const d_cust = 'Cust';
 const d_opr = 'Opr';
 const d_mkz = 'Mkz';
 const d_acc = 'Acc';
+const d_zGruAcc = 'ZGruAcc';
+const d_zAcc = 'ZAcc';
 const d_status = 'Status';
+const d_checkStatus = 'CheckStatus';
 const d_aMode = 'AMode';
+const d_iMode = 'IMode';
+const d_thvl = 'Thvl';
+const d_tGru = 'TGru';
 
 const type_Farsi = 1;
 const type_En = 2;
@@ -45,7 +51,7 @@ const length_Float = 19;
 const length_Date = 10;
 const length_Max = 250;
 
-
+const positionGrid_Defult = { x: 0, y: 0, w: 4, h: 5 };
 
 const color_Radif = "#d9d9d9";
 const color_RowSum = "#e8964d";//"#e37d228f";
@@ -55,6 +61,7 @@ const color_RowKey = "#f5efeb";
 const mode_Sort_DESC = 'DESC';
 
 const f_Columns = 'Columns';
+const f_Report = 'Report';
 const f_Control = 'Control';
 const f_GetData = 'GetData';
 const f_Print = 'Print';
@@ -92,6 +99,12 @@ var columns_Type = [
 var columns_TypeStatus = [
     { Code: 'Status', Name: 'نام', Type: type_Farsi, Visible: 1 }
 ];
+
+var columns_TypeCheckStatus = [
+    { Code: 'Code', Name: 'کد', Type: type_Code, Visible: 1 },
+    { Code: 'Name', Name: 'نام', Type: type_Farsi, Visible: 1 }
+];
+
 var columns_TypePrint = [
     { Code: 'code', Name: 'کد', Type: type_Number, Visible: 1 },
     { Code: 'name', Name: 'نام', Type: type_Farsi, Visible: 0 },
@@ -134,31 +147,93 @@ var dataSettingDefult = {
     ],
     TChk: [
         { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "خودکار" }, { key: 1, value: "دستی" }] },
-        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 1, value: 1, items: [{ key: 0, value: "نمایش" }, { key: 1, value: "مخفی" }] },
+        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "نمایش" }, { key: 1, value: "مخفی" }] },
         { code: "ViewData", caption: caption_ViewData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "کامل" }, { key: 1, value: "خلاصه" }] },
     ],
     TChk_Sum: [
-        { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 1, value: 1, items: [{ key: 0, value: "خودکار" }, { key: 1, value: "دستی" }] },
+        { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "خودکار" }, { key: 1, value: "دستی" }] },
         { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "نمایش" }, { key: 1, value: "مخفی" }] },
     ],
     TrzFCust: [
-        { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 1, value: 1, items: [{ key: 0, value: "خودکار" }, { key: 1, value: "دستی" }] },
+        { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "خودکار" }, { key: 1, value: "دستی" }] },
         { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "نمایش" }, { key: 1, value: "مخفی" }] },
         { code: "ViewData", caption: caption_ViewData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "کامل" }, { key: 1, value: "خلاصه" }] },
     ],
     TrzAcc: [
         { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "خودکار" }, { key: 1, value: "دستی" }] },
-        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 1, value: 1, items: [{ key: 0, value: "نمایش" }, { key: 1, value: "مخفی" }] },
+        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "نمایش" }, { key: 1, value: "مخفی" }] },
         { code: "ViewData", caption: caption_ViewData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "کامل" }, { key: 1, value: "خلاصه" }] },
     ],
     Dftr: [
-        { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 1, value: 1, items: [{ key: 0, value: "خودکار" }, { key: 1, value: "دستی" }] },
+        { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "خودکار" }, { key: 1, value: "دستی" }] },
+        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 1, value: 1, items: [{ key: 0, value: "نمایش" }, { key: 1, value: "مخفی" }] },
+        { code: "ViewData", caption: caption_ViewData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "کامل" }, { key: 1, value: "خلاصه" }] },
+    ],
+    ADocR: [
+        { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "خودکار" }, { key: 1, value: "دستی" }] },
+        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 1, value: 1, items: [{ key: 0, value: "نمایش" }, { key: 1, value: "مخفی" }] },
+        { code: "ViewData", caption: caption_ViewData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "کامل" }, { key: 1, value: "خلاصه" }] },
+    ],
+    AGMkz: [
+        { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "خودکار" }, { key: 1, value: "دستی" }] },
+        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "نمایش" }, { key: 1, value: "مخفی" }] },
+        { code: "ViewData", caption: caption_ViewData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "کامل" }, { key: 1, value: "خلاصه" }] },
+    ],
+    AGOpr: [
+        { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "خودکار" }, { key: 1, value: "دستی" }] },
+        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "نمایش" }, { key: 1, value: "مخفی" }] },
+        { code: "ViewData", caption: caption_ViewData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "کامل" }, { key: 1, value: "خلاصه" }] },
+    ],
+    GrdZAcc: [
+        { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "خودکار" }, { key: 1, value: "دستی" }] },
+        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "نمایش" }, { key: 1, value: "مخفی" }] },
+        { code: "ViewData", caption: caption_ViewData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "کامل" }, { key: 1, value: "خلاصه" }] },
+    ],
+    KhlAcc: [
+        { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "خودکار" }, { key: 1, value: "دستی" }] },
+        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "نمایش" }, { key: 1, value: "مخفی" }] },
+        { code: "ViewData", caption: caption_ViewData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "کامل" }, { key: 1, value: "خلاصه" }] },
+    ],
+    KhlZAcc: [
+        { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "خودکار" }, { key: 1, value: "دستی" }] },
+        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "نمایش" }, { key: 1, value: "مخفی" }] },
+        { code: "ViewData", caption: caption_ViewData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "کامل" }, { key: 1, value: "خلاصه" }] },
+    ],
+    TrzFKala: [
+        { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "خودکار" }, { key: 1, value: "دستی" }] },
+        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "نمایش" }, { key: 1, value: "مخفی" }] },
+        { code: "ViewData", caption: caption_ViewData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "کامل" }, { key: 1, value: "خلاصه" }] },
+    ],
+
+    FDocR: [
+        { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "خودکار" }, { key: 1, value: "دستی" }] },
+        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "نمایش" }, { key: 1, value: "مخفی" }] },
+        { code: "ViewData", caption: caption_ViewData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "کامل" }, { key: 1, value: "خلاصه" }] },
+    ],
+    Krdx: [
+        { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "خودکار" }, { key: 1, value: "دستی" }] },
+        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "نمایش" }, { key: 1, value: "مخفی" }] },
+        { code: "ViewData", caption: caption_ViewData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "کامل" }, { key: 1, value: "خلاصه" }] },
+    ],
+    TrzIKala: [
+        { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "خودکار" }, { key: 1, value: "دستی" }] },
+        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "نمایش" }, { key: 1, value: "مخفی" }] },
+        { code: "ViewData", caption: caption_ViewData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "کامل" }, { key: 1, value: "خلاصه" }] },
+    ],
+    TrzIKalaExf: [
+        { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "خودکار" }, { key: 1, value: "دستی" }] },
+        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "نمایش" }, { key: 1, value: "مخفی" }] },
+        { code: "ViewData", caption: caption_ViewData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "کامل" }, { key: 1, value: "خلاصه" }] },
+    ],
+    IDocR: [
+        { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "خودکار" }, { key: 1, value: "دستی" }] },
         { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "نمایش" }, { key: 1, value: "مخفی" }] },
         { code: "ViewData", caption: caption_ViewData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "کامل" }, { key: 1, value: "خلاصه" }] },
     ],
 
 
 };
+
 
 
 // دستور فرمت
@@ -243,10 +318,43 @@ async function GetData(o, refresh, param) {
             method = 'GET';
             uri = server + '/api/ADocData/' + o.id + '/' + o.baseValue.ace + '/' + o.baseValue.sal + '/' + o.baseValue.group;
         }
+        else if (o.id == d_iMode) {
+            uri = server + '/api/IDocData/' + o.id + '/' + o.baseValue.ace + '/' + o.baseValue.sal + '/' + o.baseValue.group;
+            var object = {
+                InOut: param.inOut,
+                Mode: param.mode,
+                UserCode: userCode,
+            }
+        }
+
+        else if (o.id == d_thvl) {
+            var object = {
+                Mode: param.mode,
+                UserCode: userCode,
+                Where: localStorage.getItem('whereThvl'),
+            }
+        }
+        else if (o.id == d_tGru) {
+            var object = {
+                Mode: param.mode,
+                UserCode: userCode,
+            }
+        }
 
         else if (o.id == d_status) {
             method = 'GET';
             uri += '/' + param.progName;
+        }
+        else if (o.id == d_checkStatus) {
+            method = 'GET';
+            uri = server + '/api/ADocData/' + o.id + '/' + o.baseValue.ace + '/' + o.baseValue.sal + '/' + o.baseValue.group + '/' + param.pDMode + '/' + param.report;
+        }
+
+        else if (o.id == d_zGruAcc) {
+            method = 'GET';
+        }
+
+        else if (o.id == d_zAcc) {
         }
 
         await ajaxFunction(uri, method, object, true).done(function (response) {
@@ -442,11 +550,11 @@ function FindSortField(list, fieldName) {
 }
 
 
-
+var idBox = 0;
 
 function BoxDashbord_Create(obj, divHead, divBody) {
     var o = obj.options;
-    var itemData = dashbordData.find(c => c.id == o.id);
+    var itemData = dashbordData.find(c => c.uuid == o.uuidSetting);
     if (itemData == null) {
         itemData = { valueControl: o.valueControl, position: o.position };
     } else {
@@ -454,8 +562,8 @@ function BoxDashbord_Create(obj, divHead, divBody) {
         o.position = itemData.position;
     }
 
-    var divCart = $('<div class="grid-stack-item ui-draggable ui-resizable ui-resizable-autohide" style ="visibility:' + //min-height: 505px; min-width: 450px; 
-        (o.visible == false ? 'hidden' : 'visible') + '" id="' + o.id + '"  gs-x="' + o.position.x + '" gs-y="' + o.position.y +
+    var divCart = $('<div class="item_dashbord grid-stack-item ui-draggable ui-resizable ui-resizable-autohide" style ="visibility:' + //min-height: 505px; min-width: 450px; 
+        (o.visible == false ? 'hidden' : 'visible') + '" idBox = "' + idBox + '" gs-x="' + o.position.x + '" gs-y="' + o.position.y +
         '" gs-w="' + o.position.w + '" gs-h="' + o.position.h + '" minW="3"  minH="3">');
     var divContent = $('<div class="grid-stack-item-content" style="background-color:white">');
 
@@ -476,7 +584,7 @@ function BoxDashbord_Create(obj, divHead, divBody) {
             else if (o.headButton[i] == f_Refresh) {
                 btn = $('<a action-name="' + o.headButton[i] + '" style="padding-left: 5px;" title="بروز رسانی"><span class="bi bi-arrow-repeat"></a>');
             }
-            else if (o.headButton[i] == f_Setting) {
+            else if (o.headButton[i] == f_Setting && o.uuidSetting > 0) {
                 btn = $('<a action-name="' + o.headButton[i] + '" style="padding-left: 5px;" title="تنظیمات"><span class="bi bi-gear"></a>');
             }
             if (btn != null) {
@@ -568,22 +676,104 @@ function BoxDashbord_Create(obj, divHead, divBody) {
     });
 
     grid.on('change', function (event, items) {
-        var element = $("#" + o.id);
-        o.position.x = parseInt($(element).attr("gs-x"));
-        o.position.y = parseInt($(element).attr("gs-y"));
-        o.position.w = parseInt($(element).attr("gs-w"));
-        o.position.h = parseInt($(element).attr("gs-h"));
-        var itemData = dashbordData.find(c => c.id == o.id);
-        itemData.position = o.position;
+        var a = o;
+        var element = o.o;
+        if (parseInt($(element).attr("gs-x")) >= 0) {
+            var x = parseInt($(element).attr("gs-x"));
+            var y = parseInt($(element).attr("gs-y"));
+            var w = parseInt($(element).attr("gs-w"));
+            var h = parseInt($(element).attr("gs-h"));
+
+            /*o.position.x = parseInt($(element).attr("gs-x"));
+            o.position.y = parseInt($(element).attr("gs-y"));
+            o.position.w = parseInt($(element).attr("gs-w"));
+            o.position.h = parseInt($(element).attr("gs-h"));*/
+            // o.uuidSetting اشکال دارد
+            var itemData = dashbordData.filter(c => c.uuid == o.uuidSetting);
+            if (itemData.length > 0) {
+                var pos = { x: x, y: y, w: w, h: h };
+                dashbordData.filter(c => c.uuid == o.uuidSetting)[0].position = pos;
+                //itemData[0].position = o.position;
+            }
+        }
     });
 
     itemData.caption = o.caption;
     itemData.baseValue = o.baseValue;
-
+    objectDashbord.add(divCart[0]);
+    o.idBox = idBox;
+    idBox++;
     o.o = divCart[0];
     grid.el.appendChild(o.o);
+
     let w = grid.makeWidget(o.o, { x: o.position.x, y: o.position.y, w: o.position.w, h: o.position.h, minW: 4 });
+
     //let w = grid.addWidget({content: o.o, x: o.position.x, y: o.position.y, w: o.position.w, h: o.position.h, minW: 4 });
+}
+
+$("#sortGrid").click(function (e) {
+    SetPositionItems();
+});
+
+function SetPositionItems(idBox) {
+    var position = positionGrid_Defult;
+    //grid.removeAll();
+    for (var i = idBox + 1; i < objectDashbord.length - 1; i++) {
+        grid.removeWidget(objectDashbord[i]);
+    }
+
+    var px = parseInt($(objectDashbord[idBox]).attr("gs-w"));
+    var py = parseInt($(objectDashbord[idBox]).attr("gs-h"));
+    for (var i = idBox + 1; i < objectDashbord.length - 1; i++) {
+        var item = objectDashbord[i]
+        var x = parseInt($(item).attr("gs-x"));
+        var y = parseInt($(item).attr("gs-y"));
+        var w = parseInt($(item).attr("gs-w"));
+        var h = parseInt($(item).attr("gs-h"));
+
+        $(item).attr("gs-x", px);
+        $(item).attr("gs-y", py);
+        $(item).attr("gs-w", w);
+        $(item).attr("gs-h", h);
+        grid.el.appendChild(item);
+        grid.makeWidget(item);
+
+        px = px + w;
+        py = y;
+        if (px + position.w > 12) {
+            px = 0;
+            py = py + h;
+        }
+    }
+}
+
+
+function SetPosition(e) {
+    var position = positionGrid_Defult;
+    //  var a = grid.el.findEmptyPosition();
+    if (e != null) {
+        var element = $(e).closest('.grid-stack-item')[0];
+        var x = parseInt($(element).attr("gs-x"));
+        var y = parseInt($(element).attr("gs-y"));
+        var w = parseInt($(element).attr("gs-w"));
+        var h = parseInt($(element).attr("gs-h"));
+
+        xTemp = x + w + position.w;
+        x = x + w;
+        if (xTemp > 12) {
+            x = 0;
+            y = y + position.y;
+        }
+
+        position = {
+            x: x,
+            y: y,
+            w: position.w,
+            h: position.h
+        };
+
+    }
+    return position
 }
 
 function BoxDashbord_Refresh(obj) {
@@ -606,26 +796,41 @@ function BoxDashbord_Refresh(obj) {
 
 function BoxDashbord_Close(obj) {
     var o = obj.options;
-    Swal.fire({
-        title: "تایید بستن",
-        text: translate("لیست " + o.caption + " بسته شود ؟"),
-        type: 'info',
-        showCancelButton: true,
-        cancelButtonColor: '#3085d6',
-        cancelButtonText: text_No,
-        confirmButtonColor: '#d33',
-        confirmButtonText: text_Yes
-    }).then((result) => {
-        if (result.value) {
-            for (var i = 0; i < dashbordData.length; i++) {
-                if (dashbordData[i].id == o.id) {
-                    dashbordData.splice(i, 1);
-                    grid.removeWidget(o.o);
-                    break;
+    var itemData = dashbordData.find(c => c.uuid == o.uuidSetting);
+    if (itemData != null) {
+        Swal.fire({
+            title: "تایید بستن",
+            text: translate("لیست " + o.caption + " بسته شود ؟"),
+            type: 'info',
+            showCancelButton: true,
+            cancelButtonColor: '#3085d6',
+            cancelButtonText: text_No,
+            confirmButtonColor: '#d33',
+            confirmButtonText: text_Yes
+        }).then((result) => {
+            if (result.value) {
+                var itemData = dashbordData.find(c => c.uuid == o.uuidSetting);
+                //if (itemData != null) {
+                for (var i = 0; i < dashbordData.length; i++) {
+                    if (dashbordData[i].id == o.id) {
+                        dashbordData.splice(i, 1);
+                        grid.removeWidget(o.o);
+                        $("#widget_" + o.id).remove();
+                        break;
+                    }
                 }
+                // }
+                // else {
+                //     grid.removeWidget(o.o);
+                //     $("#widget_" + o.id).remove();
+                // }
             }
-        }
-    })
+        })
+    }
+    else {
+        grid.removeWidget(o.o);
+        $("#widget_" + o.id).remove();
+    }
 };
 
 function BoxDashbord_Setting(obj) {
@@ -717,6 +922,7 @@ function CreateObjectSelectEntesab(elements, objects, name, filter, externalModa
             filter: filter,
             selected: objects[name].selected,
             Select: function (e, record) {
+                objects[name].selected = record.data;
                 objects[name].value = record.dataString;
             },
         }
@@ -769,17 +975,28 @@ function ShowObjectPrint(obj) {
 function CreateObjectSetting(obj) {
     var o = obj.options;
     var _div = $('<div class="' + 'K_DivModal' + f_Setting + '">');
+
     var dataSetting = dashbordData.filter(c => c.uuid == o.uuidSetting);
+    var data = [];
+    if (dataSetting.length > 0) {
+        if (dataSetting[0].dataSetting != null) {
+            data = dataSetting[0].dataSetting;
+        }
+        else {
+            data = dataSettingDefult[o.rprtId];
+            dataSetting[0]["dataSetting"] = data;
 
-    dataSetting = dataSetting[0].dataSetting != null ? dataSetting[0].dataSetting : dataSettingDefult[o.rprtId];
-    //reset setting 
-    //dataSetting = dataSettingDefult[o.rprtId];
+        }
+    }
+    else
+        data = dataSettingDefult[o.rprtId];
 
+    o.dataSetting = data;
     _div.Setting(
         {
             id: null,
             caption: "تنظیمات",
-            dataSetting: dataSetting,
+            dataSetting: data,
             externalModal: false,
             baseValue: {
                 ace: ace,
@@ -791,6 +1008,17 @@ function CreateObjectSetting(obj) {
                 var itemSetting = dashbordData.filter(c => c.uuid == uuid)[0];
                 itemSetting["dataSetting"] = record.data;
                 o.dataSetting = record.data;
+                if (record.data != null) {
+                    var showControl = record.data.filter(c => c.code == "ShowControl");
+                    var viewData = record.data.filter(c => c.code == "ViewData");
+                    if (showControl.length > 0) {
+                        $(o.divControl).css("display", showControl[0].value == "0" ? "block" : "none");
+                    }
+                    if (viewData.length > 0) {
+                        o.objGrid.Table("option", "viewData", viewData[0].value == "0" ? _viewDataFull : _viewDataLow);
+                        o.objGrid.Table("ChangeViewData");
+                    }
+                }
             },
         },
     );
@@ -803,19 +1031,118 @@ function ShowObjectSetting(obj) {
     objSetting.Setting("ShowModalSetting");
 };
 
-function GetSetting(uuidSetting) {
-    var setting = dashbordData.filter(c => c.uuid == uuidSetting)[0]["dataSetting"];
-    var data = {};
-    if (setting != null) {
-        for (var i = 0; i < setting.length; i++) {
-            var code = setting[i]["code"];
-            var value = setting[i]["value"];
-            if (code == "GetAutoData") data.getAutoData = value == "0" ? true : false;
-            if (code == "ShowControl") data.showControl = value == "0" ? true : false;
-            if (code == "ViewData") data.viewData = value == "0" ? _viewDataFull : _viewDataLow;
+function GetSetting(o) {
+    var dataSetting = dashbordData.filter(c => c.uuid == o.uuidSetting);
+    var data = [];
+    if (dataSetting.length > 0) {
+        if (dataSetting[0].dataSetting != null) {
+            data = dataSetting[0].dataSetting;
+        }
+        else {
+            data = dataSettingDefult[o.id];
+            dataSetting[0]["dataSetting"] = data;
         }
     }
-    return data;
+    else
+        data = dataSettingDefult[o.id];
+
+    o.dataSetting = data;
+
+
+
+    var result = {};
+    if (data != null) {
+        for (var i = 0; i < data.length; i++) {
+            var code = data[i]["code"];
+            var value = data[i]["value"];
+            if (code == "GetAutoData") result.getAutoData = value == "0" ? true : false;
+            if (code == "ShowControl") result.showControl = value == "0" ? true : false;
+            if (code == "ViewData") result.viewData = value == "0" ? _viewDataFull : _viewDataLow;
+        }
+    }
+    return result;
 }
+
+
+function AddIteminGrid(itemObject) {
+    id = itemObject.id;
+    uuid = itemObject.uuid;
+
+    var element = $('<div class="widget_dashbord">');
+    $("#objectGrid").append(element);
+
+    param = {
+        id: id,
+        uuidSetting: uuid,
+        caption: itemObject.caption,
+        visible: itemObject.visible,
+        baseValue: itemObject.baseValue,
+        controlData: itemObject.controlData,
+        position: itemObject.position,
+        objects: itemObject.objects,
+        showControl: itemObject.showControl,
+        getAutoData: itemObject.getAutoData,
+    }
+
+    if (id == "TChk_Sum") {
+        element.D_TChk_Sum(param);
+    }
+    else if (id == "TChk") {
+        element.D_TChk(param);
+    }
+    else if (id == "TarazFasli") {
+        element.D_TarazFasli(param);
+    }
+    else if (id == "TrzAcc") {
+        element.D_TrzAcc(param);
+    }
+    else if (id == "Dftr") {
+        element.D_Dftr(param);
+    }
+    else if (id == "ADocR") {
+        element.D_ADocR(param);
+    }
+    else if (id == "AGMkz") {
+        element.D_AGMkz(param);
+    }
+    else if (id == "AGOpr") {
+        element.D_AGOpr(param);
+    }
+    else if (id == "GrdZAcc") {
+        element.D_GrdZAcc(param);
+    }
+    else if (id == "KhlAcc") {
+        element.D_KhlAcc(param);
+    }
+    else if (id == "KhlZAcc") {
+        element.D_KhlZAcc(param);
+    }
+    else if (id == "TrzFCust_S" || id == "TrzFCust_P"  ) {
+        param.isForosh = itemObject.isForosh;
+        element.D_TrzFCust(param);
+    }
+    else if (id == "TrzFKala_S" || id == "TrzFKala_P") {
+        param.isForosh = itemObject.isForosh;
+        element.D_TrzFKala(param);
+    }
+    else if (id == "FDocR_S" || id == "FDocR_P") {
+        param.isForosh = itemObject.isForosh;
+        element.D_FDocR(param);
+    }
+    else if (id == "Krdx") {
+        element.D_Krdx(param);
+    }
+    else if (id == "TrzIKalaExf") {
+        element.D_TrzIKalaExf(param);
+    }
+    else if (id == "TrzIKala") {
+        element.D_TrzIKala(param);
+    }
+    else if (id == "IDocR") {
+        element.D_IDocR(param);
+    }
+
+}
+
 
 

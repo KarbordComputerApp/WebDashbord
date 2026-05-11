@@ -25,7 +25,8 @@
     _create: function () {
         var obj = this;
         var o = obj.options;
-        o.objects = obj._SetObjects();
+        var param = dataGroup[o.baseValue.group][o.baseValue.sal]["params"];
+        o.objects = obj._SetObjects(param);
         var divContent = $('<div style="background-color: white;">');
         //head
         var divHeader = $('<div class="row" style="padding:10px">');
@@ -35,9 +36,6 @@
         //Grid
 
         var divGrid = $('<div>');
-        var table = $('<table class="' + o.rprtId + '_Table table table-hover">');
-        divGrid.append(table);
-
         o.objGrid = divGrid;
 
         if (o.caption != null) {
@@ -49,7 +47,8 @@
         divContent.append(divGrid);
         obj.element.append(divContent);
 
-        o.columns = getRprtCols(o.rprtId, sessionStorage.userName);
+        getRprtAllCols(o.baseValue.ace, o.baseValue.group, o.baseValue.sal, userName);
+        o.columns = getRprtCols(o.baseValue.group, o.baseValue.sal, o.rprtId, userName);
 
         var action = [
             { code: "ADocR", name: "دفتر روزنامه", icon: "/Content/img/view.svg" },
@@ -80,6 +79,7 @@
                 controlBody: controlBody,
                 showInBoxControl: true,
                 viewData: o.viewData,
+                deghat: param.Deghat == "" ? 0 : parseInt(param.Deghat),
                 viewDataLowTemplate: [
                     '<td style="width:0px"><h5 data-name="CustCode">{0}</h5></td>',
                     '<td style="padding: 10px;" ><h5 data-name="CustName" style="word-break: break-word;white-space: normal;">{0}</h5></td>',
@@ -109,7 +109,7 @@
         var obj = this;
         var o = obj.options;
         var c = {};
-        var divControl = $('<div style="display: ' + (o.showControl ? "block" : "none") + ';">');
+        var divControl = $('<div style="margin-top: 5px; display: ' + (o.showControl ? "block" : "none") + ';">');
         o.divControl = divControl;
 
         var divRow = $('<div class="form-inline" style="margin-bottom: 5px;">');
@@ -176,7 +176,7 @@
         return divControl;
     },
 
-    _SetObjects: function (e) {
+    _SetObjects: function (param) {
         var obj = this;
         var o = obj.options;
 
@@ -208,16 +208,16 @@
         }
 
 
-        return object = {
+        object = {
             fromDate: {
                 element: null,
-                value: "1384/01/01",
+                value: param.BeginDate,
                 type: type_Date,
                 caption: "از تاریخ",
             },
             toDate: {
                 element: null,
-                value: "",
+                value: param.EndDate,
                 type: type_Date,
                 caption: "تا تاریخ",
             },
@@ -249,7 +249,7 @@
                 keyField: 'Status',
                 keyCaption: '',
                 baseValue: o.baseValue,
-                value: "",
+                value: "تصویب*تایید*موقت",
                 param: { progName: getProgName('S') },
                 selected: [{ code: 'تصویب', name: '' }, { code: 'تایید', name: '' }, { code: 'موقت', name: '' }]
             },
@@ -343,6 +343,7 @@
                 value: ""
             },
         }
+        return object;
     },
 
     _BuildControl: function (c) {
@@ -402,11 +403,11 @@
             taShomarh: data.toNumber.value,
             ModeCode1: modeCode1,
             ModeCode2: modeCode2,
-            CGruCode: "",
-            CustCode: "",
+            CGruCode: data.cGru.value,
+            CustCode: data.cust.value,
             InvCode: data.inv.value,
-            KGruCode: "",
-            KalaCode: "",
+            KGruCode: data.kGru.value,
+            KalaCode: data.kala.value,
             MkzCode: data.mkz.value,
             OprCode: data.opr.value,
             StatusCode: data.status.value,

@@ -1,6 +1,6 @@
-﻿$.widget("ui.Report_Dftr", {
+﻿$.widget("ui.Report_ADocR", {
     options: {
-        rprtId: 'Dftr',
+        rprtId: 'ADocR',
         uuidSetting: null,
         caption: null,
         baseValue: {
@@ -79,7 +79,7 @@
                 viewDataLowTemplate: [
                     '<td style="width:0px"><h5 data-name="AccCode">{0}</h5></td>',
                     '<td style="padding: 10px;" ><h5 data-name="AccName" style="word-break: break-word;white-space: normal;">{0}</h5></td>',
-                    '<td style="width:0px"><h5 data-name="MonTotal" data-type="' + type_Currency + '" style="direction: ltr;text-align:end;">{0}</h5></td>',
+                    '<td style="width:0px"><h5 data-name="Bede" data-type="' + type_Currency + '" style="direction: ltr;text-align:end;">{0}</h5></td>',
                 ],
 
                 ActionHeadClick: function (e, records) {
@@ -128,9 +128,7 @@
 
         var divCol = $('<div class="form-inline col-lg-6 col-md-6 col-sm-12 col-xs-12" >');
         c.dispBands = $('<div class="col-md-6">');
-        c.naghl = $('<div class="col-md-6">');
         divCol.append(c.dispBands);
-        divCol.append(c.naghl);
         divRow.append(divCol);
 
 
@@ -197,22 +195,15 @@
             },
             dispBands: {
                 element: null,
-                value: -1,
+                value: 10,
                 type: "select",
                 caption: "نمایش بند ها",
-                items: [{ key: '-1', value: "ریز حساب ها" }, { key: 1, value: "حساب های کل" }, { key: 2, value: "حساب های معین" }],
-            },
-            naghl: {
-                element: null,
-                value: 0,
-                type: "select",
-                caption: "نقل از قبل",
-                items: [{ key: 0, value: "محاسبه نشود" }, { key: 1, value: "محاسبه شود" }],
+                items: [{ key: 10, value: "ریز حساب ها" }, { key: 1, value: "حساب های کل" }],
             },
 
             acc: {
                 id: d_acc,
-                type: "Selected",
+                type: "Select_Entesab",
                 caption: 'حساب',
                 keyField: 'Code',
                 keyCaption: 'Name',
@@ -265,21 +256,20 @@
         }
 
         if (o.objects != null) {
-            object.acc.value = o.objects.userData.AccCode;
+            if (o.objects.userData != null) {
+                object.acc.value = o.objects.userData.AccCode;
+                object.acc.selected = [{ code: o.objects.userData.AccCode, name: o.objects.userData.AccName }];
+            }
             object.fromDate = o.objects.fromDate;
             object.toDate = o.objects.toDate;
             object.aMode = o.objects.aMode;
             object.mkz = o.objects.mkz;
-            if (o.objects.userData.MkzCode != null) {
-                object.mkz.value = o.objects.userData.MkzCode;
-                object.mkz.selected = [{ code: o.objects.userData.MkzCode, name: o.objects.userData.MkzName }];
-            }
-            
             object.opr = o.objects.opr;
-        }
+            
+            if (o.objects.status != null) object.status = o.objects.status;
 
-        if (o.controlData != null) {
-            object.acc.value = o.controlData.acc;
+            if (o.objects.level != null)
+                object.dispBands.value = o.objects.level.value == 1 ? 1 : 10;
         }
 
         return object;
@@ -310,26 +300,12 @@
                 },
                 Change: function (e, record) {
                     objects.dispBands.value = record.value;
-                    c.acc.Select("option", "filter", [{ key: "Level", value: objects.dispBands.value, act: '==' }]);
+                    c.acc.Select_Entesab("option", "filter", [{ key: "Level", value: objects.dispBands.value, act: '<=' }]);
                 },
             },
         );
 
-        c.naghl.ComboBox(
-            {
-                caption: objects.naghl.caption,
-                items: objects.naghl.items,
-                value: objects.naghl.value,
-                Create: function (e, record) {
-                    objects.naghl.element = record.input[0];
-                },
-                Change: function (e, record) {
-                    objects.naghl.value = record.value;
-                },
-            },
-        );
-
-        CreateObjectSelect(c, objects, 'acc', [{ key: "Level", value: objects.dispBands.value, act: '==' }], o.externalModal, false);
+        CreateObjectSelectEntesab(c, objects, 'acc', [{ key: "Level", value: objects.dispBands.value, act: '<=' }], o.externalModal, false);
         CreateObjectSelectEntesab(c, objects, 'aMode', null, o.externalModal);
         CreateObjectSelectEntesab(c, objects, 'status', null, o.externalModal);
         CreateObjectSelectEntesab(c, objects, 'mkz', null, o.externalModal);
@@ -342,10 +318,6 @@
         var o = obj.options;
         var data = o.objects;
 
-        if (data.acc.value == "") {
-            return showNotification(translate('حساب را انتخاب کنید'), 0);
-        }
-
         var object = {
             azTarikh: data.fromDate.value.toEnglishDigit(),
             taTarikh: data.toDate.value.toEnglishDigit(),
@@ -356,15 +328,14 @@
             StatusCode: data.status.value,
             MkzCode: data.mkz.value,
             OprCode: data.opr.value,
-            DispBands: data.dispBands.value < 0 ? 0 : data.dispBands.value,
-            JamRooz: 0,
-            Naghl: data.naghl.value,
+            DispBands: data.dispBands.value == 10 ? 0 : data.dispBands.value,
+            JamRooz: 0
         };
-        var uri = server + '/api/ReportAcc/Dftr/' + o.baseValue.ace + '/' + o.baseValue.sal + '/' + o.baseValue.group;
+
+        var uri = server + '/api/ReportAcc/ADocR/' + o.baseValue.ace + '/' + o.baseValue.sal + '/' + o.baseValue.group;
         ajaxFunction(uri, 'POST', object, true).done(function (response) {
             o.controlData = object;
             o.data = response;
-            //o.objGrid.Table("option", "controlData", object);
             o.objGrid.Table("option", "data", response);
             o.objGrid.Table("RefreshTable");
 

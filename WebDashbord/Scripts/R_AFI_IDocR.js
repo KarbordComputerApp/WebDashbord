@@ -443,6 +443,7 @@
             ThvlCode: thvlcode,
             MkzCode: mkzcode,
             OprCode: oprcode,
+            TGruCode : ""
         };
         ajaxFunction(IDocRUri + ace + '/' + sal + '/' + group, 'POST', IDocRObject, true).done(function(response) {
             self.IDocRList(response);

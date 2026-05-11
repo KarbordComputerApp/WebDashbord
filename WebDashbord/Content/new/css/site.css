@@ -300,7 +300,7 @@ select {
 
 @media only screen and (min-device-width: 576px) {
     .card {
-        margin: 30px 30px 30px 10px;
+        margin: 0px 0px 0px 0px;
         background: #fff;
         min-height: 50px;
         box-shadow: none;

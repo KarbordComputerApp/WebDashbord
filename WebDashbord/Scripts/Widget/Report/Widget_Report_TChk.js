@@ -1,6 +1,6 @@
-﻿$.widget("ui.Report_TrzFCust", {
+﻿$.widget("ui.Report_TChk", {
     options: {
-        rprtId: 'TrzFCust',
+        rprtId: 'TChk',
         uuidSetting: null,
         caption: null,
         baseValue: {
@@ -25,7 +25,8 @@
     _create: function () {
         var obj = this;
         var o = obj.options;
-        o.objects = obj._SetObjects();
+        var param = dataGroup[o.baseValue.group][o.baseValue.sal]["params"];
+        o.objects = obj._SetObjects(param);
         var divContent = $('<div style="background-color: white;">');
         //head
         var divHeader = $('<div class="row" style="padding:10px">');
@@ -35,8 +36,8 @@
         //Grid
 
         var divGrid = $('<div>');
-        var table = $('<table class="' + o.rprtId + '_Table table table-hover">');
-        divGrid.append(table);
+        //var table = $('<table class="' + o.rprtId + '_Table table table-hover">');
+       // divGrid.append(table);
 
         o.objGrid = divGrid;
 
@@ -49,11 +50,10 @@
         divContent.append(divGrid);
         obj.element.append(divContent);
 
-        o.columns = getRprtCols(o.rprtId, sessionStorage.userName);
+        getRprtAllCols(o.baseValue.ace, o.baseValue.group, o.baseValue.sal, userName);
+        o.columns = getRprtCols(o.baseValue.group, o.baseValue.sal, o.rprtId, userName);
 
-        var action = [
-            { code: "ADocR", name: "دفتر روزنامه", icon: "/Content/img/view.svg" },
-        ];
+        var action = [];
 
         divGrid.Table(
             {
@@ -63,15 +63,15 @@
                 headBtnDefult: [f_GetData, f_Print, f_Columns],
                 showHeadBtnDefult: false,
                 columns: o.columns,
-                sort: 'CustCode',
+                sort: 'CheckNo',
                 sortMode: '',
                 pageCount: 0,
                 pageSize: 10,
-                keyField: 'CustCode',
+                keyField: 'CheckNo',
                 isTableFix: true,
                 keyRow: [],
                 radif: true,
-                sumFields: ['AccBede', 'AccBest', 'AccMon', 'FinalPrice', 'OnlyDiscountPrice', 'TotalPrice'],
+                sumFields: ['Value'],
                 height: '375px',
                 striped: false,
                 action: action,
@@ -80,11 +80,13 @@
                 controlBody: controlBody,
                 showInBoxControl: true,
                 viewData: o.viewData,
+                deghat: param.Deghat == "" ? 0 : parseInt(param.Deghat),
                 viewDataLowTemplate: [
-                    '<td style="width:0px"><h5 data-name="CustCode">{0}</h5></td>',
-                    '<td style="padding: 10px;" ><h5 data-name="CustName" style="word-break: break-word;white-space: normal;">{0}</h5></td>',
-                    '<td style="width:0px"><h5 data-name="AccMon" data-type="' + type_Currency + '" style="direction: ltr;text-align:end;">{0}</h5></td>',
+                    '<td style="width:0px"><center><img data-name="Bank" data-type="img_bank" src="{0}" width="35"/><p data-name="Shobe" style="text-align:center">{1}</p></center></td>',
+                    '<td><div><h5 data-name="TrafName" style="padding-right:5px">{0}</h5><h5 data-name="CheckNo" style="padding-right:5px;padding-top: 10px;">چک: {1}</h5></div></td>',
+                    '<td style="width:0px" ><h5 data-name="Value" style="text-align:center" data-type="' + type_Currency + '">{0}</h5><div data-name="CheckDate" class="DashbordDateChek">{1}</div></td>'
                 ],
+
                 ActionHeadClick: function (e, records) {
                     var name = records.actionName;
                     var items = records.data;
@@ -109,7 +111,7 @@
         var obj = this;
         var o = obj.options;
         var c = {};
-        var divControl = $('<div style="display: ' + (o.showControl ? "block" : "none") + ';">');
+        var divControl = $('<div style="margin-top: 5px; display: ' + (o.showControl ? "block" : "none") + ';">');
         o.divControl = divControl;
 
         var divRow = $('<div class="form-inline" style="margin-bottom: 5px;">');
@@ -130,39 +132,19 @@
 
 
         var divCol = $('<div class="form-inline col-lg-6 col-md-6 col-sm-12 col-xs-12" >');
-        c.modeCode = $('<div class="col-md-6">');
-        divCol.append(c.modeCode);
+        c.pDMode = $('<div class="col-md-6">');
+        divCol.append(c.pDMode);
         divRow.append(divCol);
 
 
         var divCol = $('<div class="form-inline col-lg-12 col-md-12 col-sm-12 col-xs-12">');
-        c.status = $('<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">');
-        c.inv = $('<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">');
-        c.kGru = $('<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">');
-        c.kala = $('<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">');
+        c.acc = $('<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">');
+        c.checkStatus = $('<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">');
 
+        divCol.append(c.acc);
+        divCol.append(c.checkStatus);
 
-        divCol.append(c.status);
-        divCol.append(c.inv);
-        divCol.append(c.kGru);
-        divCol.append(c.kala);
-        divRow.append(divCol);
-
-        var divCol = $('<div class="form-inline col-lg-12 col-md-12 col-sm-12 col-xs-12">');
-        c.cGru = $('<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">');
-        c.cust = $('<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">');
-        c.mkz = $('<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">');
-        c.opr = $('<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">');
-
-        divCol.append(c.cGru);
-        divCol.append(c.cust);
-        divCol.append(c.mkz);
-        divCol.append(c.opr);
-        divRow.append(divCol);
-
-
-        var divCol = $('<div class="form-inline col-lg-12 col-md-12 col-sm-12 col-xs-12"">');
-        var divBtn = $('<div class="col-lg-12 col-md-3 col-sm-12 col-xs-12">');
+        var divBtn = $('<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">');
         var divBtn1 = $('<div class="pull-left">');
         c.btnReport = $('<button type="button" class="btn btn-primary">گزارش گیری</button>');
         divBtn1.append(c.btnReport);
@@ -176,48 +158,20 @@
         return divControl;
     },
 
-    _SetObjects: function (e) {
+    _SetObjects: function (param) {
         var obj = this;
         var o = obj.options;
 
-        var itemsModeCode = null;
-        var selectedModeCode = null;
-        if (o.isForosh) {
-            itemsModeCode = [
-                { key: "SFCT", value: "فاکتور فروش" },
-                { key: "SPFCT", value: "پیش فاکتور فروش" },
-                { key: "SRFCT", value: "برگشت از فروش" },
-                { key: "SORD", value: "سفارش فروش" },
-                { key: "SHVL", value: "حواله فروش" },
-                { key: "SEXT", value: "برگه خروج" },
-                { key: "SFCT*SRFCT", value: "فاکتور فروش با احتساب برگشتی" }
-            ];
-            selectedModeCode = "SFCT*SRFCT";
-            modeGru = 2;
-        }
-        else {
-            itemsModeCode = [
-                { key: "PFCT", value: "فاکتور خرید" },
-                { key: "PPFCT", value: "پیش فاکتور خرید" },
-                { key: "PORD", value: "سفارش خرید" },
-                { key: "PRFCT", value: "برگشت از خرید" },
-                { key: "PFCT*PRFCT", value: "فاکتور خرید با احتساب برگشتی" }
-            ];
-            selectedModeCode = "PFCT*PRFCT";
-            modeGru = 1;
-        }
-
-
-        return object = {
+        object = {
             fromDate: {
                 element: null,
-                value: "1384/01/01",
+                value: param.BeginDate,
                 type: type_Date,
                 caption: "از تاریخ",
             },
             toDate: {
                 element: null,
-                value: "",
+                value: param.EndDate,
                 type: type_Date,
                 caption: "تا تاریخ",
             },
@@ -235,114 +189,41 @@
                 dataType: type_BigInt,
                 caption: "تا شماره",
             },
-            modeCode: {
+            pDMode: {
                 element: null,
-                value: selectedModeCode,
+                value: "1",
                 type: "select",
-                caption: "نوع فاکتور",
-                items: itemsModeCode,
+                caption: "نوع چک",
+                items: [
+                    { key: "1", value: "پرداختنی" },
+                    { key: "2", value: "دریافتنی" }
+                ],
             },
-            status: {
-                id: d_status,
+            acc: {
+                id: d_acc,
                 type: "Select_Entesab",
-                caption: 'وضعیت',
-                keyField: 'Status',
-                keyCaption: '',
-                baseValue: o.baseValue,
-                value: "",
-                param: { progName: getProgName('S') },
-                selected: [{ code: 'تصویب', name: '' }, { code: 'تایید', name: '' }, { code: 'موقت', name: '' }]
-            },
-            inv: {
-                id: d_inv,
-                type: "Select_Entesab",
-                caption: 'انبارها',
-                keyField: 'Code',
-                keyCaption: 'Name',
-                baseValue: o.baseValue,
-                value: "",
-                selected: [],
-            },
-            kGru: {
-                id: d_kGru,
-                type: "Select_Entesab",
-                caption: 'گروه کالا',
+                caption: 'حساب',
                 keyField: 'Code',
                 keyCaption: 'Name',
                 keyRow: [{ column: 'Level', value: 1, act: '==' }],
                 baseValue: o.baseValue,
-                value: "",
-                param: { Mode: 0 },
-                selected: [],
-            },
-            kala: {
-                id: d_kala,
-                type: "Select_Entesab",
-                caption: 'کالا',
-                keyField: 'Code',
-                keyCaption: 'Name',
-                baseValue: o.baseValue,
-                value: "",
-                param: {
-                    withimage: false,
-                    updatedate: null,
-                    mode: 0,
-                    kalaCode: "",
-                },
-                selected: [],
-            },
-
-            cGru: {
-                id: d_cGru,
-                type: "Select_Entesab",
-                caption: 'گروه خریدار/فروشنده',
-                keyField: 'Code',
-                keyCaption: 'Name',
-                keyRow: [{ column: 'Level', value: 1, act: '==' }],
-                baseValue: o.baseValue,
-                value: "",
-                param: {
-                    mode: 0,
-                    modeGru: modeGru,
-                },
-                selected: [],
-            },
-            cust: {
-                id: d_cust,
-                type: "Select_Entesab",
-                caption: 'خریدار فروشنده',
-                keyField: 'Code',
-                keyCaption: 'Name',
-                baseValue: o.baseValue,
-                value: "",
-                param: {
-                    forSale: null,
-                    updatedate: null,
-                    mode: 0,
-                    custCode:''
-                },
-                selected: [],
-            },
-
-            mkz: {
-                id: d_mkz,
-                type: "Select_Entesab",
-                caption: "مرکز هزینه",
-                keyField: 'Code',
-                keyCaption: 'Name',
-                baseValue: o.baseValue,
+                param: { mode: 0 },
                 value: ""
             },
-            opr: {
-                id: d_opr,
+
+            checkStatus: {
+                id: d_checkStatus,
                 type: "Select_Entesab",
-                caption: "پروژه",
+                caption: 'وضعیت چک',
                 keyField: 'Code',
                 keyCaption: 'Name',
                 baseValue: o.baseValue,
-                value: ""
+                value: "",
+                param: { pDMode: "0", report: "1" },
+                selected: []
             },
         }
+        return object;
     },
 
     _BuildControl: function (c) {
@@ -358,30 +239,24 @@
         CreateObjectDate(c, objects, 'toDate');
         CreateObjectInput(c, objects, 'fromNumber');
         CreateObjectInput(c, objects, 'toNumber');
-        c.modeCode.ComboBox(
+        c.pDMode.ComboBox(
             {
-                caption: objects.modeCode.caption,
-                items: objects.modeCode.items,
-                value: objects.modeCode.value,
+                caption: objects.pDMode.caption,
+                items: objects.pDMode.items,
+                value: objects.pDMode.value,
                 sizeSelect: 9,
                 Create: function (e, record) {
-                    objects.modeCode.element = record.input[0];
+                    objects.pDMode.element = record.input[0];
                 },
                 Change: function (e, record) {
-                    objects.modeCode.value = record.value;
-                },
+                    objects.pDMode.value = record.value;
+                    c.checkStatus.Select_Entesab("option", "selected", []);
+                    c.checkStatus.Select_Entesab("option", "filter", [{ key: "PDMode", value: objects.pDMode.value, act: '==' }]);
+               },
             },
         );
-        CreateObjectSelectEntesab(c, objects, 'status', null, o.externalModal);
-        CreateObjectSelectEntesab(c, objects, 'inv', null, o.externalModal);
-        CreateObjectSelectEntesab(c, objects, 'kGru', null, o.externalModal,false);
-        CreateObjectSelectEntesab(c, objects, 'kala', null, o.externalModal);
-
-        CreateObjectSelectEntesab(c, objects, 'cGru', null, o.externalModal,false);
-        CreateObjectSelectEntesab(c, objects, 'cust', null, o.externalModal);
-        CreateObjectSelectEntesab(c, objects, 'mkz', null, o.externalModal);
-        CreateObjectSelectEntesab(c, objects, 'opr', null, o.externalModal);
-
+        CreateObjectSelectEntesab(c, objects, 'acc', null, o.externalModal, false);
+        CreateObjectSelectEntesab(c, objects, 'checkStatus', [{ key: "PDMode", value: objects.pDMode.value, act: '==' }], o.externalModal);
     },
 
     _GetData: async function (e) {
@@ -389,30 +264,16 @@
         var o = obj.options;
         var data = o.objects;
 
-        var modeCode = data.modeCode.value.split("*");
-        var modeCode1 = modeCode[0];
-        var modeCode2 = modeCode[1];
-        if (modeCode.length == 1)
-            modeCode2 = '';
-
         var object = {
             azTarikh: data.fromDate.value.toEnglishDigit(),
             taTarikh: data.toDate.value.toEnglishDigit(),
             azShomarh: data.fromNumber.value,
             taShomarh: data.toNumber.value,
-            ModeCode1: modeCode1,
-            ModeCode2: modeCode2,
-            CGruCode: "",
-            CustCode: "",
-            InvCode: data.inv.value,
-            KGruCode: "",
-            KalaCode: "",
-            MkzCode: data.mkz.value,
-            OprCode: data.opr.value,
-            StatusCode: data.status.value,
-            ZeroValue: "0",
+            AccCode: data.acc.value,
+            CheckStatus: data.checkStatus.value,
+            PDMode: data.pDMode.value, 
         };
-        var uri = server + '/api/ReportFct/TrzFCust/' + o.baseValue.ace + '/' + o.baseValue.sal + '/' + o.baseValue.group;
+        var uri = server + '/api/ReportAcc/TChk/' + o.baseValue.ace + '/' + o.baseValue.sal + '/' + o.baseValue.group;
         ajaxFunction(uri, 'POST', object, true).done(function (response) {
             o.controlData = object;
             o.data = response;
@@ -454,5 +315,6 @@
         var o = obj.options;
         ShowObjectPrint(obj);
     },
+
 
 });

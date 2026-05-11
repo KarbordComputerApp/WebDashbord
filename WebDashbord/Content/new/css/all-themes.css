@@ -1650,11 +1650,18 @@
 
         .theme-red .navbar.active .nav > li > a {
             color: #fff
-        }
+        }    
 
         .theme-red .navbar.active .sidemenu-collapse i {
             color: #fff
         }
+        .theme-red .navbar.active .topobject {
+            color: #fff
+        }
+
+    .theme-red .navbar .topobject {
+        color: #3f4853
+    }
 
 .theme-red .nav > li > a:hover {
     background-color: rgba(0, 0, 0, 0);

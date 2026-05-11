@@ -27,7 +27,7 @@ $.widget("ui.Select_Entesab", {
         o.o = o;
         var divObject = $('<div class="input-group" style="margin-bottom:' + margin_Input +';">');
         var divBtn = $('<div class="input-group-addon">');
-        var aBtn = $('<a style="padding-right: 5px;padding-left: 5px;" title="انتخاب"><i class="bi bi-search-heart"></i></a>');
+        var aBtn = $('<a style="padding-right: 5px;padding-left: 5px;" class="dropdown-toggle" data-toggle="modal" data-backdrop="static" data-keyboard="false" title="انتخاب"><i class="bi bi-search"></i></a>');
         //var aBtn = $('<a class="dropdown-toggle">');
        // var iconBtn = $('<img src="/Content/img/list/SearchKala.png" class="icon" height="20" width="20" title="انتخاب">');
        // aBtn.append(iconBtn);
@@ -100,7 +100,7 @@ $.widget("ui.Select_Entesab", {
 
         //modal
         o.classModal = 'K_Modal' + f_Select + (o.externalModal == true ? '_' + obj.uuid : '');
-        _modal = $('<div class="modal fade ' + o.classModal + '" tabindex="-1" aria-hidden="true">');
+        _modal = $('<div class="modal fade ' + o.classModal + '" tabindex="-1" role="dialog" aria-labelledby="formModal" aria-hidden="true">');
         o.modalElement = _modal;
         dialog = $('<div class="modal-dialog" style="max-width:1000px"></div>');
         _modal.append(dialog);
@@ -272,6 +272,9 @@ $.widget("ui.Select_Entesab", {
         }
         else if (o.id == d_status) {
             columns = columns_TypeStatus;
+        }
+        else if (o.id == d_checkStatus) {
+            columns = columns_TypeCheckStatus;
         }
         action = [
             { code: "AddRowEntesab", name: "افزودن", icon: "/Content/img/list/streamline-icon-navigation-next.png" }

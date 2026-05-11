@@ -1,6 +1,6 @@
-﻿$.widget("ui.Report_Dftr", {
+﻿$.widget("ui.Report_AGMkz", {
     options: {
-        rprtId: 'Dftr',
+        rprtId: 'AGMkz',
         uuidSetting: null,
         caption: null,
         baseValue: {
@@ -14,6 +14,7 @@
         externalModal: true,
         showControl: false,
         getAutoData: false,
+        isForosh: false,
         viewData: _viewDataFull,
         // exports
         columns: null,
@@ -33,21 +34,24 @@
         divHeader.append(h2);
 
         //Grid
-        var divGrid = $('<div> ');
+
+        var divGrid = $('<div>');
         o.objGrid = divGrid;
 
         if (o.caption != null) {
             divContent.append(divHeader);
         }
+
         var controlBody = null;
         divContent.append(obj._CreateControl());
         divContent.append(divGrid);
         obj.element.append(divContent);
 
-        var columns = getRprtCols(o.rprtId, sessionStorage.userName);
+        getRprtAllCols(o.baseValue.ace, o.baseValue.group, o.baseValue.sal, userName);
+        o.columns = getRprtCols(o.baseValue.group, o.baseValue.sal, o.rprtId, userName);
 
         var action = [
-            { code: "ADoc", name: "نمایش سند", icon: "/Content/img/view.svg" },
+            { code: "Dftr", name: "دفتر حساب", icon: "/Content/img/view.svg" },
         ];
 
         divGrid.Table(
@@ -57,14 +61,14 @@
                 headBtn: [],
                 headBtnDefult: [f_GetData, f_Print, f_Columns],
                 showHeadBtnDefult: false,
-                columns: columns,
+                columns: o.columns,
                 sort: 'AccCode',
                 sortMode: '',
                 pageCount: 0,
                 pageSize: 10,
                 keyField: 'AccCode',
                 isTableFix: true,
-                keyRow: null,
+                keyRow: [{ column: 'Tag', value: 0, act: '==' }],
                 radif: true,
                 sumFields: ['Bede', 'Best', 'MonBede', 'MonBest', 'MonTotal'],
                 height: '375px',
@@ -77,11 +81,10 @@
                 viewData: o.viewData,
                 deghat: param.Deghat == "" ? 0 : parseInt(param.Deghat),
                 viewDataLowTemplate: [
-                    '<td style="width:0px"><h5 data-name="AccCode">{0}</h5></td>',
-                    '<td style="padding: 10px;" ><h5 data-name="AccName" style="word-break: break-word;white-space: normal;">{0}</h5></td>',
+                    '<td style="width:0px"><h5 data-name="MkzCode">{0}</h5></td>',
+                    '<td style="padding: 10px;" ><h5 data-name="MkzName" style="word-break: break-word;white-space: normal;">{0}</h5></td>',
                     '<td style="width:0px"><h5 data-name="MonTotal" data-type="' + type_Currency + '" style="direction: ltr;text-align:end;">{0}</h5></td>',
                 ],
-
                 ActionHeadClick: function (e, records) {
                     var name = records.actionName;
                     var items = records.data;
@@ -90,17 +93,40 @@
                     }
                 },
                 ActionClick: function (e, records) {
+                    var actionName = records.actionName;
+                    var actionCaption = records.actionCaption;
+                    if (actionName != null) {
+                        userData = {
+                            AccCode: records.data.AccCode,
+                            AccName: records.data.AccName,
+                            MkzCode: records.data.MkzCode,
+                            MkzName: records.data.MkzName,
+                        };
+                        o.objects.userData = userData
+                        _body.ModalReport({
+                            reportId: actionName,
+                            caption: actionCaption,
+                            baseValue: o.baseValue,
+                            headButton: [f_Print, f_Columns],
+                            controlData: null,
+                            showControl: false,
+                            getAutoData: true,
+                            viewData: _viewDataFull,
+                            objects: o.objects,
+                        });
+                    }
+
                 },
                 ExportData: function (e, records) {
                     o.columns = records.columns;
                     o.data = records.data;
                 },
-            });
+            },
+        );
         CreateObjectPrint(obj);
         CreateObjectSetting(obj);
         if (o.getAutoData) obj._GetData();
     },
-
 
     _CreateControl: function () {
         var obj = this;
@@ -118,44 +144,27 @@
         divCol.append(c.toDate);
         divRow.append(divCol);
 
-        var divCol = $('<div class="form-inline col-lg-3 col-md-3 col-sm-12 col-xs-12" >');
-        c.fromNumber = $('<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">');
-        c.toNumber = $('<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">');
-        divCol.append(c.fromNumber);
-        divCol.append(c.toNumber);
-        divRow.append(divCol);
-
-
-        var divCol = $('<div class="form-inline col-lg-6 col-md-6 col-sm-12 col-xs-12" >');
-        c.dispBands = $('<div class="col-md-6">');
-        c.naghl = $('<div class="col-md-6">');
-        divCol.append(c.dispBands);
-        divCol.append(c.naghl);
-        divRow.append(divCol);
-
-
-        var divCol = $('<div class="form-inline col-lg-12 col-md-12 col-sm-12 col-xs-12">');
+        var divCol = $('<div class="form-inline col-lg-9 col-md-9 col-sm-12 col-xs-12">');
+        c.level = $('<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">');
         c.acc = $('<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">');
         c.aMode = $('<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">');
-        c.status = $('<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">');
-
+        divCol.append(c.level);
         divCol.append(c.acc);
         divCol.append(c.aMode);
-        divCol.append(c.status);
         divRow.append(divCol);
 
-        var divCol = $('<div class="form-inline col-lg-12 col-md-12 col-sm-12 col-xs-12"">');
-        c.mkz = $('<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">');
-        c.opr = $('<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">');
+        var divCol = $('<div class="form-inline col-lg-12 col-md-12 col-sm-12 col-xs-12">');
+        c.mkz = $('<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">');
+        c.opr = $('<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">');
+        divCol.append(c.mkz);
+        divCol.append(c.opr);
 
-        var divBtn = $('<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">');
+        var divBtn = $('<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">');
         var divBtn1 = $('<div class="pull-left">');
         c.btnReport = $('<button type="button" class="btn btn-primary">گزارش گیری</button>');
         divBtn1.append(c.btnReport);
         divBtn.append(divBtn1);
 
-        divCol.append(c.mkz);
-        divCol.append(c.opr);
         divCol.append(divBtn);
         divRow.append(divCol);
 
@@ -181,38 +190,31 @@
                 type: type_Date,
                 caption: "تا تاریخ",
             },
-            fromNumber: {
+            level: {
                 element: null,
-                value: "",
-                maxlength: 10,
-                dataType: type_BigInt,
-                caption: "از شماره",
-            },
-            toNumber: {
-                element: null,
-                value: "",
-                maxlength: 10,
-                dataType: type_BigInt,
-                caption: "تا شماره",
-            },
-            dispBands: {
-                element: null,
-                value: -1,
+                value: "1",
                 type: "select",
-                caption: "نمایش بند ها",
-                items: [{ key: '-1', value: "ریز حساب ها" }, { key: 1, value: "حساب های کل" }, { key: 2, value: "حساب های معین" }],
+                caption: "سطح",
+                items: [
+                    { key: "1", value: "سطح 1" },
+                    { key: "2", value: "سطح 2" },
+                    { key: "3", value: "سطح 3" },
+                ],
             },
-            naghl: {
-                element: null,
-                value: 0,
-                type: "select",
-                caption: "نقل از قبل",
-                items: [{ key: 0, value: "محاسبه نشود" }, { key: 1, value: "محاسبه شود" }],
+           
+            aMode: {
+                id: d_aMode,
+                type: "Select_Entesab",
+                caption: "نوع سند",
+                keyField: 'Code',
+                keyCaption: 'Name',
+                baseValue: o.baseValue,
+                value: ""
             },
 
             acc: {
                 id: d_acc,
-                type: "Selected",
+                type: "Select_Entesab",
                 caption: 'حساب',
                 keyField: 'Code',
                 keyCaption: 'Name',
@@ -221,27 +223,6 @@
                 param: { mode: 0 },
                 value: ""
             },
-            aMode: {
-                id: d_aMode,
-                type: "Select_Entesab",
-                caption: "نوع سند",
-                keyField: 'Code',
-                keyCaption: 'Name',
-                baseValue: o.baseValue,
-                selected: [],
-                value: ""
-            },
-            status: {
-                id: d_status,
-                type: "Select_Entesab",
-                caption: 'وضعیت',
-                keyField: 'Status',
-                keyCaption: '',
-                baseValue: o.baseValue,
-                param: { progName: getProgName('A') },
-                selected: [],
-                value: "تصویب*تایید*موقت",
-            },
             mkz: {
                 id: d_mkz,
                 type: "Select_Entesab",
@@ -249,7 +230,6 @@
                 keyField: 'Code',
                 keyCaption: 'Name',
                 baseValue: o.baseValue,
-                selected: [],
                 value: ""
             },
             opr: {
@@ -259,32 +239,11 @@
                 keyField: 'Code',
                 keyCaption: 'Name',
                 baseValue: o.baseValue,
-                selected: [],
                 value: ""
             },
         }
-
-        if (o.objects != null) {
-            object.acc.value = o.objects.userData.AccCode;
-            object.fromDate = o.objects.fromDate;
-            object.toDate = o.objects.toDate;
-            object.aMode = o.objects.aMode;
-            object.mkz = o.objects.mkz;
-            if (o.objects.userData.MkzCode != null) {
-                object.mkz.value = o.objects.userData.MkzCode;
-                object.mkz.selected = [{ code: o.objects.userData.MkzCode, name: o.objects.userData.MkzName }];
-            }
-            
-            object.opr = o.objects.opr;
-        }
-
-        if (o.controlData != null) {
-            object.acc.value = o.controlData.acc;
-        }
-
         return object;
     },
-
 
     _BuildControl: function (c) {
         var obj = this;
@@ -297,44 +256,25 @@
 
         CreateObjectDate(c, objects, 'fromDate');
         CreateObjectDate(c, objects, 'toDate');
-        CreateObjectInput(c, objects, 'fromNumber');
-        CreateObjectInput(c, objects, 'toNumber');
-        c.dispBands.ComboBox(
+        c.level.ComboBox(
             {
-                caption: objects.dispBands.caption,
-                items: objects.dispBands.items,
-                value: objects.dispBands.value,
-                sizeSelect: 7,
+                caption: objects.level.caption,
+                items: objects.level.items,
+                value: objects.level.value,
+                sizeSelect: 9,
                 Create: function (e, record) {
-                    objects.dispBands.element = record.input[0];
+                    objects.level.element = record.input[0];
                 },
                 Change: function (e, record) {
-                    objects.dispBands.value = record.value;
-                    c.acc.Select("option", "filter", [{ key: "Level", value: objects.dispBands.value, act: '==' }]);
+                    objects.level.value = record.value;
+                    c.mkz.Select_Entesab("option", "filter", [{ key: "Level", value: objects.level.value, act: '<=' }]);
                 },
             },
         );
-
-        c.naghl.ComboBox(
-            {
-                caption: objects.naghl.caption,
-                items: objects.naghl.items,
-                value: objects.naghl.value,
-                Create: function (e, record) {
-                    objects.naghl.element = record.input[0];
-                },
-                Change: function (e, record) {
-                    objects.naghl.value = record.value;
-                },
-            },
-        );
-
-        CreateObjectSelect(c, objects, 'acc', [{ key: "Level", value: objects.dispBands.value, act: '==' }], o.externalModal, false);
         CreateObjectSelectEntesab(c, objects, 'aMode', null, o.externalModal);
-        CreateObjectSelectEntesab(c, objects, 'status', null, o.externalModal);
-        CreateObjectSelectEntesab(c, objects, 'mkz', null, o.externalModal);
+        CreateObjectSelectEntesab(c, objects, 'acc', null, o.externalModal, false);
+        CreateObjectSelectEntesab(c, objects, 'mkz', [{ key: "Level", value: objects.level.value, act: '<=' }], o.externalModal);
         CreateObjectSelectEntesab(c, objects, 'opr', null, o.externalModal);
-
     },
 
     _GetData: async function (e) {
@@ -342,40 +282,25 @@
         var o = obj.options;
         var data = o.objects;
 
-        if (data.acc.value == "") {
-            return showNotification(translate('حساب را انتخاب کنید'), 0);
-        }
-
         var object = {
             azTarikh: data.fromDate.value.toEnglishDigit(),
             taTarikh: data.toDate.value.toEnglishDigit(),
-            azShomarh: data.fromNumber.value,
-            taShomarh: data.toNumber.value,
-            AccCode: data.acc.value,
             AModeCode: data.aMode.value,
-            StatusCode: data.status.value,
+            AccCode: data.acc.value,
             MkzCode: data.mkz.value,
             OprCode: data.opr.value,
-            DispBands: data.dispBands.value < 0 ? 0 : data.dispBands.value,
-            JamRooz: 0,
-            Naghl: data.naghl.value,
+            Level: data.level.value,
         };
-        var uri = server + '/api/ReportAcc/Dftr/' + o.baseValue.ace + '/' + o.baseValue.sal + '/' + o.baseValue.group;
+        var uri = server + '/api/ReportAcc/AGMkz/' + o.baseValue.ace + '/' + o.baseValue.sal + '/' + o.baseValue.group;
         ajaxFunction(uri, 'POST', object, true).done(function (response) {
             o.controlData = object;
             o.data = response;
-            //o.objGrid.Table("option", "controlData", object);
+            o.objGrid.Table("option", "controlData", object);
             o.objGrid.Table("option", "data", response);
             o.objGrid.Table("RefreshTable");
-
-            var uuid = o.uuidSetting;
-            var itemSetting = dashbordData.filter(c => c.uuid == uuid);
-            if (itemSetting.length > 0) {
-                itemSetting[0]["controlData"] = object;
-            }
         });
-
     },
+
 
 
     Refresh: function () {

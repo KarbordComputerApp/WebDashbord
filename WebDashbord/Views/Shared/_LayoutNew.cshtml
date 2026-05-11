@@ -58,7 +58,7 @@
             <div class="m-t-30">
                 <img class="loading-img-spin" src="~/Content/loading1.png" width="20" height="20" alt="admin">
             </div>
-            <p data-bind="text:translate('لطفا منتظر بمانید')"></p>
+            <p >لطفا منتظر بمانید</p>
         </div>
     </div>
 
@@ -103,22 +103,29 @@
             <div class="collapse navbar-collapse" id="navbar-collapse">
 
 
-
                 <ul class="pull-right" id="navbar_Buttom" style="padding-right: 0px;">
+                    <li>
+                        <p class="topobject" id="dateTimeHome">تاریخ سرور</p>
+                        <h4 id="userNameHome"></h4>
+                    </li>
                     <li>
                         <a href="javascript:void(0);" class="sidemenu-collapse">
                             <i class="material-icons">reorder</i>
                         </a>
                     </li>
+
                 </ul>
 
-                <ul class="nav navbar-nav navbar-right" id="navbar_Menu">
-
+                <ul class="nav navbar-nav navbar-right topobject" id="navbar_Menu">
                     <li class="dropdown user_profile pull-left">
-                        <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" style="margin-left: 50px;">
-                            <img src="~/Content/img/list/profile.png" width="32" height="32" alt="User" style="border: #ec8121 2px solid;" />
-                            <span id="userNameFa"></span>
-                            <img src="~/Content/img/streamline-icon-arrow-button-down-2@48x48.png" width="10" height="10" />
+                        <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" style="margin-left: 40px;margin-top: 0px;">
+
+                            <div class="form-inline">
+                                <img src="~/Content/img/list/profile.png" width="32" height="32" alt="User" style="border: #ec8121 2px solid;" />
+                                <span id="userNameFa" class="topobject" style="margin-left: 5px;margin-right: 5px;"></span>
+                                <i class="bi bi-caret-down-fill topobject" style="font-size: 12px;"></i>
+                            </div>
+
                         </a>
                         <ul class="dropdown-menu pullDown" style="margin-left: 10px; width:250px">
                             <li class="body">
@@ -129,7 +136,7 @@
                                                 <div class="form-group form-float">
                                                     <div class="form-line date fix">
                                                         <input type="text" id="coName_TitleMenu" class="form-control float" readonly>
-                                                        <label class="form-label" data-bind="text:translate('شرکت')"></label>
+                                                        <label class="form-label" >شرکت</label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -138,16 +145,16 @@
                                                 <div class="form-group form-float">
                                                     <div class="form-line date fix">
                                                         <input type="text" id="ace_TitleMenu" class="form-control float" readonly>
-                                                        <label class="form-label" data-bind="text:translate('نرم افزار')"></label>
+                                                        <label class="form-label" >نرم افزار</label>
                                                     </div>
                                                 </div>
                                             </div>
 
-                                            <div class="col-sm-12">
+                                            <!--<div class="col-sm-12">
                                                 <div class="form-group form-float">
                                                     <div class="form-line date fix">
                                                         <input type="text" id="group_TitleMenu" class="form-control float" readonly>
-                                                        <label class="form-label" data-bind="text:translate('گروه')"></label>
+                                                        <label class="form-label">گروه</label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -156,13 +163,13 @@
                                                 <div class="form-group form-float">
                                                     <div class="form-line date fix">
                                                         <input type="text" id="sal_TitleMenu" class="form-control float" readonly>
-                                                        <label class="form-label" data-bind="text:translate('سال')"></label>
+                                                        <label class="form-label" ">سال</label>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            </div>-->
 
                                             <div class="col-sm-12">
-                                                <button data-bind="text:translate('خروج')" type="button" id="LogOut" class="btn btn-primary btn-block" style="background-color: #eb8121 !important;"></button>
+                                                <button  type="button" id="LogOut" class="btn btn-primary btn-block" style="background-color: #eb8121 !important;">خروج</button>
                                             </div>
 
                                         </div>
@@ -196,25 +203,32 @@
 
                     </li>
 
-                    <li style="color: #e77e22;font-size: 35px;margin-top: 5px;margin-right: 8px;" class="pull-left">|</li>
-                    <li class="pull-left" id="P_Setting">
-                        <a href="/Home/Setting" class="dropdown-toggle" data-close="true">
-                            <img src="~/Content/img/streamline-icon-cog-1@48x48.png" width="16" height="16" title="تنظیمات" />
+
+                    <li style="color: #e77e22;font-size: 35px;margin-top: -2px;margin-right: 8px;" class="pull-left">|</li>
+                    <li class="pull-left" id="addObject">
+                        <a class="dropdown-toggle" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#modal-DesktopItem" title="افزودن" style="margin-top: 5px;">
+                            <i class="bi bi-plus-circle topobject" style="top: -15px;position: relative;"></i>
                         </a>
                     </li>
 
-
+                    <li class="pull-left" id="settingObject">
+                        <a class="dropdown-toggle" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#" style="padding-left: 5px;margin-top: 5px;" title="تنظیمات">
+                            <i class="bi bi-gear topobject" style="top: -15px;position: relative;"></i>
+                        </a>
+                    </li>
 
                     <li class="pull-left" id="P_Home">
-                        <a href="/Home/Index" class="dropdown-toggle" data-close="true" title="خانه">
-                            <img src="~/Content/img/streamline-icon-house-2@48x48.png" width="16" height="16" />
+                        <a href="/Home/Index" class="dropdown-toggle" data-close="true" title="خانه" style="padding-left: 5px;margin-top: 5px;">
+                            <i class="bi bi-house-door topobject" style="top: -15px;position: relative;"></i>
                         </a>
                     </li>
 
                     <li class="dropdown pull-left">
-                        <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" id="Btn_ShowMessage" title="پیام ها">
+                        <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" id="Btn_ShowMessage" title="پیام ها" style="padding-left: 5px;margin-top: 5px;">
                             <!--<span class="label-count bg-orange"></span>-->
-                            <img src="~/Content/img/streamline-icon-alarm-bell-1@48x48.png" width="16" height="16" />
+                            
+                            <i class="bi bi-bell topobject" style="top: -15px;position: relative;"></i>
+
                         </a>
                         <ul class="dropdown-menu pullDown">
                             <li class="header">پیام ها</li>
@@ -236,14 +250,14 @@
                     </li>-->
 
                     <li class="dropdown pull-left notification" id="P_NotificationErja">
-                        <a href="/ERJ/Erja" title="ارجاعات پرونده دریافتی">
-                            <img id="" src="~/Content/img/notificationErja.png" width="23" height="25" style="margin-top: 1px;" />
-                            <span class="badge" id="notificationCount"></span>
+                        <a href="/ERJ/Erja" title="ارجاعات پرونده دریافتی" style="margin-top: 5px;">
+                            <i class="bi bi-bell topobject" style="top: -15px;position: relative;"></i> 
+                           <span class="badge" id="notificationCount"></span>
                         </a>
                     </li>
 
                     <li class="dropdown pull-left" id="P_AccessRefresh" title="بازخوانی دسترسی ها">
-                        <a id="AccessRefresh">
+                        <a id="AccessRefresh" style="margin-top: 5px;">
                             <img src="~/Content/img/account-convert.png" width="20" height="20" style="margin-top: 3px;" />
                         </a>
                     </li>
@@ -254,19 +268,20 @@
                         </a>
                     </li>-->
                     <li class="dropdown pull-left" id="P_ContactUs" title="تماس با ما">
-                        <a id="btn_App" href="https://karbordcomputer.com/contact-us/" target="_blank">
-                            <img src="~/Content/img/ContactUs.png" width="18" height="18" style="margin-top: 5px;margin-bottom: 0px;" />
+                        <a id="btn_App" href="https://karbordcomputer.com/contact-us/" target="_blank" style="padding-left: 5px;margin-top: 5px;">
+                            <i class="bi bi-telephone-outbound topobject" style="top: -15px;position: relative;"></i>
                         </a>
                     </li>
 
+
                     <li class="dropdown pull-left" id="P_App" title="دریافت نسخه اندروید">
-                        <a id="btn_App" href="https://cafebazaar.ir/app/com.karbord.karbordapp" target="_blank">
+                        <a id="btn_App" href="https://cafebazaar.ir/app/com.karbord.karbordapp" target="_blank" style="margin-top: 5px;">
                             <img src="~/Content/img/android.png" width="20" height="20" style="margin-top: 5px;" />
                         </a>
                     </li>
 
                     <li class="dropdown pull-left" id="P_App" title="راهنمای کلید های میانبر">
-                        <a id="HotKeyHelp" class="dropdown-toggle" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#modal-HotKeyHelp">
+                        <a id="HotKeyHelp" class="dropdown-toggle" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#modal-HotKeyHelp" style="margin-top: 5px;">
                             <img src="~/Content/img/keyboard.png" width="32" style="margin-top: 10px;" />
                         </a>
                     </li>
@@ -291,11 +306,11 @@
                         <!--<div class="sidebar-userpic-name" id="TextUserName"></div>
                         <div class="profile-usertitle-job " id="TextNoUser"></div>-->
                         <div class="profile-usertitle-job ">
-                            <span id="titleVer" data-bind="text:translate('@(WebDashbord.Controllers.Unit.UnitPublic.titleVer)') + ' : '"></span>
+                            <span id="titleVer">@(WebDashbord.Controllers.Unit.UnitPublic.titleVer) :</span>
                             <span id="titleVerNumber" style="padding-right:5px">@(WebDashbord.Controllers.Unit.UnitPublic.titleVerNumber)</span>
                             <br />
                             <!--<span id="titleVer">ورژن سرویس : 521</span>-->
-                            <span id="titleVer" data-bind="text:translate('ورژن سرویس')"></span><span data-bind="text:' : ' +    '1043'"> </span>
+                            <span id="titleVer">ورژن سرویس</span><span > : 1043 </span>
                             <span id="titleVerNumber" style="padding-right:5px"></span>
                             <br />
                             <!--<span data-bind="text:translate('ورژن دی ال ال') + ' : '"></span>
@@ -313,7 +328,7 @@
                         <i>
                             <img src="~/Content/img/dashboard-report-icon.png" width="20" />
                         </i>
-                        <span data-bind="text:translate('داشبورد')"></span>
+                        <span>داشبورد</span>
                     </a>
                 </li>
 
@@ -415,6 +430,8 @@
                             <a data-bind="text:translate('برگشت از خرید')" class="useBlank" target="_blank" href=@Url.Action("Index","AFIFactor")></a>
                         </li>
 
+
+
                         <!--<li id="FDOC_SO">@Html.ActionLink("سفارش فروش", "Index", "AFIFactor")</li>
                         <li id="FDOC_SP">@Html.ActionLink("پیش فاکتور فروش", "Index", "AFIFactor")</li>
                         <li id="FDOC_S"> @Html.ActionLink("فاکتور فروش", "Index", "AFIFactor")</li>
@@ -481,6 +498,7 @@
                         <li id="Erja_Send" class="rightClick">
                             <a data-bind="text:translate('ارجاعات پرونده ارسالی')" class="useBlank" target="_blank" href=@Url.Action("Erja","ERJ")></a>
                         </li>
+
                         <!--
                         <li id="ErjaDOC">@Html.ActionLink("پرونده", "Index", "ERJ")</li>
                         <li id="Erja_Resive">@Html.ActionLink("ارجاعات پرونده دریافتی", "Erja", "ERJ")</li>
@@ -529,6 +547,8 @@
                             <a data-bind="text:translate('صورت خلاصه زیرحساب ها')" class="useBlank" target="_blank" href=@Url.Action("KhlZAcc","ReportAFI")></a>
                         </li>
 
+
+
                         <!-- <li id="TrzAcc">@Html.ActionLink("تراز حساب", "TrzAcc", "ReportAFI")</li>
                         <li id="Dftr">@Html.ActionLink("دفتر حساب", "Dftr", "ReportAFI")</li>
                         <li id="ADocR">@Html.ActionLink("دفتر روزنامه", "ADocR", "ReportAFI")</li>
@@ -560,6 +580,7 @@
                         <li id="FDocR_P" class="rightClick">
                             <a data-bind="text:translate('ریز گردش اسناد خرید')" class="useBlank" target="_blank" href=@Url.Action("FDocR_P","ReportAFI")></a>
                         </li>
+
                         <!--<li id="FDocR_S">@Html.ActionLink("ریز گردش اسناد فروش", "FDocR_S", "ReportAFI")</li>
                         <li id="FDocR_P">@Html.ActionLink("ریز گردش اسناد خرید", "FDocR_P", "ReportAFI")</li>
                         <li id="TrzFKala_S">@Html.ActionLink("تراز فروش کالاها", "TrzFKala_S", "ReportAFI")</li>
@@ -587,6 +608,8 @@
                         <li id="IDocR" class="rightClick">
                             <a data-bind="text:translate('ریز گردش اسناد انبارداری')" class="useBlank" target="_blank" href=@Url.Action("IDocR","ReportAFI")></a>
                         </li>
+
+
 
                         <!--<li id="Krdx">@Html.ActionLink("کاردکس کالا", "Krdx", "ReportAFI")</li>
                         <li id="TrzIKala">@Html.ActionLink("موجودی کالا", "TrzIKala", "ReportAFI")</li>
@@ -844,7 +867,7 @@
                         </a>
                         <input id="upload" type="file" style="display:none" data-bind="event: {change: $root.fileUpload}" />
                         <a id="AddNewPrintForms" data-bind="attr: {title:text_Add}">
-                            <img src="/Content/img/list/streamline-icon-add-circle-alternate@48x48.png" width="20" height="20">
+                            <i class="bi bi-plus-circle"></i>
                         </a>
                     </div>
                 </div>
@@ -1295,6 +1318,7 @@
     <script src="~/Content/new/js/stimulsoft.viewer.js?dt=@(WebDashbord.Controllers.Unit.UnitPublic.titleVerNumber)"></script>
     <script src="~/Content/new/js/stimulsoft.designer.js?dt=@(WebDashbord.Controllers.Unit.UnitPublic.titleVerNumber)"></script>
     <script src="~/Content/new/js/num2persian-min.js?dt=@(WebDashbord.Controllers.Unit.UnitPublic.titleVerNumber)"></script>
+    <script src="~/Scripts/PublicVariant.js?dt=@(WebDashbord.Controllers.Unit.UnitPublic.titleVerNumber)"></script>
     <script src="~/Scripts/PublicAFI.js?dt=@(WebDashbord.Controllers.Unit.UnitPublic.titleVerNumber)"></script>
     <script src="~/Content/js/sweet2.js"></script>
     <script src="~/Content/new/js/jquery.md.bootstrap.datetimepicker.js"></script>

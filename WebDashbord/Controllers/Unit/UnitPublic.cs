@@ -17,7 +17,7 @@ namespace WebDashbord.Controllers.Unit
 
     {
         public static string titleVer = "ورژن تست";
-        public static string titleVerNumber = "1"; 
+        public static string titleVerNumber = "2"; 
 
         //public static string titleVer = "ورژن";
         //public static string titleVerNumber = "1041";

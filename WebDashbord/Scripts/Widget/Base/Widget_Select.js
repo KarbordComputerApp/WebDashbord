@@ -23,7 +23,7 @@ $.widget("ui.Select", {
 
         var divObject = $('<div class="input-group" style="margin-bottom:' + margin_Input +';">');
         var divBtn = $('<div class="input-group-addon">');
-        var aBtn = $('<a style="padding-right: 5px;padding-left: 5px;" title="انتخاب"><i class="bi bi-search-heart"></i></a>');
+        var aBtn = $('<a style="padding-right: 5px;padding-left: 5px;" title="انتخاب"><i class="bi bi-search"></i></a>');
        // var iconBtn = $('<img src="/Content/img/list/SearchKala.png" class="icon" height="20" width="20" title="انتخاب">');
        // aBtn.append(iconBtn);
         divBtn.append(aBtn);

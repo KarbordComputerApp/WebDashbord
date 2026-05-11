@@ -25,7 +25,7 @@ $.widget("ui.Setting", {
         //modal
         o.classModal = 'K_Modal' + f_Setting;
 
-        var _modal = $('<div class="modal fade ' + o.classModal + '" tabindex="-1" aria-hidden="true" style="' + (o.externalModal == false ? 'position: absolute;' : '') + '" >');
+        var _modal = $('<div class="modal fade ' + o.classModal + '" aria-hidden="true" role="dialog" aria-labelledby="formModal"  style="' + (o.externalModal == false ? 'position: absolute;' : '') + '" >');
         o.modalElement = _modal;
 
         var dialog = $('<div class="modal-dialog" style="max-width: 400px;"></div>');
@@ -107,7 +107,13 @@ $.widget("ui.Setting", {
 
         dialog.append(content);
 
-        obj.element.append(_modal);
+        if (o.externalModal == true) {
+            $("#objectModalSettingAll").empty();
+            $("#objectModalSettingAll").append(_modal);
+        }
+        else {
+            obj.element.append(_modal);
+        }
 
         //var _ContentReport = $('<div class="' + o.classModal + '_Content">');
         //o.contentReport = _ContentReport;

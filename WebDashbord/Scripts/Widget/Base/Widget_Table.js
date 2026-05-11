@@ -26,6 +26,7 @@
         controlData: null, // اطلاعات کنترل گزارش
         viewData: _viewDataFull,  // نمایش جدول کامل یا مختصر موبایلی
         viewDataLowTemplate: null,  // نحوه نمایش در حالت مختصر
+        deghat: 0,  // دقت اعشار مبلغ
 
         //dataPrint: { data: null, classModal: null, modalElement: null },
         baseValue: {
@@ -282,7 +283,7 @@
             // bands
             for (var j = 0; j < _columns.length; j++) {
                 var value = list[i][_columns[j].Code];
-                var valueShow = _columns[j].Type == type_Currency ? NumberToNumberString(parseFloat(value)) : _columns[j].Type == type_Boolean ? '' : value;
+                var valueShow = _columns[j].Type == type_Currency ? NumberToNumberString(parseFloat(value.toFixed(o.deghat))) : _columns[j].Type == type_Boolean ? '' : value;
 
                 var _td = $('<td data-name="' + _columns[j].Code + '"' +
                     'data-value="' + value + '"' +
@@ -399,6 +400,9 @@
                     var valueData = list[i][_name];
                     if (_type == type_Currency) {
                         valueData = NumberToNumberString(parseFloat(valueData))
+                    }
+                    else if (_type == "img_bank") {
+                        valueData = GetIconBank(valueData)
                     }
                     value[k] = valueData;
                 }
@@ -632,7 +636,7 @@
 
         //head
         var _header = $('<div class="modal-header" style="min-width: 300px">');
-        var _buttonExit = $('<a data-dismiss="modal" aria-label="Close" title="بستن"><i class="bi bi-x-lg"></button >');
+        var _buttonExit = $('<a title="بستن"><i class="bi bi-x-lg"></button >');
         _header.append(_buttonExit);
         var title = $('<p class="modal-title" style="width: 90%;text-align: center;">' + headBtn.caption + '</p>');
         _header.append(title);
@@ -678,12 +682,16 @@
         //end modal
 
 
+        _buttonExit.click(function (e) {
+            _modal.modal('hide');
+        });
+
         _aDefult.click(function (e) {
             obj._SetDefultColumns();
         });
 
         _modal.on('hide.bs.modal', function () {
-            obj._SetResultModalColumn();
+            //obj._SetResultModalColumn();
         });
 
     },
@@ -1004,7 +1012,8 @@
             }
         }
         var actionName = $(e).attr("action-name");
-        var actionValue = { actionName: actionName, data: rowData }
+        var actionCaption = e.text;
+        var actionValue = { actionName: actionName, actionCaption: actionCaption, data: rowData }
 
         obj._trigger("ActionClick", event, actionValue);
     },
@@ -1131,7 +1140,7 @@
 
         obj._ExportData(list, _columns);
     },
-
+    
     RefreshTable: function () {
         obj = this;
         var o = obj.options;
@@ -1143,6 +1152,24 @@
 
         if (o.sumFields.length > 0) obj._Sum();
     },
+
+    ChangeViewData: function () {
+        obj = this;
+        var o = obj.options;
+        o.allData = [];
+        for (var i = 0; i < o.data.length; i++) {
+            o.allData.add(o.data[i]);
+        }
+        if (o.viewData == _viewDataFull) {
+            obj._PaintFull();
+        }
+        else {
+            obj._PaintLow();
+        }
+        if (o.sumFields.length > 0) obj._Sum();
+    },
+    
+
 
     ShowModalControl: function () {
         obj = this;

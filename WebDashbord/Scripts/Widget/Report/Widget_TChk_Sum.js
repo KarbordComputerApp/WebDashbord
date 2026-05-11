@@ -23,7 +23,8 @@
     _create: function () {
         var obj = this;
         var o = obj.options;
-        o.objects = obj._SetObjects();
+        var param = dataGroup[o.baseValue.group][o.baseValue.sal]["params"];
+        o.objects = obj._SetObjects(param);
         var divContent = $('<div style="background-color: white;">');
         //head
         var divHeader = $('<div class="row" style="padding:10px">');
@@ -94,10 +95,10 @@
         return divControl;
     },
 
-    _SetObjects: function (e) {
+    _SetObjects: function (param) {
         var obj = this;
         var o = obj.options;
-        return object = {
+        object = {
             day: {
                 element: null,
                 value: 8000,
@@ -106,6 +107,7 @@
                 caption: "روز مانده به تاریخ چک",
             },
         }
+        return object;
     },
 
     _BuildControl: function (c) {

@@ -24,7 +24,8 @@
     _create: function () {
         var obj = this;
         var o = obj.options;
-        o.objects = obj._SetObjects();
+        var param = dataGroup[o.baseValue.group][o.baseValue.sal]["params"];
+        o.objects = obj._SetObjects(param);
         var divContent = $('<div style="background-color: white;">');
         //head
         var divHeader = $('<div class="row" style="padding:10px">');
@@ -45,12 +46,15 @@
         divContent.append(divGrid);
         obj.element.append(divContent);
 
-        o.columns = getRprtCols(o.rprtId, sessionStorage.userName);
+        getRprtAllCols(o.baseValue.ace, o.baseValue.group, o.baseValue.sal, userName);
+        o.columns = getRprtCols(o.baseValue.group, o.baseValue.sal, o.rprtId, userName);
+
+        
 
         var action = [
             { code: "ADocR", name: "دفتر روزنامه", icon: "/Content/img/view.svg" },
             { code: "Dftr", name: "دفتر حساب", icon: "/Content/img/view.svg" },
-            { code: "TrzAcc_Riz", name: "تراز زیر حساب ها", icon: "/Content/img/view.svg", visible: { key: "HasChild", value: 1, act: '==' } }
+            { code: "TrzAcc", name: "تراز زیر حساب ها", icon: "/Content/img/view.svg", visible: { key: "HasChild", value: 1, act: '==' } }
         ];
 
         divGrid.Table(
@@ -78,12 +82,13 @@
                 controlBody: controlBody,
                 showInBoxControl: true,
                 viewData: o.viewData,
+                deghat: param.Deghat == "" ? 0 : parseInt(param.Deghat),
                 viewDataLowTemplate: [
                     '<td style="width:0px"><h5 data-name="AccCode">{0}</h5></td>',
                     '<td style="padding: 10px;" ><h5 data-name="AccName" style="word-break: break-word;white-space: normal;">{0}</h5></td>',
                     //'<td style="width:0px"><p data-name="Bede" data-type="' + type_Currency +'" style="direction: ltr">{0}</p></td>',
                     //'<td style="width:0px"><p data-name="Best" data-type="' + type_Currency +'" style="direction: ltr">{0}</p></td>',
-                    '<td style="width:0px"><h5 data-name="MonTotal" data-type="' + type_Currency +'" style="direction: ltr;text-align:end;">{0}</h5></td>',
+                    '<td style="width:0px"><h5 data-name="MonTotal" data-type="' + type_Currency + '" style="direction: ltr;text-align:end;">{0}</h5></td>',
                 ],
                 ActionHeadClick: function (e, records) {
                     var name = records.actionName;
@@ -93,6 +98,41 @@
                     }
                 },
                 ActionClick: function (e, records) {
+                    var actionName = records.actionName;
+                    var actionCaption = records.actionCaption;
+                    if (actionName != null) {
+                        userData = { AccCode: records.data.AccCode, AccName: records.data.AccName };
+                        var idbox = parseInt($(obj.element[0].closest('.item_dashbord')).attr("idbox"));
+
+                        o.objects.userData = userData
+                        var position = SetPosition(o.objGrid);
+
+                        var item = {
+                            id: actionName,
+                            uuid: 0,
+                            position: position,
+                            caption: actionCaption,
+                            visible: true,
+                            baseValue: o.baseValue,
+                            objects: o.objects,
+                            showControl: false,
+                            getAutoData: true,
+                        };
+
+                        /*_body.ModalReport({
+                            reportId: actionName,
+                            caption: actionCaption,
+                            baseValue: o.baseValue,
+                            headButton: [f_Print, f_Columns],
+                            controlData: null,
+                            showControl: false,
+                            getAutoData: true,
+                            viewData: _viewDataFull,
+                            objects: o.objects,
+                        });*/
+                        AddIteminGrid(item);
+                        SetPositionItems(idbox);
+                    }
                 },
                 ExportData: function (e, records) {
                     o.columns = records.columns;
@@ -109,57 +149,11 @@
     },
 
 
-    /*
-        _CreateControl_Modal: function (c) {
-            var obj = this;
-            var o = obj.options;
-            var c = {};
-            var divControl = $('<div style="width: 450px;">');
-            var divRow = $('<div class="row" style="padding:5px 10px 0px 10px">');
-    
-            var divDate = $('<div class="form-inline col-sm-12" style="margin-bottom: 2rem;">');
-            c.fromDate = $('<div class="col-sm-6">');
-            c.toDate = $('<div class="col-sm-6">');
-            divDate.append(c.fromDate);
-            divDate.append(c.toDate);
-    
-            c.acc = $('<div class="col-md-12" style="margin-bottom: 2rem;">');
-            c.aMode = $('<div class="col-md-12" style="margin-bottom: 2rem;">');
-            c.mkz = $('<div class="col-md-12" style="margin-bottom: 2rem;">');
-            c.opr = $('<div class="col-md-12" style="margin-bottom: 2rem;">');
-    
-            var divSath = $('<div class="form-inline col-sm-12" style="margin-bottom: 2rem;">');
-            c.sath = $('<div class="col-md-6">');
-            c.level = $('<div class="col-md-6">');
-            divSath.append(c.sath);
-            divSath.append(c.level);
-    
-            var divBtn = $('<div class="col-md-12">');
-            var divBtn1 = $('<div class="pull-left">');
-            c.btnReport = $('<button type="button" class="btn btn-primary" data-dismiss="modal">گزارش گیری</button>');
-    
-            divBtn1.append(c.btnReport);
-            divBtn.append(divBtn1);
-    
-            divRow.append(divDate);
-            divRow.append(c.acc);
-            divRow.append(c.aMode);
-            divRow.append(c.mkz);
-            divRow.append(c.opr);
-            divRow.append(divSath);
-            divRow.append(divBtn);
-    
-            divControl.append(divRow);
-            obj._BuildControl(c);
-            return divControl;
-        },
-        */
-
     _CreateControl: function () {
         var obj = this;
         var o = obj.options;
         var c = {};
-        var divControl = $('<div style="display: ' + (o.showControl ? "block" : "none") + ';">');
+        var divControl = $('<div style="margin-top: 5px; display: ' + (o.showControl ? "block" : "none") + ';">');
         o.divControl = divControl;
 
         var divRow = $('<div class="form-inline" style="margin-bottom: 5px;">');
@@ -177,11 +171,13 @@
         var divCol = $('<div class="form-inline col-lg-9 col-md-9 col-sm-12 col-xs-12">');
         c.acc = $('<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">');
         c.aMode = $('<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">');
+        //c.status = $('<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">');
         c.mkz = $('<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">');
 
         divCol.append(c.acc);
         divCol.append(c.aMode);
         divCol.append(c.mkz);
+        // divCol.append(c.status);
 
         divRow.append(divCol);
         //divRow.append('<div class="w-100">');
@@ -197,6 +193,7 @@
         divBtn1.append(c.btnReport);
         divBtn.append(divBtn1);
 
+        //divRow.append(c.mkz);
         divRow.append(c.opr);
         divRow.append(c.sath);
         divRow.append(c.level);
@@ -210,20 +207,20 @@
         return divControl;
     },
 
-    _SetObjects: function (e) {
-
+    _SetObjects: function (param) {
         var obj = this;
         var o = obj.options;
-        return object = {
+       
+        object = {
             fromDate: {
                 element: null,
-                value: "1384/01/01",
+                value: param.BeginDate,
                 type: type_Date,
                 caption: "از تاریخ",
             },
             toDate: {
                 element: null,
-                value: "",
+                value: param.EndDate,
                 type: type_Date,
                 caption: "تا تاریخ",
             },
@@ -245,8 +242,20 @@
                 keyField: 'Code',
                 keyCaption: 'Name',
                 baseValue: o.baseValue,
+                selected: [],
                 value: ""
             },
+            /* status: {
+                 id: d_status,
+                 type: "Select_Entesab",
+                 caption: 'وضعیت',
+                 keyField: 'Status',
+                 keyCaption: '',
+                 baseValue: o.baseValue,
+                 param: { progName: getProgName('A') },
+                 selected: [],
+                 value: "تصویب*تایید*موقت",
+             },*/
             mkz: {
                 id: d_mkz,
                 type: "Select_Entesab",
@@ -254,6 +263,7 @@
                 keyField: 'Code',
                 keyCaption: 'Name',
                 baseValue: o.baseValue,
+                selected: [],
                 value: ""
             },
             opr: {
@@ -263,6 +273,7 @@
                 keyField: 'Code',
                 keyCaption: 'Name',
                 baseValue: o.baseValue,
+                selected: [],
                 value: ""
             },
             sath: {
@@ -280,6 +291,28 @@
                 items: [{ key: 1, value: "کل" }, { key: 2, value: "معین" }, { key: 3, value: "تفصیلی 1" }, { key: 4, value: "تفصیلی 2" }, { key: 5, value: "تفصیلی 3" }],
             },
         }
+        if (o.objects != null) {
+            var control = o.objects;
+            if (control.userData != null) {
+                object.acc.value = control.userData.AccCode;
+                object.acc.selected = [{ code: control.userData.AccCode, name: control.userData.AccName }];
+            }
+            object.fromDate = control.fromDate;
+            object.toDate = control.toDate;
+            object.aMode = control.aMode;
+            object.mkz = control.mkz;
+            object.opr = control.opr;
+
+
+            if (control.level != null)
+                object.level.value = parseInt(control.level.value) + 1;
+        }
+
+
+        if (o.controlData != null) {
+            // object.level.value = o.controlData.Level;
+        }
+        return object;
     },
 
     _BuildControl: function (c) {
@@ -295,6 +328,7 @@
         CreateObjectDate(c, objects, 'toDate');
         CreateObjectSelectEntesab(c, objects, 'acc', [{ key: "Level", value: objects.sath.value, act: '<=' }], o.externalModal, false);
         CreateObjectSelectEntesab(c, objects, 'aMode', null, o.externalModal);
+        //CreateObjectSelectEntesab(c, objects, 'status', null, o.externalModal);
         CreateObjectSelectEntesab(c, objects, 'mkz', null, o.externalModal);
         CreateObjectSelectEntesab(c, objects, 'opr', null, o.externalModal);
         c.level.ComboBox(
@@ -326,100 +360,6 @@
             },
         );
 
-
-        /*c.fromDate.DatePicker(
-            {
-                caption: objects.fromDate.caption,
-                value: objects.fromDate.value,
-                Create: function (e, record) {
-                    objects.fromDate.element = record;
-                },
-                Change: function (e, record) {
-                    objects.fromDate.value = record.value;
-                },
-            },
-        );
-
-        c.toDate.DatePicker(
-            {
-                caption: objects.toDate.caption,
-                value: objects.toDate.value,
-                Create: function (e, record) {
-                    objects.toDate.element = record;
-                },
-                Change: function (e, record) {
-                    objects.toDate.value = record.value;
-                },
-            },
-        );*/
-
-
-
-        /*c.acc.Select_Entesab(
-            {
-                id: objects.acc.id,
-                caption: objects.acc.caption,
-                baseValue: objects.acc.baseValue,
-                keyField: objects.acc.keyField,
-                keyCaption: objects.acc.keyCaption,
-                keyRow: objects.acc.keyRow,
-                param: objects.acc.param,
-                striped: false,
-                externalModal: o.externalModal,
-                filter: [{ key: "Level", value: objects.sath.value, act: '<=' }],
-                Select: function (e, record) {
-                    objects.acc.value = record.dataString;
-                    //objects.acc.value = record.;
-                },
-            }
-        );
-
-        c.aMode.Select_Entesab(
-            {
-                id: objects.aMode.id,
-                caption: objects.aMode.caption,
-                baseValue: objects.aMode.baseValue,
-                keyField: objects.aMode.keyField,
-                keyCaption: objects.aMode.keyCaption,
-                param: null,
-                externalModal: o.externalModal,
-                Select: function (e, record) {
-                    objects.aMode.value = record.dataString;
-                },
-            }
-        );
-       
-
-        c.mkz.Select_Entesab(
-            {
-                id: objects.mkz.id,
-                caption: objects.mkz.caption,
-                baseValue: objects.mkz.baseValue,
-                keyField: objects.mkz.keyField,
-                keyCaption: objects.mkz.keyCaption,
-                param: null, externalModal: o.externalModal,
-                Select: function (e, record) {
-                    objects.mkz.value = record.dataString;
-                },
-            }
-        );
-
-        c.opr.Select_Entesab(
-            {
-                id: objects.opr.id,
-                caption: objects.opr.caption,
-                baseValue: objects.opr.baseValue,
-                keyField: objects.opr.keyField,
-                keyCaption: objects.opr.keyCaption,
-                param: null, externalModal: o.externalModal,
-                Select: function (e, record) {
-                    objects.opr.value = record.dataString;
-                },
-            }
-        );
-
-*/
-
     },
 
     _GetData: async function (e) {
@@ -436,61 +376,26 @@
             OprCode: data.opr.value,
             Level: data.level.value,
             Sath: data.sath.value,
+            //StatusCode: data.status.value,
         };
+
         var uri = server + '/api/ReportAcc/TrzAcc/' + o.baseValue.ace + '/' + o.baseValue.sal + '/' + o.baseValue.group;
         ajaxFunction(uri, 'POST', object, true).done(function (response) {
-            o.controlData = object;
             o.data = response;
-            o.objGrid.Table("option", "controlData", object);
+            o.controlData = object;
+            //object["data"] = [data];
             o.objGrid.Table("option", "data", response);
             o.objGrid.Table("RefreshTable");
+
+            var itemSetting = dashbordData.filter(c => c.uuid == uuid);
+            if (itemSetting.length > 0) {
+                itemSetting[0]["controlData"] = object;
+                //itemSetting[0]["controlDataAll"] = data;
+            }
+
         });
 
     },
-
-    /*  _CreateObjectPrint: function () {
-          var obj = this;
-          var o = obj.options;
-          var _div = $('<div class="' + 'K_DivModal' + f_Print + '">');
-          _div.Print(
-              {
-                  id: o.rprtId,
-                  caption: "چاپ",
-                  baseValue: o.baseValue,
-                  data: o.data,
-                  columns: o.columns,
-                  printVariable: "",
-                  Select: function (e, record) {
-                      a = record;
-                  },
-              }
-          );
-          obj.element.append(_div);
-      },
-  
-      _ShowObjectPrint: function () {
-          var obj = this;
-          var o = obj.options;
-          if (o.data.length > 0) {
-              var objPrint = $(obj.bindings[0]).find('.K_DivModal' + f_Print);
-  
-              printVariable = o.controlData;
-              printVariable["ReportDate"] = localStorage.getItem("DateNow");
-  
-              for (var i = 0; i < o.columns.length; i++) {
-                  if (o.columns[i].Sum != null) {
-                      printVariable['Sum' + o.columns[i].Code] = o.columns[i].Sum;
-                  }
-              }
-  
-              objPrint.Print("option", "printVariable", printVariable);
-              objPrint.Print("option", "data", o.data);
-              objPrint.Print("ShowModalPrint");
-          }
-          else {
-              return showNotification('اطلاعاتی برای چاپ وجود ندارد. ابتدا گزارش گیری کنید', 0);
-          }
-      },*/
 
     Refresh: function () {
         var obj = this;
