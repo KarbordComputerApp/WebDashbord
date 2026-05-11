@@ -58,7 +58,7 @@
                 headBtn: [],
                 headBtnDefult: [f_GetData, f_Print, f_Columns],
                 showHeadBtnDefult: false,
-                columns: columns,
+                columns: o.columns,
                 sort: 'AccCode',
                 sortMode: '',
                 pageCount: 0,
