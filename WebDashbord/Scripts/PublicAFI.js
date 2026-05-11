@@ -438,8 +438,10 @@ function getRprtAllCols(ace, group, sal, userName) {
 function getRprtCols(group, sal, rprtId, username) {
     var columns = dataGroup[group][sal].Columns.dataUser;
     var result = columns.filter(c => c.RprtId == rprtId && c.UserCode == username);
-    if (result.length == 0)
+    if (result.length == 0) {
+        columns = dataGroup[group][sal].Columns.dataDefult;
         result = columns.filter(c => c.RprtId == rprtId && c.UserCode == "*Default*");
+    }
     return result;
 }
 

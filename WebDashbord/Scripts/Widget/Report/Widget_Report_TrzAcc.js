@@ -49,8 +49,6 @@
         getRprtAllCols(o.baseValue.ace, o.baseValue.group, o.baseValue.sal, userName);
         o.columns = getRprtCols(o.baseValue.group, o.baseValue.sal, o.rprtId, userName);
 
-        
-
         var action = [
             { code: "ADocR", name: "دفتر روزنامه", icon: "/Content/img/view.svg" },
             { code: "Dftr", name: "دفتر حساب", icon: "/Content/img/view.svg" },
@@ -210,7 +208,7 @@
     _SetObjects: function (param) {
         var obj = this;
         var o = obj.options;
-       
+
         object = {
             fromDate: {
                 element: null,

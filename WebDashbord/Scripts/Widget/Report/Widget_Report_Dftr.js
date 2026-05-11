@@ -44,7 +44,8 @@
         divContent.append(divGrid);
         obj.element.append(divContent);
 
-        var columns = getRprtCols(o.rprtId, sessionStorage.userName);
+        getRprtAllCols(o.baseValue.ace, o.baseValue.group, o.baseValue.sal, userName);
+        o.columns = getRprtCols(o.baseValue.group, o.baseValue.sal, o.rprtId, userName);
 
         var action = [
             { code: "ADoc", name: "نمایش سند", icon: "/Content/img/view.svg" },
@@ -274,7 +275,7 @@
                 object.mkz.value = o.objects.userData.MkzCode;
                 object.mkz.selected = [{ code: o.objects.userData.MkzCode, name: o.objects.userData.MkzName }];
             }
-            
+
             object.opr = o.objects.opr;
         }
 

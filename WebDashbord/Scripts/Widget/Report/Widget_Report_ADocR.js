@@ -44,7 +44,8 @@
         divContent.append(divGrid);
         obj.element.append(divContent);
 
-        var columns = getRprtCols(o.rprtId, sessionStorage.userName);
+        getRprtAllCols(o.baseValue.ace, o.baseValue.group, o.baseValue.sal, userName);
+        o.columns = getRprtCols(o.baseValue.group, o.baseValue.sal, o.rprtId, userName);
 
         var action = [
             { code: "ADoc", name: "نمایش سند", icon: "/Content/img/view.svg" },
@@ -265,7 +266,7 @@
             object.aMode = o.objects.aMode;
             object.mkz = o.objects.mkz;
             object.opr = o.objects.opr;
-            
+
             if (o.objects.status != null) object.status = o.objects.status;
 
             if (o.objects.level != null)
