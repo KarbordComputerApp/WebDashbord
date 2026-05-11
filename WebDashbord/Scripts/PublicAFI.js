@@ -18,8 +18,7 @@ localStorage.removeItem("Karbord_DashbordData");
 
 var apiAccount = 'http://127.0.0.1:902/api/';
 // apiAccount = 'http://192.168.0.106:902/api/';
-// apiAccount = 'http://192.168.0.106:902/api/';
-// apiAccount = 'http://192.168.1.2:902/api/';
+
 // apiAccount = 'http://185.208.174.64:902/api/';
 
 var tiketUrl = 'http://localhost:51091/';
