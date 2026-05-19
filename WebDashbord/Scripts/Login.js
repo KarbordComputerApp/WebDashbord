@@ -41,7 +41,7 @@ function LoginAccount(userAccount, passAccount, flagMessage = false) {
             if (flagMessage) {
                 localStorage.removeItem("Karbord_LoginData");
                 localStorage.removeItem("Karbord_PublicData");
-                localStorage.removeItem("Karbord_DashbordData");
+                //localStorage.removeItem("Karbord_DashbordData");
                 publicData = {};
                 loginData = loginDataDefult;
             }

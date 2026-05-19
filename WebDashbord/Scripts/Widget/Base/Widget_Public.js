@@ -572,6 +572,9 @@ function BoxDashbord_Create(obj, divHead, divBody) {
 
     var div = $('<div class="headButton">');
 
+    var b_ShowControl = $('<a action-name="ShowControl" style="padding-left: 5px;" title="کنترل گزارش"><i class="bi bi-caret-down"></a>');
+    div.append(b_ShowControl);
+
     if (o.headButton != null) {
         for (var i = 0; i < o.headButton.length; i++) {
             var btn;
@@ -595,15 +598,16 @@ function BoxDashbord_Create(obj, divHead, divBody) {
 
     var b_Close = $('<a action-name="Close" style="padding-left: 5px;" title="بستن"><i class="bi bi-x-lg"></a>');
     var b_Maximum = $('<a action-name="Maximum" style="padding-left: 5px;" title="تغییر سایز"><i class="bi bi-window"></a>');
-    var b_ShowControl = $('<a action-name="ShowControl" style="padding-left: 5px;" title="کنترل گزارش"><i class="bi bi-caret-down"></a>');
 
-    div.append(b_Close);
+
     div.append(b_Maximum);
-    div.append(b_ShowControl);
+    div.append(b_Close);
 
     var h4 = $('<h4 class="modal-title" style="">' + o.caption + '</h4>');
 
     divHeader.append(h4);
+    divHeader.append(h41);
+
     divHeader.append(div);
 
     if (divHead != null) {
@@ -643,12 +647,12 @@ function BoxDashbord_Create(obj, divHead, divBody) {
             BoxDashbord_Columns(obj);
         }
         else if (actionName == f_Maximum) {
-            var a = $("#" + o.id);
+            var a = $(o.o);
             styleMaximum = a[0].style;
             var zIndex = a.css("z-index");
             var i = $(this).find("i");
             if (zIndex == "auto") {
-                $("#" + o.id).css(cssMaximin);
+                a.css(cssMaximin);
                 i.removeClass("bi-window");
                 i.addClass("bi-window-stack");
             }
@@ -658,12 +662,12 @@ function BoxDashbord_Create(obj, divHead, divBody) {
                 i.removeClass("bi-window-stack");
             }
         } else if (actionName == f_Maximum) {
-            var a = $("#" + o.id);
+            var a = $(o.o);
             styleMaximum = a[0].style;
             var zIndex = a.css("z-index");
             var i = $(this).find("i");
             if (zIndex == "auto") {
-                $("#" + o.id).css(cssMaximin);
+                a.css(cssMaximin);
                 i.removeClass("bi-window");
                 i.addClass("bi-window-stack");
             }

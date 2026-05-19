@@ -42,7 +42,7 @@ var dashbordData_Save = localStorage.getItem("Karbord_DashbordData");
 //dashbordData_Save = `[{"id":"TChk_Sum-1","valueControl":{"day":"10000000"},"position":{"x":0,"y":12,"w":4,"h":3},"caption":"صورت خلاصه چک های پرداختی - گروه 97 - سال 1384","visible":true,"baseValue":{"ace":"Web8","group":"97","sal":"1384"}},{"id":"TChk_Sum-2","valueControl":{"day":"10000000"},"position":{"x":4,"y":3,"w":4,"h":3},"caption":"صورت خلاصه چک های پرداختی - گروه 97 - سال 1403","visible":true,"baseValue":{"ace":"Web8","group":"97","sal":"1403"}},{"id":"TrzFCust_S-1","valueControl":{"top":10,"fromDate":"1384/01/01","modeItem":"S"},"position":{"x":8,"y":0,"w":4,"h":3},"caption":"مانده حساب خریداران - گروه 97 - سال 1403","visible":true,"baseValue":{"ace":"Web8","group":"97","sal":"1403"}},{"id":"TrzFCust_P-1","valueControl":{"top":10,"fromDate":"1384/01/01","modeItem":"P"},"position":{"x":0,"y":3,"w":4,"h":3},"caption":"مانده حساب فروشندگان - گروه 97 - سال 1403","visible":true,"baseValue":{"ace":"Web8","group":"97","sal":"1403"}},{"id":"TChk-3","valueControl":{"day":"1000000"},"position":{"x":0,"y":0,"w":4,"h":3},"caption":"چک های پرداختی - گروه 97 - سال 1403","visible":true,"baseValue":{"ace":"Web8","group":"97","sal":"1403"}},{"id":"TChk-4","valueControl":{"day":"10000000"},"position":{"x":8,"y":3,"w":4,"h":3},"caption":"چک های پرداختی - گروه 97 - سال 1384","visible":true,"baseValue":{"ace":"Web8","group":"97","sal":"1384"}},{"id":"TrzFCust_P-2","valueControl":{"top":10,"fromDate":"1384/01/01","modeItem":"P"},"position":{"x":4,"y":0,"w":4,"h":3},"caption":"مانده حساب فروشندگان - گروه 97 - سال 1384","visible":true,"baseValue":{"ace":"Web8","group":"97","sal":"1384"}}]`
 //dashbordData_Save = `[{"id":"TrzAcc-1","valueControl":{"mode":0,"fromDate":"1384/01/01","modeItem":"S"},"position":{"x":0,"y":0,"w":4,"h":3},"caption":"تراز حساب - گروه 97 - سال 1384","visible":true,"baseValue":{"ace":"Web8","group":"97","sal":"1384"}}]`
 
-if (dashbordData_Save != null && dashbordData_Save != "[{}]"  && dashbordData_Save.toString() != "null" && dashbordData_Save.toString() != "") {
+if (dashbordData_Save != null && dashbordData_Save != "[{}]" && dashbordData_Save.toString() != "null" && dashbordData_Save.toString() != "") {
     var dashbordData = JSON.parse(dashbordData_Save);
     dashbordData = dashbordData.filter(c => loginData.baseValue.groupsAccess.includes(c.baseValue.group));
 
@@ -123,10 +123,11 @@ $("#SaveItems").click(function () {
     //GetParam(baseValue.ace, baseValue.group, baseValue.sal, false);
     for (i = 0; i < items.length; i++) {
         var item = $(items[i]);
+        var uuid = item.attr("uuid");
         var idItem = items[i].id.substring(8);
 
         // باید با uuid جایگزین بشه
-        var itemData = dashbordData.find(c => c.id == idItem);
+        var itemData = dashbordData.find(c => c.uuid == uuid);
 
 
         itemData.visible = item.is(':checked') == true;
@@ -162,14 +163,19 @@ $("#AddItemDesktop").click(function () {
     var salDesktopItem = $("#SalDesktopItem").val();
     GetParam(ace, groupDesktopItem, salDesktopItem, false);
 
-    var index = 1;
+    var uuid = 1;
     if (dashbordData.length > 0) {
         var lastItems = dashbordData.filter(o => o.id.contains(modeItem));
-        index = lastItems.length + 1;
+        uuid = Math.max.apply(Math, dashbordData.map(function (o) { return o.uuid; })) + 1;
     }
-    var uuid = dashbordData.length + 1;
 
+
+    // var uuid = dashbordData.length + 1;
+
+    //const max = Math.max.apply(Math, dashbordData.map(function (o) { return o.uuid; }));
+    //var uuid = max + 1;
     //var idItem = modeItem + "-" + index;
+
     var idItem = modeItem;
     var item = {};
     if (modeItem == "TChk") {
@@ -200,50 +206,10 @@ $("#AddItemDesktop").click(function () {
             }
         };
     }
-    else if (modeItem == "TrzFCust_S") {
-        item = {
-            id: idItem,
-            uuid: uuid,
-            isForosh: true,
-            position: positionGrid_Defult,
-            caption: captionItem,
-            visible: true,
-            baseValue: {
-                ace: ace,
-                group: groupDesktopItem,
-                sal: salDesktopItem
-            }
-        };
-    }
-    else if (modeItem == "TrzFCust_P") {
-        item = {
-            id: idItem,
-            uuid: uuid,
-            /* valueControl: {
-                 top: 10,
-                 fromDate: "1384/01/01",//localStorage.getItem("BeginDateFct"),
-                 modeItem: "P"
-             },*/
-            isForosh: false,
-            position: positionGrid_Defult,
-            caption: captionItem,
-            visible: true,
-            baseValue: {
-                ace: ace,
-                group: groupDesktopItem,
-                sal: salDesktopItem
-            }
-        };
-    }
     else if (modeItem == "TarazFasli") {
         item = {
             id: idItem,
             uuid: uuid,
-            valueControl: {
-                mode: 0,
-                fromDate: "1384/01/01",
-                modeItem: "S"
-            },
             position: positionGrid_Defult,
             caption: captionItem,
             visible: true,
@@ -258,11 +224,6 @@ $("#AddItemDesktop").click(function () {
         item = {
             id: idItem,
             uuid: uuid,
-            valueControl: {
-                mode: 0,
-                fromDate: "1384/01/01",
-                modeItem: "S"
-            },
             position: positionGrid_Defult,
             caption: captionItem,
             visible: true,
@@ -277,9 +238,6 @@ $("#AddItemDesktop").click(function () {
         item = {
             id: idItem,
             uuid: uuid,
-            valueControl: {
-                mode: 0,
-            },
             position: positionGrid_Defult,
             caption: captionItem,
             visible: true,
@@ -294,9 +252,6 @@ $("#AddItemDesktop").click(function () {
         item = {
             id: idItem,
             uuid: uuid,
-            valueControl: {
-                mode: 0,
-            },
             position: positionGrid_Defult,
             caption: captionItem,
             visible: true,
@@ -311,9 +266,6 @@ $("#AddItemDesktop").click(function () {
         item = {
             id: idItem,
             uuid: uuid,
-            valueControl: {
-                mode: 0,
-            },
             position: positionGrid_Defult,
             caption: captionItem,
             visible: true,
@@ -328,9 +280,6 @@ $("#AddItemDesktop").click(function () {
         item = {
             id: idItem,
             uuid: uuid,
-            valueControl: {
-                mode: 0,
-            },
             position: positionGrid_Defult,
             caption: captionItem,
             visible: true,
@@ -345,9 +294,6 @@ $("#AddItemDesktop").click(function () {
         item = {
             id: idItem,
             uuid: uuid,
-            valueControl: {
-                mode: 0,
-            },
             position: positionGrid_Defult,
             caption: captionItem,
             visible: true,
@@ -362,9 +308,6 @@ $("#AddItemDesktop").click(function () {
         item = {
             id: idItem,
             uuid: uuid,
-            valueControl: {
-                mode: 0,
-            },
             position: positionGrid_Defult,
             caption: captionItem,
             visible: true,
@@ -379,9 +322,6 @@ $("#AddItemDesktop").click(function () {
         item = {
             id: idItem,
             uuid: uuid,
-            valueControl: {
-                mode: 0,
-            },
             position: positionGrid_Defult,
             caption: captionItem,
             visible: true,
@@ -438,6 +378,36 @@ $("#AddItemDesktop").click(function () {
         };
     }
     else if (modeItem == "FDocR_P") {
+        item = {
+            id: idItem,
+            uuid: uuid,
+            isForosh: false,
+            position: positionGrid_Defult,
+            caption: captionItem,
+            visible: true,
+            baseValue: {
+                ace: ace,
+                group: groupDesktopItem,
+                sal: salDesktopItem
+            }
+        };
+    }
+    else if (modeItem == "TrzFCust_S") {
+        item = {
+            id: idItem,
+            uuid: uuid,
+            isForosh: true,
+            position: positionGrid_Defult,
+            caption: captionItem,
+            visible: true,
+            baseValue: {
+                ace: ace,
+                group: groupDesktopItem,
+                sal: salDesktopItem
+            }
+        };
+    }
+    else if (modeItem == "TrzFCust_P") {
         item = {
             id: idItem,
             uuid: uuid,
@@ -513,10 +483,10 @@ $("#AddItemDesktop").click(function () {
     dashbordData.push(item);
     AddIteminGrid(item);
 
-    var col = ' <tr id="Obj_' + item.id + '"> ' +
-        '    <td id="Text_' + item.id + '">' + item.caption + '</td> ' +
+    var col = ' <tr id="Obj_' + item.id + '" uuid="' + item.uuid + '"> ' +
+        '    <td id="Text_' + item.id + '" uuid="' + item.uuid + '">' + item.caption + '</td> ' +
         '    <td style="padding: 0px 10px;text-align: left;"> ' +
-        '        <input class="CheckedItem" id = "Setting_' + item.id + '" type = "checkbox" ' + (item.visible == false ? "" : 'Checked="checked"') + '/>' +
+        '        <input class="CheckedItem" id="Setting_' + item.id + '"  uuid="' + item.uuid + '" type = "checkbox" ' + (item.visible == false ? "" : 'Checked="checked"') + '/>' +
         '    </td > ' +
         '</tr> ';
 
@@ -532,10 +502,10 @@ $('#modal-DesktopItem').on('show.bs.modal', function () {
     for (var i = 0; i < dashbordData.length; i++) {
         var item = dashbordData[i];
         id = item.id;
-        col = ' <tr id="Obj_' + id + '"> ' +
-            '    <td id="Text_' + id + '">' + item.caption + '</td> ' +
+        col = ' <tr id="Obj_' + id + '" uuid="' + item.uuid + '"> ' +
+            '    <td id="Text_' + id + '"  uuid="' + item.uuid + '">' + item.caption + '</td> ' +
             '    <td style="padding: 0px 10px;text-align: left;"> ' +
-            '        <input class="CheckedItem" id = "Setting_' + id + '" type = "checkbox" ' + (item.visible == false ? "" : 'Checked="checked"') + '/>' +
+            '        <input class="CheckedItem" id = "Setting_' + id + '" uuid="' + item.uuid + '" type = "checkbox" ' + (item.visible == false ? "" : 'Checked="checked"') + '/>' +
             '    </td > ' +
             '</tr> ';
         $('#TableDesktopItem').append(col);
@@ -591,7 +561,8 @@ $('#modal-DesktopNewItem').on('show.bs.modal', function () {
     CreateListDesktop(ace, group);
     CreateListModeDesktop(group);
     SetSalData(ace, group);
-    $("#CaptionItem").val(listModeDesktop[0].caption + ' - گروه ' + $('#GroupDesktopItem').val() + ' - سال ' + $('#SalDesktopItem').val());
+    //$("#CaptionItem").val(listModeDesktop[0].caption + ' - گروه ' + $('#GroupDesktopItem').val() + ' - سال ' + $('#SalDesktopItem').val());
+    $("#CaptionItem").val(listModeDesktop[0].caption);
     $('#GroupDesktopItem').val(group);
 })
 
@@ -599,7 +570,8 @@ $("#ModeDesktopItem").change(function () {
     var value = $(this).val();
     for (var i = 0; i < listModeDesktop.length; i++) {
         if (listModeDesktop[i].code == value) {
-            $("#CaptionItem").val(listModeDesktop[i].caption + ' - گروه ' + $('#GroupDesktopItem').val() + ' - سال ' + $('#SalDesktopItem option:selected').text());
+            //$("#CaptionItem").val(listModeDesktop[i].caption + ' - گروه ' + $('#GroupDesktopItem').val() + ' - سال ' + $('#SalDesktopItem option:selected').text());
+            $("#CaptionItem").val(listModeDesktop[i].caption);
         }
     }
 });
@@ -613,11 +585,13 @@ $("#GroupDesktopItem").change(function () {
     CreateListDesktop(ace, group);
     CreateListModeDesktop(group);
     SetSalData(ace, group);
+    //$("#CaptionItem").val($("#ModeDesktopItem option:selected").text() + ' - گروه ' + $('#GroupDesktopItem').val() + ' - سال ' + $('#SalDesktopItem option:selected').text());
     $("#CaptionItem").val($("#ModeDesktopItem option:selected").text() + ' - گروه ' + $('#GroupDesktopItem').val() + ' - سال ' + $('#SalDesktopItem option:selected').text());
 });
 
 $("#SalDesktopItem").change(function () {
-    $("#CaptionItem").val($("#ModeDesktopItem option:selected").text() + ' - گروه ' + $('#GroupDesktopItem').val() + ' - سال ' + $('#SalDesktopItem option:selected').text());
+    // $("#CaptionItem").val($("#ModeDesktopItem option:selected").text() + ' - گروه ' + $('#GroupDesktopItem').val() + ' - سال ' + $('#SalDesktopItem option:selected').text());
+    $("#CaptionItem").val($("#ModeDesktopItem option:selected").text());
 });
 
 
