@@ -1298,7 +1298,7 @@ afiaccess = [false, false, false, false, false, false, false,
 ]
 
 
-
+/*
 tempAccess = localStorage.getItem("afi1Access");
 if (ace != prog_Web2 && ace != null) {
     if (tempAccess == "null" || tempAccess == "" || tempAccess == null) {
@@ -1386,7 +1386,7 @@ if (localStorage.getItem("erjAccess") != null && localStorage.getItem("erjAccess
     erjGroupApi = localStorage.getItem("erjList").split("-")
 }
 
-
+*/
 
 
 function CheckGroupErj(GroupName) {
