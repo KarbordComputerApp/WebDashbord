@@ -35,7 +35,7 @@ mode_TrzFKala_S = mode_TrzFKala_S == null ? 0 : mode_TrzFKala_S;
 
 
 
-
+TestUser();
 
 var dashbordData_Save = localStorage.getItem("Karbord_DashbordData");
 
@@ -120,6 +120,7 @@ function CreateListDesktop(ace, group) {
 $("#SaveItems").click(function () {
     var obj = [];
     var items = $('.CheckedItem');
+    var widget_dashbord = $('.grid-stack ');
     //GetParam(baseValue.ace, baseValue.group, baseValue.sal, false);
     for (i = 0; i < items.length; i++) {
         var item = $(items[i]);
@@ -131,7 +132,9 @@ $("#SaveItems").click(function () {
 
 
         itemData.visible = item.is(':checked') == true;
-        $("#" + idItem).css("visibility", item.is(':checked') == true ? "visible" : "hidden");
+        var itemDashbord = $(widget_dashbord).find("[uuid=" + uuid + "]");
+
+        $(itemDashbord).css("visibility", item.is(':checked') == true ? "visible" : "hidden");
     }
 
     SaveVariantDashbord();
@@ -157,6 +160,7 @@ for (var i = 0; i < dashbordData.length; i++) {
 }
 
 $("#AddItemDesktop").click(function () {
+    ViewLoading(true);
     var modeItem = $("#ModeDesktopItem").val();
     var captionItem = $("#CaptionItem").val();
     var groupDesktopItem = $("#GroupDesktopItem").val();
@@ -169,16 +173,293 @@ $("#AddItemDesktop").click(function () {
         uuid = Math.max.apply(Math, dashbordData.map(function (o) { return o.uuid; })) + 1;
     }
 
-
     // var uuid = dashbordData.length + 1;
 
     //const max = Math.max.apply(Math, dashbordData.map(function (o) { return o.uuid; }));
     //var uuid = max + 1;
     //var idItem = modeItem + "-" + index;
 
-    var idItem = modeItem;
-    var item = {};
-    if (modeItem == "TChk") {
+    var item = {
+        id: modeItem,
+        uuid: uuid,
+        position: positionGrid_Defult,
+        caption: captionItem,
+        visible: true,
+        baseValue: {
+            ace: ace,
+            group: groupDesktopItem,
+            sal: salDesktopItem
+        }
+    }
+
+    if (modeItem == "TrzFCust_S" || modeItem == "TrzFKala_S" || modeItem == "FDocR_S"  ) {
+        item.isForosh = true;
+    }
+    else if (modeItem == "TrzFCust_P" || modeItem == "TrzFKala_P" || modeItem == "FDocR_P" ) {
+        item.isForosh = false;
+    }
+
+    dashbordData.push(item);
+    AddIteminGrid(item);
+
+    var col = ' <tr id="Obj_' + item.id + '" uuid="' + item.uuid + '"> ' +
+        '    <td id="Text_' + item.id + '" uuid="' + item.uuid + '">' + item.caption + '</td> ' +
+        '    <td style="padding: 0px 10px;text-align: left;"> ' +
+        '        <input class="CheckedItem" id="Setting_' + item.id + '"  uuid="' + item.uuid + '" type = "checkbox" ' + (item.visible == false ? "" : 'Checked="checked"') + '/>' +
+        '    </td > ' +
+        '</tr> ';
+
+    $('#TableDesktopItem').append(col);
+
+    ViewLoading(false);
+    $('#modal-DesktopNewItem').modal('hide');
+});
+
+
+$('#modal-DesktopItem').on('show.bs.modal', function () {
+    cols = '';
+    $("#TableDesktopItem").empty();
+    for (var i = 0; i < dashbordData.length; i++) {
+        var item = dashbordData[i];
+        id = item.id;
+        col = ' <tr id="Obj_' + id + '" uuid="' + item.uuid + '"> ' +
+            '    <td id="Text_' + id + '"  uuid="' + item.uuid + '">' + item.caption + '</td> ' +
+            '    <td style="padding: 0px 10px;text-align: left;"> ' +
+            '        <input class="CheckedItem" id = "Setting_' + id + '" uuid="' + item.uuid + '" type = "checkbox" ' + (item.visible == false ? "" : 'Checked="checked"') + '/>' +
+            '    </td > ' +
+            '</tr> ';
+        $('#TableDesktopItem').append(col);
+    }
+});
+
+var settingObject = $('#settingObject');
+
+settingObject.Setting(
+    {
+        id: null,
+        caption: "تنظیمات",
+        dataSetting: dataSettingDefult["all"],
+        externalModal: true,
+        baseValue: {
+            ace: ace
+        },
+    },
+);
+
+
+settingObject.click(function () {
+    settingObject.Setting("ShowModalSetting");
+});
+
+
+
+
+function CreateListModeDesktop(group) {
+    $('#ModeDesktopItem').empty();
+    var listModeDesktop = dataGroup[group]["ListMode"]
+    for (var i = 0; i < listModeDesktop.length; i++) {
+        $('#ModeDesktopItem').append($('<option>', { value: listModeDesktop[i].code, text: listModeDesktop[i].caption }));
+    }
+}
+
+/*
+$('#ModeDesktopItem').empty();
+for (var i = 0; i < listModeDesktop.length; i++) {
+    $('#ModeDesktopItem').append($('<option>', { value: listModeDesktop[i].code, text: listModeDesktop[i].caption }));
+}
+*/
+
+listGroups = loginData.baseValue.groupsData;
+for (var i = 0; i < listGroups.length; i++) {
+    $('#GroupDesktopItem').append($('<option>', { value: ReplaceGroup(listGroups[i].Code), text: listGroups[i].Code + " - " + listGroups[i].Name }));
+}
+$('#GroupDesktopItem').val(loginData.baseValue.defultGroup);
+
+
+$('#modal-DesktopNewItem').on('show.bs.modal', function () {
+    var group = ReplaceGroup(loginData.baseValue.defultGroup);
+    CreateListDesktop(ace, group);
+    CreateListModeDesktop(group);
+    SetSalData(ace, group);
+    //$("#CaptionItem").val(listModeDesktop[0].caption + ' - گروه ' + $('#GroupDesktopItem').val() + ' - سال ' + $('#SalDesktopItem').val());
+    $("#CaptionItem").val(listModeDesktop[0].caption);
+    $('#GroupDesktopItem').val(group);
+})
+
+$("#ModeDesktopItem").change(function () {
+    var value = $(this).val();
+    for (var i = 0; i < listModeDesktop.length; i++) {
+        if (listModeDesktop[i].code == value) {
+            //$("#CaptionItem").val(listModeDesktop[i].caption + ' - گروه ' + $('#GroupDesktopItem').val() + ' - سال ' + $('#SalDesktopItem option:selected').text());
+            $("#CaptionItem").val(listModeDesktop[i].caption);
+        }
+    }
+});
+
+//var listGroups = localStorage.getItem('afiList');
+
+
+
+$("#GroupDesktopItem").change(function () {
+    var group = $(this).val();
+    CreateListDesktop(ace, group);
+    CreateListModeDesktop(group);
+    SetSalData(ace, group);
+    //$("#CaptionItem").val($("#ModeDesktopItem option:selected").text() + ' - گروه ' + $('#GroupDesktopItem').val() + ' - سال ' + $('#SalDesktopItem option:selected').text());
+    $("#CaptionItem").val($("#ModeDesktopItem option:selected").text() + ' - گروه ' + $('#GroupDesktopItem').val() + ' - سال ' + $('#SalDesktopItem option:selected').text());
+});
+
+$("#SalDesktopItem").change(function () {
+    // $("#CaptionItem").val($("#ModeDesktopItem option:selected").text() + ' - گروه ' + $('#GroupDesktopItem').val() + ' - سال ' + $('#SalDesktopItem option:selected').text());
+    $("#CaptionItem").val($("#ModeDesktopItem option:selected").text());
+});
+
+
+
+
+
+
+
+
+function SetSalData(ace, group) {
+    $("#SalDesktopItem").empty();
+    var progName = ace == prog_Web1 ? prog_Afi : loginData.orgProgName;
+
+    var DatabseSalObject = {
+        ProgName: progName,
+        Group: group,
+        UserCode: userName
+    }
+
+    ajaxFunction(DatabseSalUrl, 'Post', DatabseSalObject).done(function (data) {
+        if (data.length > 0) {
+            for (var i = 0; i < data.length; i++) {
+                $('#SalDesktopItem').append($('<option>', { value: data[i].Code, text: data[i].Name }));
+            }
+            $("#SalDesktopItem").val(data[i - 1].Code);
+        }
+    });
+}
+
+
+
+
+
+
+/*
+var ViewModel = function () {
+    var self = this;
+
+    var aceList = [];
+    var afi1List = [];
+    var afi8List = [];
+    var afiList = [];
+    var erjList = [];
+
+    var DatabseSalUrl = server + '/api/Web_Data/DatabseSal/'; // آدرس دیتابیس های سال
+    self.DatabseSalList = ko.observableArray([]); // دیتابیس های سال
+
+    $('#information').hide();
+
+    if (sessionStorage.userName != 'ACE') {
+        $('#show_RepairDatabaseConfig').hide();
+        $('#show_RepairDatabase').hide();
+    }
+
+    self.currentPageIndexPrintForms = ko.observable(0);
+    self.filterPrintForms0 = ko.observable("");
+    self.filterPrintForms1 = ko.observable("");
+    self.pageSizePrintForms = ko.observable(0);
+    self.currentPageIndexKhdt = ko.observable(0);
+    self.CodePrint = ko.observable();
+
+    self.sortTablePrintForms = function (viewModel, e) { };
+    self.currentPagePrintForms = ko.computed(function () { });
+
+    self.nextPagePrintForms = function () { };
+
+    self.previousPagePrintForms = function () { };
+
+    self.firstPagePrintForms = function () { };
+
+
+    self.lastPagePrintForms = function () { };
+
+
+    self.PageIndexPrintForms = function (item) {
+        return 0;
+    };
+
+};
+
+
+ko.applyBindings(new ViewModel());
+*/
+
+function GetIconBank(Bank) {
+    res = '';
+    if (Bank == null)
+        res = "ansar"
+    else if (Bank.includes("انصار"))
+        res = "ansar"
+    else if (Bank.includes("پاسارگاد"))
+        res = "asargad"
+    else if (Bank.includes("آینده"))
+        res = "ayandeh"
+    else if (Bank.includes("دی"))
+        res = "day"
+    else if (Bank.includes("اقتصاد"))
+        res = "eghtesad"
+    else if (Bank.includes("گردشگری"))
+        res = "gardesh"
+    else if (Bank.includes("حکمت"))
+        res = "hekmat"
+    else if (Bank.includes("آفرین"))
+        res = "karafarin"
+    else if (Bank.includes("کشاورزی"))
+        res = "keshavarzi"
+    else if (Bank.includes("مسکن"))
+        res = "maskan"
+    else if (Bank.includes("مهر"))
+        res = "mehr"
+    else if (Bank.includes("ملت"))
+        res = "melat"
+    else if (Bank.includes("ملی"))
+        res = "meli"
+    else if (Bank.includes("پارسیان"))
+        res = "parsian"
+    else if (Bank.includes("رفاه"))
+        res = "refah"
+    else if (Bank.includes("رسالت"))
+        res = "resalat"
+    else if (Bank.includes("صادرات"))
+        res = "saderat"
+    else if (Bank.includes("سامان"))
+        res = "saman"
+    else if (Bank.includes("سرمایه"))
+        res = "sarmaye"
+    else if (Bank.includes("سپه"))
+        res = "sepah"
+    else if (Bank.includes("شهر"))
+        res = "shahr"
+    else if (Bank.includes("سینا"))
+        res = "sina"
+    else if (Bank.includes("تعاون"))
+        res = "tavon"
+    else if (Bank.includes("تجارت"))
+        res = "tejarat"
+    return "/Content/img/bank/" + res + ".png";
+}
+
+
+function GetIconCustomer(code) {
+    return '/Content/img/profile.png'
+}
+
+
+
+
+/* if (modeItem == "TChk") {
         item = {
             id: idItem,
             uuid: uuid,
@@ -478,261 +759,4 @@ $("#AddItemDesktop").click(function () {
                 sal: salDesktopItem
             }
         }
-    }
-
-    dashbordData.push(item);
-    AddIteminGrid(item);
-
-    var col = ' <tr id="Obj_' + item.id + '" uuid="' + item.uuid + '"> ' +
-        '    <td id="Text_' + item.id + '" uuid="' + item.uuid + '">' + item.caption + '</td> ' +
-        '    <td style="padding: 0px 10px;text-align: left;"> ' +
-        '        <input class="CheckedItem" id="Setting_' + item.id + '"  uuid="' + item.uuid + '" type = "checkbox" ' + (item.visible == false ? "" : 'Checked="checked"') + '/>' +
-        '    </td > ' +
-        '</tr> ';
-
-    $('#TableDesktopItem').append(col);
-
-    $('#modal-DesktopNewItem').modal('hide');
-});
-
-
-$('#modal-DesktopItem').on('show.bs.modal', function () {
-    cols = '';
-    $("#TableDesktopItem").empty();
-    for (var i = 0; i < dashbordData.length; i++) {
-        var item = dashbordData[i];
-        id = item.id;
-        col = ' <tr id="Obj_' + id + '" uuid="' + item.uuid + '"> ' +
-            '    <td id="Text_' + id + '"  uuid="' + item.uuid + '">' + item.caption + '</td> ' +
-            '    <td style="padding: 0px 10px;text-align: left;"> ' +
-            '        <input class="CheckedItem" id = "Setting_' + id + '" uuid="' + item.uuid + '" type = "checkbox" ' + (item.visible == false ? "" : 'Checked="checked"') + '/>' +
-            '    </td > ' +
-            '</tr> ';
-        $('#TableDesktopItem').append(col);
-    }
-});
-
-var settingObject = $('#settingObject');
-
-settingObject.Setting(
-    {
-        id: null,
-        caption: "تنظیمات",
-        dataSetting: dataSettingDefult["all"],
-        externalModal: true,
-        baseValue: {
-            ace: ace
-        },
-    },
-);
-
-
-settingObject.click(function () {
-    settingObject.Setting("ShowModalSetting");
-});
-
-
-
-
-function CreateListModeDesktop(group) {
-    $('#ModeDesktopItem').empty();
-    var listModeDesktop = dataGroup[group]["ListMode"]
-    for (var i = 0; i < listModeDesktop.length; i++) {
-        $('#ModeDesktopItem').append($('<option>', { value: listModeDesktop[i].code, text: listModeDesktop[i].caption }));
-    }
-}
-
-/*
-$('#ModeDesktopItem').empty();
-for (var i = 0; i < listModeDesktop.length; i++) {
-    $('#ModeDesktopItem').append($('<option>', { value: listModeDesktop[i].code, text: listModeDesktop[i].caption }));
-}
-*/
-
-listGroups = loginData.baseValue.groupsData;
-for (var i = 0; i < listGroups.length; i++) {
-    $('#GroupDesktopItem').append($('<option>', { value: ReplaceGroup(listGroups[i].Code), text: listGroups[i].Code + " - " + listGroups[i].Name }));
-}
-$('#GroupDesktopItem').val(loginData.baseValue.defultGroup);
-
-
-$('#modal-DesktopNewItem').on('show.bs.modal', function () {
-    var group = ReplaceGroup(loginData.baseValue.defultGroup);
-    CreateListDesktop(ace, group);
-    CreateListModeDesktop(group);
-    SetSalData(ace, group);
-    //$("#CaptionItem").val(listModeDesktop[0].caption + ' - گروه ' + $('#GroupDesktopItem').val() + ' - سال ' + $('#SalDesktopItem').val());
-    $("#CaptionItem").val(listModeDesktop[0].caption);
-    $('#GroupDesktopItem').val(group);
-})
-
-$("#ModeDesktopItem").change(function () {
-    var value = $(this).val();
-    for (var i = 0; i < listModeDesktop.length; i++) {
-        if (listModeDesktop[i].code == value) {
-            //$("#CaptionItem").val(listModeDesktop[i].caption + ' - گروه ' + $('#GroupDesktopItem').val() + ' - سال ' + $('#SalDesktopItem option:selected').text());
-            $("#CaptionItem").val(listModeDesktop[i].caption);
-        }
-    }
-});
-
-//var listGroups = localStorage.getItem('afiList');
-
-
-
-$("#GroupDesktopItem").change(function () {
-    var group = $(this).val();
-    CreateListDesktop(ace, group);
-    CreateListModeDesktop(group);
-    SetSalData(ace, group);
-    //$("#CaptionItem").val($("#ModeDesktopItem option:selected").text() + ' - گروه ' + $('#GroupDesktopItem').val() + ' - سال ' + $('#SalDesktopItem option:selected').text());
-    $("#CaptionItem").val($("#ModeDesktopItem option:selected").text() + ' - گروه ' + $('#GroupDesktopItem').val() + ' - سال ' + $('#SalDesktopItem option:selected').text());
-});
-
-$("#SalDesktopItem").change(function () {
-    // $("#CaptionItem").val($("#ModeDesktopItem option:selected").text() + ' - گروه ' + $('#GroupDesktopItem').val() + ' - سال ' + $('#SalDesktopItem option:selected').text());
-    $("#CaptionItem").val($("#ModeDesktopItem option:selected").text());
-});
-
-
-
-
-
-
-
-
-function SetSalData(ace, group) {
-    $("#SalDesktopItem").empty();
-    var progName = ace == prog_Web1 ? prog_Afi : loginData.orgProgName;
-
-    var DatabseSalObject = {
-        ProgName: progName,
-        Group: group,
-        UserCode: userName
-    }
-
-    ajaxFunction(DatabseSalUrl, 'Post', DatabseSalObject).done(function (data) {
-        if (data.length > 0) {
-            for (var i = 0; i < data.length; i++) {
-                $('#SalDesktopItem').append($('<option>', { value: data[i].Code, text: data[i].Name }));
-            }
-            $("#SalDesktopItem").val(data[i - 1].Code);
-        }
-    });
-}
-
-
-
-
-
-
-/*
-var ViewModel = function () {
-    var self = this;
-
-    var aceList = [];
-    var afi1List = [];
-    var afi8List = [];
-    var afiList = [];
-    var erjList = [];
-
-    var DatabseSalUrl = server + '/api/Web_Data/DatabseSal/'; // آدرس دیتابیس های سال
-    self.DatabseSalList = ko.observableArray([]); // دیتابیس های سال
-
-    $('#information').hide();
-
-    if (sessionStorage.userName != 'ACE') {
-        $('#show_RepairDatabaseConfig').hide();
-        $('#show_RepairDatabase').hide();
-    }
-
-    self.currentPageIndexPrintForms = ko.observable(0);
-    self.filterPrintForms0 = ko.observable("");
-    self.filterPrintForms1 = ko.observable("");
-    self.pageSizePrintForms = ko.observable(0);
-    self.currentPageIndexKhdt = ko.observable(0);
-    self.CodePrint = ko.observable();
-
-    self.sortTablePrintForms = function (viewModel, e) { };
-    self.currentPagePrintForms = ko.computed(function () { });
-
-    self.nextPagePrintForms = function () { };
-
-    self.previousPagePrintForms = function () { };
-
-    self.firstPagePrintForms = function () { };
-
-
-    self.lastPagePrintForms = function () { };
-
-
-    self.PageIndexPrintForms = function (item) {
-        return 0;
-    };
-
-};
-
-
-ko.applyBindings(new ViewModel());
-*/
-
-function GetIconBank(Bank) {
-    res = '';
-    if (Bank == null)
-        res = "ansar"
-    else if (Bank.includes("انصار"))
-        res = "ansar"
-    else if (Bank.includes("پاسارگاد"))
-        res = "asargad"
-    else if (Bank.includes("آینده"))
-        res = "ayandeh"
-    else if (Bank.includes("دی"))
-        res = "day"
-    else if (Bank.includes("اقتصاد"))
-        res = "eghtesad"
-    else if (Bank.includes("گردشگری"))
-        res = "gardesh"
-    else if (Bank.includes("حکمت"))
-        res = "hekmat"
-    else if (Bank.includes("آفرین"))
-        res = "karafarin"
-    else if (Bank.includes("کشاورزی"))
-        res = "keshavarzi"
-    else if (Bank.includes("مسکن"))
-        res = "maskan"
-    else if (Bank.includes("مهر"))
-        res = "mehr"
-    else if (Bank.includes("ملت"))
-        res = "melat"
-    else if (Bank.includes("ملی"))
-        res = "meli"
-    else if (Bank.includes("پارسیان"))
-        res = "parsian"
-    else if (Bank.includes("رفاه"))
-        res = "refah"
-    else if (Bank.includes("رسالت"))
-        res = "resalat"
-    else if (Bank.includes("صادرات"))
-        res = "saderat"
-    else if (Bank.includes("سامان"))
-        res = "saman"
-    else if (Bank.includes("سرمایه"))
-        res = "sarmaye"
-    else if (Bank.includes("سپه"))
-        res = "sepah"
-    else if (Bank.includes("شهر"))
-        res = "shahr"
-    else if (Bank.includes("سینا"))
-        res = "sina"
-    else if (Bank.includes("تعاون"))
-        res = "tavon"
-    else if (Bank.includes("تجارت"))
-        res = "tejarat"
-    return "/Content/img/bank/" + res + ".png";
-}
-
-
-function GetIconCustomer(code) {
-    return '/Content/img/profile.png'
-}
-
+    }*/

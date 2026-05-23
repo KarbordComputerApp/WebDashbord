@@ -1,7 +1,7 @@
 ﻿$.widget("ui.Report_FDocR", {
     options: {
         rprtId: 'FDocR',
-        uuidSetting: null,
+        uuid: null,
         caption: null,
         baseValue: {
             ace: null,

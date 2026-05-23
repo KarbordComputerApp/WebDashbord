@@ -1,7 +1,7 @@
 ﻿$.widget("ui.Report_AGOpr", {
     options: {
         rprtId: 'AGOpr',
-        uuidSetting: null,
+        uuid: null,
         caption: null,
         baseValue: {
             ace: null,

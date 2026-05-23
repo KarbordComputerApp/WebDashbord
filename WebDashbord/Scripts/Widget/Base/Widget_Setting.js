@@ -137,6 +137,17 @@ $.widget("ui.Setting", {
         var obj = this;
         var o = obj.options;
         var modal = o.modalElement;
+
+        for (var i = 0; i < o.dataSetting.length; i++) {
+            var tr = $(modal).find("[data-name =" + o.dataSetting[i].code + "]");
+            
+
+            if (o.dataSetting[i].mode == f_Select) {
+                $(tr).find("select").val(o.dataSetting[i].value);
+                
+            }
+        }
+
         modal.modal('show');
     },
 

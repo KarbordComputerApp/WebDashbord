@@ -20,7 +20,7 @@ $('.grid-stack-item').resizable({
 $.widget("ui.D_TChk", {
     options: {
         id: null,
-        uuidSetting: null,
+        uuid: null,
         caption: null,
         position: [],
         baseValue: [],
@@ -42,7 +42,7 @@ $.widget("ui.D_TChk", {
 
         var divReport = $('<div style="padding: 5px;">');
         divReport.Report_TChk({
-            uuidSetting: o.uuidSetting,
+            uuid: o.uuid,
             baseValue: o.baseValue,
             showControl: o.showControl == null ? setting.showControl : o.showControl,
             getAutoData: o.getAutoData == null ? setting.getAutoData : o.getAutoData,
@@ -91,7 +91,7 @@ $.widget("ui.D_TChk", {
 $.widget("ui.D_TChk_Sum", {
     options: {
         id: null,
-        uuidSetting: null,
+        uuid: null,
         caption: null,
         position: [],
         baseValue: [],
@@ -113,7 +113,7 @@ $.widget("ui.D_TChk_Sum", {
 
         var divReport = $('<div style="padding: 5px;">');
         divReport.TChk_Sum({
-            uuidSetting: o.uuidSetting,
+            uuid: o.uuid,
             baseValue: o.baseValue,
             showControl: o.showControl == null ? setting.showControl : o.showControl,
             getAutoData: o.getAutoData == null ? setting.getAutoData : o.getAutoData,
@@ -150,7 +150,7 @@ $.widget("ui.D_TChk_Sum", {
 $.widget("ui.D_TrzFCust", {
     options: {
         id: null,
-        uuidSetting: null,
+        uuid: null,
         caption: null,
         isForosh: null,
         position: [],
@@ -173,7 +173,7 @@ $.widget("ui.D_TrzFCust", {
 
         var divReport = $('<div style="padding: 5px;">');
         divReport.Report_TrzFCust({
-            uuidSetting: o.uuidSetting,
+            uuid: o.uuid,
             baseValue: o.baseValue,
             showControl: o.showControl == null ? setting.showControl : o.showControl,
             getAutoData: o.getAutoData == null ? setting.getAutoData : o.getAutoData,
@@ -447,7 +447,7 @@ $.widget("ui.D_TarazFasli", {
 
 
             o.data = response;
-            var itemData = dashbordData.find(c => c.uuid == o.uuidSetting);
+            var itemData = dashbordData.find(c => c.uuid == o.uuid);
             itemData.valueControl = o.valueControl;
         });
     },
@@ -463,7 +463,7 @@ $.widget("ui.D_TarazFasli", {
 $.widget("ui.D_TrzAcc", {
     options: {
         id: null,
-        uuidSetting: null,
+        uuid: null,
         caption: null,
         position: [],
         valueControl: {
@@ -488,7 +488,7 @@ $.widget("ui.D_TrzAcc", {
 
         var divReport = $('<div style="padding: 10px;">');
         divReport.Report_TrzAcc({
-            uuidSetting: o.uuidSetting,
+            uuid: o.uuid,
             baseValue: o.baseValue,
             showControl: o.showControl == null ? setting.showControl : o.showControl,   
             getAutoData: o.getAutoData == null ? setting.getAutoData : o.getAutoData ,
@@ -537,7 +537,7 @@ $.widget("ui.D_TrzAcc", {
 $.widget("ui.D_Dftr", {
     options: {
         id: null,
-        uuidSetting: null,
+        uuid: null,
         caption: null,
         position: [],
         baseValue: [],
@@ -559,7 +559,7 @@ $.widget("ui.D_Dftr", {
         var divReport = $('<div style="padding: 10px;">');
 
         divReport.Report_Dftr({
-            uuidSetting: o.uuidSetting,
+            uuid: o.uuid,
             baseValue: o.baseValue,
             showControl: o.showControl == null ? setting.showControl : o.showControl,
             getAutoData: o.getAutoData == null ? setting.getAutoData : o.getAutoData,
@@ -609,7 +609,7 @@ $.widget("ui.D_Dftr", {
 $.widget("ui.D_ADocR", {
     options: {
         id: null,
-        uuidSetting: null,
+        uuid: null,
         caption: null,
         position: [],
         baseValue: [],
@@ -631,7 +631,7 @@ $.widget("ui.D_ADocR", {
         var divReport = $('<div style="padding: 10px;">');
 
         divReport.Report_ADocR({
-            uuidSetting: o.uuidSetting,
+            uuid: o.uuid,
             baseValue: o.baseValue,
             showControl: o.showControl == null ? setting.showControl : o.showControl,
             getAutoData: o.getAutoData == null ? setting.getAutoData : o.getAutoData,
@@ -682,7 +682,7 @@ $.widget("ui.D_ADocR", {
 $.widget("ui.D_AGMkz", {
     options: {
         id: null,
-        uuidSetting: null,
+        uuid: null,
         caption: null,
         position: [],
         baseValue: [],
@@ -704,7 +704,7 @@ $.widget("ui.D_AGMkz", {
 
         var divReport = $('<div style="padding: 5px;">');
         divReport.Report_AGMkz({
-            uuidSetting: o.uuidSetting,
+            uuid: o.uuid,
             baseValue: o.baseValue,
             showControl: o.showControl == null ? setting.showControl : o.showControl,
             getAutoData: o.getAutoData == null ? setting.getAutoData : o.getAutoData,
@@ -753,7 +753,7 @@ $.widget("ui.D_AGMkz", {
 $.widget("ui.D_AGOpr", {
     options: {
         id: null,
-        uuidSetting: null,
+        uuid: null,
         caption: null,
         position: [],
         baseValue: [],
@@ -775,7 +775,7 @@ $.widget("ui.D_AGOpr", {
 
         var divReport = $('<div style="padding: 5px;">');
         divReport.Report_AGOpr({
-            uuidSetting: o.uuidSetting,
+            uuid: o.uuid,
             baseValue: o.baseValue,
             showControl: o.showControl == null ? setting.showControl : o.showControl,
             getAutoData: o.getAutoData == null ? setting.getAutoData : o.getAutoData,
@@ -824,7 +824,7 @@ $.widget("ui.D_AGOpr", {
 $.widget("ui.D_GrdZAcc", {
     options: {
         id: null,
-        uuidSetting: null,
+        uuid: null,
         caption: null,
         position: [],
         baseValue: [],
@@ -846,7 +846,7 @@ $.widget("ui.D_GrdZAcc", {
 
         var divReport = $('<div style="padding: 5px;">');
         divReport.Report_GrdZAcc({
-            uuidSetting: o.uuidSetting,
+            uuid: o.uuid,
             baseValue: o.baseValue,
             showControl: o.showControl == null ? setting.showControl : o.showControl,
             getAutoData: o.getAutoData == null ? setting.getAutoData : o.getAutoData,
@@ -895,7 +895,7 @@ $.widget("ui.D_GrdZAcc", {
 $.widget("ui.D_KhlAcc", {
     options: {
         id: null,
-        uuidSetting: null,
+        uuid: null,
         caption: null,
         position: [],
         baseValue: [],
@@ -917,7 +917,7 @@ $.widget("ui.D_KhlAcc", {
 
         var divReport = $('<div style="padding: 5px;">');
         divReport.Report_KhlAcc({
-            uuidSetting: o.uuidSetting,
+            uuid: o.uuid,
             baseValue: o.baseValue,
             showControl: o.showControl == null ? setting.showControl : o.showControl,
             getAutoData: o.getAutoData == null ? setting.getAutoData : o.getAutoData,
@@ -966,7 +966,7 @@ $.widget("ui.D_KhlAcc", {
 $.widget("ui.D_KhlZAcc", {
     options: {
         id: null,
-        uuidSetting: null,
+        uuid: null,
         caption: null,
         position: [],
         baseValue: [],
@@ -988,7 +988,7 @@ $.widget("ui.D_KhlZAcc", {
 
         var divReport = $('<div style="padding: 5px;">');
         divReport.Report_KhlZAcc({
-            uuidSetting: o.uuidSetting,
+            uuid: o.uuid,
             baseValue: o.baseValue,
             showControl: o.showControl == null ? setting.showControl : o.showControl,
             getAutoData: o.getAutoData == null ? setting.getAutoData : o.getAutoData,
@@ -1037,7 +1037,7 @@ $.widget("ui.D_KhlZAcc", {
 $.widget("ui.D_TrzFKala", {
     options: {
         id: null,
-        uuidSetting: null,
+        uuid: null,
         caption: null,
         isForosh: null,
         position: [],
@@ -1060,7 +1060,7 @@ $.widget("ui.D_TrzFKala", {
 
         var divReport = $('<div style="padding: 5px;">');
         divReport.Report_TrzFKala({
-            uuidSetting: o.uuidSetting,
+            uuid: o.uuid,
             baseValue: o.baseValue,
             showControl: o.showControl == null ? setting.showControl : o.showControl,
             getAutoData: o.getAutoData == null ? setting.getAutoData : o.getAutoData,
@@ -1110,7 +1110,7 @@ $.widget("ui.D_TrzFKala", {
 $.widget("ui.D_FDocR", {
     options: {
         id: null,
-        uuidSetting: null,
+        uuid: null,
         caption: null,
         isForosh: null,
         position: [],
@@ -1133,7 +1133,7 @@ $.widget("ui.D_FDocR", {
 
         var divReport = $('<div style="padding: 5px;">');
         divReport.Report_FDocR({
-            uuidSetting: o.uuidSetting,
+            uuid: o.uuid,
             baseValue: o.baseValue,
             showControl: o.showControl == null ? setting.showControl : o.showControl,
             getAutoData: o.getAutoData == null ? setting.getAutoData : o.getAutoData,
@@ -1183,7 +1183,7 @@ $.widget("ui.D_FDocR", {
 $.widget("ui.D_Krdx", {
     options: {
         id: null,
-        uuidSetting: null,
+        uuid: null,
         caption: null,
         position: [],
         baseValue: [],
@@ -1205,7 +1205,7 @@ $.widget("ui.D_Krdx", {
 
         var divReport = $('<div style="padding: 5px;">');
         divReport.Report_Krdx({
-            uuidSetting: o.uuidSetting,
+            uuid: o.uuid,
             baseValue: o.baseValue,
             showControl: o.showControl == null ? setting.showControl : o.showControl,
             getAutoData: o.getAutoData == null ? setting.getAutoData : o.getAutoData,
@@ -1254,7 +1254,7 @@ $.widget("ui.D_Krdx", {
 $.widget("ui.D_TrzIKala", {
     options: {
         id: null,
-        uuidSetting: null,
+        uuid: null,
         caption: null,
         position: [],
         baseValue: [],
@@ -1276,7 +1276,7 @@ $.widget("ui.D_TrzIKala", {
 
         var divReport = $('<div style="padding: 5px;">');
         divReport.Report_TrzIKala({
-            uuidSetting: o.uuidSetting,
+            uuid: o.uuid,
             baseValue: o.baseValue,
             showControl: o.showControl == null ? setting.showControl : o.showControl,
             getAutoData: o.getAutoData == null ? setting.getAutoData : o.getAutoData,
@@ -1325,7 +1325,7 @@ $.widget("ui.D_TrzIKala", {
 $.widget("ui.D_TrzIKalaExf", {
     options: {
         id: null,
-        uuidSetting: null,
+        uuid: null,
         caption: null,
         position: [],
         baseValue: [],
@@ -1347,7 +1347,7 @@ $.widget("ui.D_TrzIKalaExf", {
 
         var divReport = $('<div style="padding: 5px;">');
         divReport.Report_TrzIKalaExf({
-            uuidSetting: o.uuidSetting,
+            uuid: o.uuid,
             baseValue: o.baseValue,
             showControl: o.showControl == null ? setting.showControl : o.showControl,
             getAutoData: o.getAutoData == null ? setting.getAutoData : o.getAutoData,
@@ -1396,7 +1396,7 @@ $.widget("ui.D_TrzIKalaExf", {
 $.widget("ui.D_IDocR", {
     options: {
         id: null,
-        uuidSetting: null,
+        uuid: null,
         caption: null,
         position: [],
         baseValue: [],
@@ -1418,7 +1418,7 @@ $.widget("ui.D_IDocR", {
 
         var divReport = $('<div style="padding: 5px;">');
         divReport.Report_IDocR({
-            uuidSetting: o.uuidSetting,
+            uuid: o.uuid,
             baseValue: o.baseValue,
             showControl: o.showControl == null ? setting.showControl : o.showControl,
             getAutoData: o.getAutoData == null ? setting.getAutoData : o.getAutoData,

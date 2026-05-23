@@ -1,7 +1,7 @@
 ﻿$.widget("ui.Report_AGMkz", {
     options: {
         rprtId: 'AGMkz',
-        uuidSetting: null,
+        uuid: null,
         caption: null,
         baseValue: {
             ace: null,

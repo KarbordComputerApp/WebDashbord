@@ -1,7 +1,7 @@
 ﻿$.widget("ui.TChk_Sum", {
     options: {
         rprtId: 'TChk_Sum',
-        uuidSetting: null,
+        uuid: null,
         caption: null,
         baseValue: {
             ace: null,

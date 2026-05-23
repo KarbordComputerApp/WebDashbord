@@ -1,7 +1,7 @@
 ﻿$.widget("ui.Report_GrdZAcc", {
     options: {
         rprtId: 'GrdZAcc',
-        uuidSetting: null,
+        uuid: null,
         caption: null,
         baseValue: {
             ace: null,

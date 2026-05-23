@@ -1,7 +1,7 @@
 ﻿$.widget("ui.TChk", {
     options: {
         rprtId: 'TChk',
-        uuidSetting: null,
+        uuid: null,
         caption: null,
         baseValue: {
             ace: null,

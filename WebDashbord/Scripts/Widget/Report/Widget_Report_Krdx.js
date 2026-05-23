@@ -1,7 +1,7 @@
 ﻿$.widget("ui.Report_Krdx", {
     options: {
         rprtId: 'Krdx',
-        uuidSetting: null,
+        uuid: null,
         caption: null,
         baseValue: {
             ace: null,

@@ -67,6 +67,7 @@ var loginDataDefult =
 
 
 
+
 var loginData_Save = localStorage.getItem("Karbord_LoginData");
 if (loginData_Save != null && loginData_Save != "[{}]" && loginData_Save.toString() != "null" && loginData_Save.toString() != "") {
     loginData = JSON.parse(loginData_Save);
@@ -103,6 +104,7 @@ if (loginData_Save != null && loginData_Save != "[{}]" && loginData_Save.toStrin
     */
 }
 else {
+    loginData = loginDataDefult;
     // window.location.href = urlPage_Login;
 }
 
@@ -178,14 +180,18 @@ function SetUrl(server) {
     SaveFDoc_SamaneMakeDocUri = server + '/api/FDocData/SaveFDoc_SamaneMakeDoc/'; // آدرس ذخیره سامانه 
 }
 
-SetUrl(loginData.apiAddress);
+if (loginData.apiAddress != null) {
+    SetUrl(loginData.apiAddress);
+}
+
 
 function ViewLoading(show) {
-    if (show == true) {
+    var display = $('#loadingsite').css('display');
+    if (show && display == "none") {
         $('#loadingsite').attr('class', 'page-proccess-wrapper');
         $('#loadingsite').css('display', 'block');
     }
-    else {
+    else if (show == false && display == "block") {
         $('#loadingsite').css('display', 'none');
         $('#loadingsite').attr('class', 'page-loader-wrapper');
     }
@@ -2812,38 +2818,33 @@ function getTimeServer() {
 
 if (userName != '' && userName != null)
     setInterval(TestUser, 60000);
-function TestUser() {
-    /*
-    if (userName != "" && userName != null) {
 
-        groupNo = '';
-        if (erjGroupApi.includes(group) == true) {
-            if (accessErj != null) {
-                groupNo = group
-            }
-        }
+function TestUser() {
+    if (userName != "" && userName != null && hrefPage != urlPage_Login) {
         var LoginTestObject = {
             MachineId: loginData.machineIdKarbord,
-            IPWan: '',
-            Country: '',
-            City: '',
+            IPWan: loginData.ip,
+            Country: loginData.country,
+            City: loginData.city,
             UserCode: userName,
             ProgName: ace,
-            ProgVer: '',
-            ProgCaption: '',
-            FlagTest: 1,
-            GroupNo: groupNo,
-            Year: sal,
+            ProgVer: loginData.version,
+            ProgCaption: "وب : " + loginData.progCaption,
+            FlagTest: true,
+            GroupNo: '',
+            Year: '',
         }
 
         ajaxFunction(LoginTestUri, 'POST', LoginTestObject).done(function (datalogin) {
-            if (datalogin.ID >= 0) {
+            /*if (datalogin.ID >= 0) {
                 //showNotification('لطفا دوباره وارد شوید', 0);
                 //sleep(10000);
                 userName = '';
+                loginData.userName = "";
+                loginData.password = "";
                 window.location.href = urlPage_Login;
             }
-            else {
+            else */{
                 DateNow = datalogin.SrvDate;
                 localStorage.setItem("DateNow", DateNow);
 
@@ -2887,9 +2888,8 @@ function TestUser() {
 
             }
         });
-    }*/
-
-};
+    };
+}
 
 function SetValidation() {
 

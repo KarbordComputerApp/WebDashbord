@@ -1,7 +1,7 @@
 ﻿$.widget("ui.Report_Dftr", {
     options: {
         rprtId: 'Dftr',
-        uuidSetting: null,
+        uuid: null,
         caption: null,
         baseValue: {
             ace: null,
@@ -369,7 +369,7 @@
             o.objGrid.Table("option", "data", response);
             o.objGrid.Table("RefreshTable");
 
-            var uuid = o.uuidSetting;
+            var uuid = o.uuid;
             var itemSetting = dashbordData.filter(c => c.uuid == uuid);
             if (itemSetting.length > 0) {
                 itemSetting[0]["controlData"] = object;

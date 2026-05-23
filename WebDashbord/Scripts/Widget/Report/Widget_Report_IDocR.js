@@ -1,7 +1,7 @@
 ﻿$.widget("ui.Report_IDocR", {
     options: {
         rprtId: 'IDocR',
-        uuidSetting: null,
+        uuid: null,
         caption: null,
         baseValue: {
             ace: null,

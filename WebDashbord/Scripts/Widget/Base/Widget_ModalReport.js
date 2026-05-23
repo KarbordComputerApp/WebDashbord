@@ -72,7 +72,7 @@
         dialog.append(content);
 
         var paramReport = {
-            uuidSetting: o.uuid,
+            uuid: o.uuid,
             baseValue: o.baseValue,
             showControl: o.showControl,
             getAutoData: o.getAutoData,

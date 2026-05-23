@@ -140,98 +140,104 @@ const caption_GetAutoData = "گزارش گیری در شروع"
 const caption_ShowControl = "نمایش کنترل گزارش در شروع"
 const caption_ViewData = "نمایش اطلاعات"
 
+const caption_ViewData_Desktop = "دسکتاپ";
+const caption_ViewData_Mobile = "موبایل";
+
+const caption_GetAutoData_Auto = "خودکار";
+const caption_GetAutoData_Manual = "دستی";
+
+const caption_ShowControl_Show = "نمایش";
+const caption_ShowControl_Hide = "مخفی";
+
 var dataSettingDefult = {
     all: [
         { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "دریافت همه" }, { key: 1, value: "دریافت دستی" }, { key: 2, value: "غیر فعال" }] },
-        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "نمایش" }, { key: 1, value: "مخفی" }] },
+        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_ShowControl_Show }, { key: 1, value: caption_ShowControl_Hide }] },
     ],
     TChk: [
-        { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "خودکار" }, { key: 1, value: "دستی" }] },
-        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "نمایش" }, { key: 1, value: "مخفی" }] },
-        { code: "ViewData", caption: caption_ViewData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "کامل" }, { key: 1, value: "خلاصه" }] },
+        { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_GetAutoData_Auto }, { key: 1, value: caption_GetAutoData_Manual }] },
+        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_ShowControl_Show }, { key: 1, value: caption_ShowControl_Hide }] },
+        { code: "ViewData", caption: caption_ViewData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_ViewData_Desktop }, { key: 1, value: caption_ViewData_Mobile }] },
     ],
     TChk_Sum: [
-        { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "خودکار" }, { key: 1, value: "دستی" }] },
-        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "نمایش" }, { key: 1, value: "مخفی" }] },
+        { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_GetAutoData_Auto }, { key: 1, value: caption_GetAutoData_Manual }] },
+        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_ShowControl_Show }, { key: 1, value: caption_ShowControl_Hide }] },
     ],
     TrzFCust: [
-        { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "خودکار" }, { key: 1, value: "دستی" }] },
-        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "نمایش" }, { key: 1, value: "مخفی" }] },
-        { code: "ViewData", caption: caption_ViewData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "کامل" }, { key: 1, value: "خلاصه" }] },
+        { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_GetAutoData_Auto }, { key: 1, value: caption_GetAutoData_Manual }] },
+        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_ShowControl_Show }, { key: 1, value: caption_ShowControl_Hide }] },
+        { code: "ViewData", caption: caption_ViewData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_ViewData_Desktop }, { key: 1, value: caption_ViewData_Mobile }] },
     ],
     TrzAcc: [
-        { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "خودکار" }, { key: 1, value: "دستی" }] },
-        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "نمایش" }, { key: 1, value: "مخفی" }] },
-        { code: "ViewData", caption: caption_ViewData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "کامل" }, { key: 1, value: "خلاصه" }] },
+        { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_GetAutoData_Auto }, { key: 1, value: caption_GetAutoData_Manual }] },
+        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_ShowControl_Show }, { key: 1, value: caption_ShowControl_Hide }] },
+        { code: "ViewData", caption: caption_ViewData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_ViewData_Desktop }, { key: 1, value: caption_ViewData_Mobile }] },
     ],
     Dftr: [
-        { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "خودکار" }, { key: 1, value: "دستی" }] },
-        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 1, value: 1, items: [{ key: 0, value: "نمایش" }, { key: 1, value: "مخفی" }] },
-        { code: "ViewData", caption: caption_ViewData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "کامل" }, { key: 1, value: "خلاصه" }] },
+        { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_GetAutoData_Auto }, { key: 1, value: caption_GetAutoData_Manual }] },
+        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 1, value: 1, items: [{ key: 0, value: caption_ShowControl_Show }, { key: 1, value: caption_ShowControl_Hide }] },
+        { code: "ViewData", caption: caption_ViewData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_ViewData_Desktop }, { key: 1, value: caption_ViewData_Mobile }] },
     ],
     ADocR: [
-        { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "خودکار" }, { key: 1, value: "دستی" }] },
-        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 1, value: 1, items: [{ key: 0, value: "نمایش" }, { key: 1, value: "مخفی" }] },
-        { code: "ViewData", caption: caption_ViewData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "کامل" }, { key: 1, value: "خلاصه" }] },
+        { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_GetAutoData_Auto }, { key: 1, value: caption_GetAutoData_Manual }] },
+        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 1, value: 1, items: [{ key: 0, value: caption_ShowControl_Show }, { key: 1, value: caption_ShowControl_Hide }] },
+        { code: "ViewData", caption: caption_ViewData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_ViewData_Desktop }, { key: 1, value: caption_ViewData_Mobile }] },
     ],
     AGMkz: [
-        { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "خودکار" }, { key: 1, value: "دستی" }] },
-        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "نمایش" }, { key: 1, value: "مخفی" }] },
-        { code: "ViewData", caption: caption_ViewData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "کامل" }, { key: 1, value: "خلاصه" }] },
+        { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_GetAutoData_Auto }, { key: 1, value: caption_GetAutoData_Manual }] },
+        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_ShowControl_Show }, { key: 1, value: caption_ShowControl_Hide }] },
+        { code: "ViewData", caption: caption_ViewData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_ViewData_Desktop }, { key: 1, value: caption_ViewData_Mobile }] },
     ],
     AGOpr: [
-        { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "خودکار" }, { key: 1, value: "دستی" }] },
-        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "نمایش" }, { key: 1, value: "مخفی" }] },
-        { code: "ViewData", caption: caption_ViewData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "کامل" }, { key: 1, value: "خلاصه" }] },
+        { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_GetAutoData_Auto }, { key: 1, value: caption_GetAutoData_Manual }] },
+        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_ShowControl_Show }, { key: 1, value: caption_ShowControl_Hide }] },
+        { code: "ViewData", caption: caption_ViewData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_ViewData_Desktop }, { key: 1, value: caption_ViewData_Mobile }] },
     ],
     GrdZAcc: [
-        { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "خودکار" }, { key: 1, value: "دستی" }] },
-        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "نمایش" }, { key: 1, value: "مخفی" }] },
-        { code: "ViewData", caption: caption_ViewData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "کامل" }, { key: 1, value: "خلاصه" }] },
+        { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_GetAutoData_Auto }, { key: 1, value: caption_GetAutoData_Manual }] },
+        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_ShowControl_Show }, { key: 1, value: caption_ShowControl_Hide }] },
+        { code: "ViewData", caption: caption_ViewData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_ViewData_Desktop }, { key: 1, value: caption_ViewData_Mobile }] },
     ],
     KhlAcc: [
-        { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "خودکار" }, { key: 1, value: "دستی" }] },
-        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "نمایش" }, { key: 1, value: "مخفی" }] },
-        { code: "ViewData", caption: caption_ViewData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "کامل" }, { key: 1, value: "خلاصه" }] },
+        { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_GetAutoData_Auto }, { key: 1, value: caption_GetAutoData_Manual }] },
+        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_ShowControl_Show }, { key: 1, value: caption_ShowControl_Hide }] },
+        { code: "ViewData", caption: caption_ViewData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_ViewData_Desktop }, { key: 1, value: caption_ViewData_Mobile }] },
     ],
     KhlZAcc: [
-        { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "خودکار" }, { key: 1, value: "دستی" }] },
-        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "نمایش" }, { key: 1, value: "مخفی" }] },
-        { code: "ViewData", caption: caption_ViewData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "کامل" }, { key: 1, value: "خلاصه" }] },
+        { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_GetAutoData_Auto }, { key: 1, value: caption_GetAutoData_Manual }] },
+        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_ShowControl_Show }, { key: 1, value: caption_ShowControl_Hide }] },
+        { code: "ViewData", caption: caption_ViewData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_ViewData_Desktop }, { key: 1, value: caption_ViewData_Mobile }] },
     ],
     TrzFKala: [
-        { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "خودکار" }, { key: 1, value: "دستی" }] },
-        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "نمایش" }, { key: 1, value: "مخفی" }] },
-        { code: "ViewData", caption: caption_ViewData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "کامل" }, { key: 1, value: "خلاصه" }] },
+        { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_GetAutoData_Auto }, { key: 1, value: caption_GetAutoData_Manual }] },
+        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_ShowControl_Show }, { key: 1, value: caption_ShowControl_Hide }] },
+        { code: "ViewData", caption: caption_ViewData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_ViewData_Desktop }, { key: 1, value: caption_ViewData_Mobile }] },
     ],
-
     FDocR: [
-        { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "خودکار" }, { key: 1, value: "دستی" }] },
-        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "نمایش" }, { key: 1, value: "مخفی" }] },
-        { code: "ViewData", caption: caption_ViewData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "کامل" }, { key: 1, value: "خلاصه" }] },
+        { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_GetAutoData_Auto }, { key: 1, value: caption_GetAutoData_Manual }] },
+        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_ShowControl_Show }, { key: 1, value: caption_ShowControl_Hide }] },
+        { code: "ViewData", caption: caption_ViewData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_ViewData_Desktop }, { key: 1, value: caption_ViewData_Mobile }] },
     ],
     Krdx: [
-        { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "خودکار" }, { key: 1, value: "دستی" }] },
-        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "نمایش" }, { key: 1, value: "مخفی" }] },
-        { code: "ViewData", caption: caption_ViewData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "کامل" }, { key: 1, value: "خلاصه" }] },
+        { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_GetAutoData_Auto }, { key: 1, value: caption_GetAutoData_Manual }] },
+        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_ShowControl_Show }, { key: 1, value: caption_ShowControl_Hide }] },
+        { code: "ViewData", caption: caption_ViewData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_ViewData_Desktop }, { key: 1, value: caption_ViewData_Mobile }] },
     ],
     TrzIKala: [
-        { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "خودکار" }, { key: 1, value: "دستی" }] },
-        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "نمایش" }, { key: 1, value: "مخفی" }] },
-        { code: "ViewData", caption: caption_ViewData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "کامل" }, { key: 1, value: "خلاصه" }] },
+        { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_GetAutoData_Auto }, { key: 1, value: caption_GetAutoData_Manual }] },
+        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_ShowControl_Show }, { key: 1, value: caption_ShowControl_Hide }] },
+        { code: "ViewData", caption: caption_ViewData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_ViewData_Desktop }, { key: 1, value: caption_ViewData_Mobile }] },
     ],
     TrzIKalaExf: [
-        { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "خودکار" }, { key: 1, value: "دستی" }] },
-        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "نمایش" }, { key: 1, value: "مخفی" }] },
-        { code: "ViewData", caption: caption_ViewData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "کامل" }, { key: 1, value: "خلاصه" }] },
+        { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_GetAutoData_Auto }, { key: 1, value: caption_GetAutoData_Manual }] },
+        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_ShowControl_Show }, { key: 1, value: caption_ShowControl_Hide }] },
+        { code: "ViewData", caption: caption_ViewData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_ViewData_Desktop }, { key: 1, value: caption_ViewData_Mobile }] },
     ],
     IDocR: [
-        { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "خودکار" }, { key: 1, value: "دستی" }] },
-        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "نمایش" }, { key: 1, value: "مخفی" }] },
-        { code: "ViewData", caption: caption_ViewData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "کامل" }, { key: 1, value: "خلاصه" }] },
+        { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_GetAutoData_Auto }, { key: 1, value: caption_GetAutoData_Manual }] },
+        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_ShowControl_Show }, { key: 1, value: caption_ShowControl_Hide }] },
+        { code: "ViewData", caption: caption_ViewData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_ViewData_Desktop }, { key: 1, value: caption_ViewData_Mobile }] },
     ],
-
-
 };
 
 
@@ -554,7 +560,7 @@ var idBox = 0;
 
 function BoxDashbord_Create(obj, divHead, divBody) {
     var o = obj.options;
-    var itemData = dashbordData.find(c => c.uuid == o.uuidSetting);
+    var itemData = dashbordData.find(c => c.uuid == o.uuid);
     if (itemData == null) {
         itemData = { valueControl: o.valueControl, position: o.position };
     } else {
@@ -563,14 +569,16 @@ function BoxDashbord_Create(obj, divHead, divBody) {
     }
 
     var divCart = $('<div class="item_dashbord grid-stack-item ui-draggable ui-resizable ui-resizable-autohide" style ="visibility:' + //min-height: 505px; min-width: 450px; 
-        (o.visible == false ? 'hidden' : 'visible') + '" idBox = "' + idBox + '" gs-x="' + o.position.x + '" gs-y="' + o.position.y +
+        (o.visible == false ? 'hidden' : 'visible') + '" idBox = "' + idBox + '" uuid = "' + o.uuid + '" gs-x="' + o.position.x + '" gs-y="' + o.position.y +
         '" gs-w="' + o.position.w + '" gs-h="' + o.position.h + '" minW="3"  minH="3">');
     var divContent = $('<div class="grid-stack-item-content" style="background-color:white">');
 
     //Header
-    var divHeader = $('<div class="modal-header form-inline focused" style="position: sticky;top: 0px;background: white;z-index: 10;">');
+    var divHeader = $('<div class="modal-header form-inline focused" style="position: sticky;top: 0px;background: white;z-index: 10;padding-bottom: 5px;">');
 
     var div = $('<div class="headButton">');
+
+
 
     var b_ShowControl = $('<a action-name="ShowControl" style="padding-left: 5px;" title="کنترل گزارش"><i class="bi bi-caret-down"></a>');
     div.append(b_ShowControl);
@@ -587,7 +595,7 @@ function BoxDashbord_Create(obj, divHead, divBody) {
             else if (o.headButton[i] == f_Refresh) {
                 btn = $('<a action-name="' + o.headButton[i] + '" style="padding-left: 5px;" title="بروز رسانی"><span class="bi bi-arrow-repeat"></a>');
             }
-            else if (o.headButton[i] == f_Setting && o.uuidSetting > 0) {
+            else if (o.headButton[i] == f_Setting && o.uuid > 0) {
                 btn = $('<a action-name="' + o.headButton[i] + '" style="padding-left: 5px;" title="تنظیمات"><span class="bi bi-gear"></a>');
             }
             if (btn != null) {
@@ -604,9 +612,16 @@ function BoxDashbord_Create(obj, divHead, divBody) {
     div.append(b_Close);
 
     var h4 = $('<h4 class="modal-title" style="">' + o.caption + '</h4>');
-
     divHeader.append(h4);
-    divHeader.append(h41);
+
+    var divBase = $('<div style="padding-right: 10px;padding-left: 10px;border: 1px solid red;border-radius: 10px;position: absolute;top: 8px;left: 160px;">');
+
+    var groupData = loginData.baseValue.groupsData.find(c => c.Code == o.baseValue.group);
+    var p1 = $('<p style="font-size: 9px;">' + o.baseValue.group + ' - ' + groupData.Name + '</p>');
+    var p2 = $('<p style="font-size: 9px;">سال مالی ' + o.baseValue.sal + '</p>');
+    divBase.append(p1);
+    divBase.append(p2);
+    divHeader.append(divBase);
 
     divHeader.append(div);
 
@@ -692,11 +707,11 @@ function BoxDashbord_Create(obj, divHead, divBody) {
             o.position.y = parseInt($(element).attr("gs-y"));
             o.position.w = parseInt($(element).attr("gs-w"));
             o.position.h = parseInt($(element).attr("gs-h"));*/
-            // o.uuidSetting اشکال دارد
-            var itemData = dashbordData.filter(c => c.uuid == o.uuidSetting);
+            // o.uuid اشکال دارد
+            var itemData = dashbordData.filter(c => c.uuid == o.uuid);
             if (itemData.length > 0) {
                 var pos = { x: x, y: y, w: w, h: h };
-                dashbordData.filter(c => c.uuid == o.uuidSetting)[0].position = pos;
+                dashbordData.filter(c => c.uuid == o.uuid)[0].position = pos;
                 //itemData[0].position = o.position;
             }
         }
@@ -800,7 +815,7 @@ function BoxDashbord_Refresh(obj) {
 
 function BoxDashbord_Close(obj) {
     var o = obj.options;
-    var itemData = dashbordData.find(c => c.uuid == o.uuidSetting);
+    var itemData = dashbordData.find(c => c.uuid == o.uuid);
     if (itemData != null) {
         Swal.fire({
             title: "تایید بستن",
@@ -813,7 +828,7 @@ function BoxDashbord_Close(obj) {
             confirmButtonText: text_Yes
         }).then((result) => {
             if (result.value) {
-                var itemData = dashbordData.find(c => c.uuid == o.uuidSetting);
+                var itemData = dashbordData.find(c => c.uuid == o.uuid);
                 //if (itemData != null) {
                 for (var i = 0; i < dashbordData.length; i++) {
                     if (dashbordData[i].id == o.id) {
@@ -980,7 +995,7 @@ function CreateObjectSetting(obj) {
     var o = obj.options;
     var _div = $('<div class="' + 'K_DivModal' + f_Setting + '">');
 
-    var dataSetting = dashbordData.filter(c => c.uuid == o.uuidSetting);
+    var dataSetting = dashbordData.filter(c => c.uuid == o.uuid);
     var data = [];
     if (dataSetting.length > 0) {
         if (dataSetting[0].dataSetting != null) {
@@ -1008,7 +1023,7 @@ function CreateObjectSetting(obj) {
                 sal: sal
             },
             Save: function (e, record) {
-                var uuid = o.uuidSetting;
+                var uuid = o.uuid;
                 var itemSetting = dashbordData.filter(c => c.uuid == uuid)[0];
                 itemSetting["dataSetting"] = record.data;
                 o.dataSetting = record.data;
@@ -1036,7 +1051,7 @@ function ShowObjectSetting(obj) {
 };
 
 function GetSetting(o) {
-    var dataSetting = dashbordData.filter(c => c.uuid == o.uuidSetting);
+    var dataSetting = dashbordData.filter(c => c.uuid == o.uuid);
     var data = [];
     if (dataSetting.length > 0) {
         if (dataSetting[0].dataSetting != null) {
@@ -1077,7 +1092,7 @@ function AddIteminGrid(itemObject) {
 
     param = {
         id: id,
-        uuidSetting: uuid,
+        uuid: uuid,
         caption: itemObject.caption,
         visible: itemObject.visible,
         baseValue: itemObject.baseValue,
@@ -1121,7 +1136,7 @@ function AddIteminGrid(itemObject) {
     else if (id == "KhlZAcc") {
         element.D_KhlZAcc(param);
     }
-    else if (id == "TrzFCust_S" || id == "TrzFCust_P"  ) {
+    else if (id == "TrzFCust_S" || id == "TrzFCust_P") {
         param.isForosh = itemObject.isForosh;
         element.D_TrzFCust(param);
     }

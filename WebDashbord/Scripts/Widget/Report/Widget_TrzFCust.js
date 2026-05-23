@@ -1,7 +1,7 @@
 ﻿$.widget("ui.TrzFCust", {
     options: {
         rprtId: 'TrzFCust',
-        uuidSetting: null,
+        uuid: null,
         caption: null,
         baseValue: {
             ace: null,

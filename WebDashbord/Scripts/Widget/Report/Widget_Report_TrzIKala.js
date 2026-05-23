@@ -1,7 +1,7 @@
 ﻿$.widget("ui.Report_TrzIKala", {
     options: {
         rprtId: 'TrzIKala',
-        uuidSetting: null,
+        uuid: null,
         caption: null,
         baseValue: {
             ace: null,

@@ -1,7 +1,7 @@
 ﻿$.widget("ui.Report_KhlAcc", {
     options: {
         rprtId: 'KhlAcc',
-        uuidSetting: null,
+        uuid: null,
         caption: null,
         baseValue: {
             ace: null,
