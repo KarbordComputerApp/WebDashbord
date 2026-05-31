@@ -53,6 +53,14 @@ const length_Max = 250;
 
 const positionGrid_Defult = { x: 0, y: 0, w: 4, h: 5 };
 
+function PositionGrid_Defult_Fun() {
+    this.x = positionGrid_Defult.x;
+    this.y = positionGrid_Defult.y;
+    this.w = positionGrid_Defult.w;
+    this.h = positionGrid_Defult.h;
+}
+
+
 const color_Radif = "#d9d9d9";
 const color_RowSum = "#e8964d";//"#e37d228f";
 const color_RowSearch = "#efb683";

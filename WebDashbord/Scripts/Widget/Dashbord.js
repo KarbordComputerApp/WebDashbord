@@ -55,6 +55,7 @@ function unique(arr, key) {
     }
     return a;
 }
+
 function Fix_UUid() {
     dashbordData.sort(function (a, b) {
         //return (a.y > b.y) || (a.x > b.x) ? 1 : -1
@@ -82,12 +83,12 @@ function SetDataColumns(push) {
                 w: item.w,
                 h: item.h,
             }
-            pos.push(position);
+            pos.add(position);
         }
     }
     else {
         for (var i = 0; i < dashbordData.length; i++) {
-            pos.push(dashbordData[i].position);
+            pos.add(dashbordData[i].position);
         }
     }
 
@@ -130,9 +131,16 @@ function AppendBoxPush(uuid) {
         }
     }
 }
+function Car() {
+    this.x = 0;
+    this.y = 0;
+    this.w = 4;
+    this.h = 5;
+}
+
 
 function FindFreePosition(uuid, push = false) {
-    var position = {};
+    let position = {};
     var rows = SetDataColumns(push);
     if (uuid > 0) {
         var pos = dashbordData.filter(c => c.uuid == uuid)[0].position;
@@ -146,7 +154,7 @@ function FindFreePosition(uuid, push = false) {
         position.w = pos.w;
         position.h = pos.h;
     } else {
-        position = positionGrid_Defult;
+        position = new PositionGrid_Defult_Fun(); //positionGrid_Defult;
         if (rows.length > 0) {
             var flagSet = false;
             for (var i = 0; i < rows.length; i++) {
@@ -325,7 +333,7 @@ $("#AddItemDesktop").click(async function () {
         item.isForosh = false;
     }
 
-    dashbordData.push(item);
+    dashbordData.add(item);
     AddIteminGrid(item);
 
     var col = ' <tr id="Obj_' + item.id + '" uuid="' + item.uuid + '"> ' +
