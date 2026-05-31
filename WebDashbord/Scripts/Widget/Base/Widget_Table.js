@@ -635,35 +635,54 @@
         var content = $('<div class="modal-content"></div>');
 
         //head
-        var _header = $('<div class="modal-header" style="min-width: 300px">');
+        var _header = $('<div style="min-width: 300px">');
+        var _rowHeader = $('<div class="modal-header">');
         var _buttonExit = $('<a title="بستن"><i class="bi bi-x-lg"></button >');
-        _header.append(_buttonExit);
+        _rowHeader.append(_buttonExit);
         var title = $('<p class="modal-title" style="width: 90%;text-align: center;">' + headBtn.caption + '</p>');
-        _header.append(title);
-
+        _rowHeader.append(title);
         var _aDefult = $('<a title="پیش فرض"><i class="bi bi-person-gear"></a>')
-        _header.append(_aDefult);
+        _rowHeader.append(_aDefult);
+
+        _header.append(_rowHeader);
+
+        var _rowHeader = $('<div class="row">');
+        var _inputSearch = $('<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">');
+        _rowHeader.append(_inputSearch);
+        _header.append(_rowHeader);
         // end head
+
+
+        _inputSearch.Input(
+            {
+                caption: "جستجو",
+                value: "",
+                dataType: type_String,
+                maxlength: 0,
+                KeyUp: function (e, record) {
+                    var value = record.value.trim();
+                    var row = $(this).closest('.modal-content').find('.columnslist');
+
+                    var columns = [];
+                    if (value == "")
+                        columns = o.columns.filter(c => c.Name != "");
+                    else
+                        columns = o.columns.filter(c => c.Name.includes(value));
+
+                    var _divRow = obj._CreateListFilter(columns, row);
+                },
+            },
+        );
+
+
 
         //body
         var _body = $('<div class="modal-body" style="height: 350px;overflow:auto;">');
-        var _divRow = $('<div>');
 
-        //{ Code: 'Spec', Name: 'ملاحظات', Type: type_Farsi, Visible: 1 },
         var columns = o.columns.filter(c => c.Name != '');
-        for (var i = 0; i < columns.length; i++) {
-            var _divInline = $('<div class="form-inline" style="padding: 5px 10px 5px 10px;">');
-            var _input = $('<input data-name="' + columns[i].Code + '" mode = "' + td_Mode + '" type="checkbox" style="margin:0px">');
-            var _strong = $('<strong style="padding-right: 10px;">' + columns[i].Name + '</strong>');
-
-            _input.prop('checked', columns[i].Visible == 1);
-
-            _divInline.append(_input);
-            _divInline.append(_strong);
-
-            _divRow.append(_divInline);
-        }
-        _body.append(_divRow);
+        var _divRow = $('<div class = "columnslist">');
+        var divRow = obj._CreateListFilter(columns, _divRow);
+        _body.append(divRow);
         //end body
 
         var _footer = $('<div style="padding: 0px; margin: 10px;" hidden>');
@@ -691,9 +710,34 @@
         });
 
         _modal.on('hide.bs.modal', function () {
-            //obj._SetResultModalColumn();
+            obj._SetResultModalColumn();
         });
 
+    },
+
+    _CreateListFilter: function (column, row) {
+        var obj = this;
+        var o = obj.options;
+        $(row).empty();
+        for (var i = 0; i < column.length; i++) {
+            var _divInline = $('<div class="form-inline" style="padding: 5px 10px 5px 10px;">');
+            var _input = $('<input data-name="' + column[i].Code + '" mode = "' + td_Mode + '" type="checkbox" style="margin:0px">');
+            var _strong = $('<strong style="padding-right: 10px;">' + column[i].Name + '</strong>');
+
+            _input.prop('checked', column[i].Visible == 1);
+
+            _divInline.append(_input);
+            _divInline.append(_strong);
+            row.append(_divInline);
+            _input.click(function (e) {
+                var input = $(this);
+                var visible = 1;
+                var code = input.attr("data-name");
+                input.is(':checked') == true ? visible = 1 : visible = 0;
+                o.columns.find(c => c.Code == code).Visible = visible;
+            });
+        }
+        return row;
     },
 
     _ShowModalColumn: function () {
@@ -725,17 +769,17 @@
         var modal = $(obj.bindings[0]).find('.K_Modal' + f_Columns);
         var input = modal.find('[mode="' + td_Mode + '"]');
         var list = [];
-        var rprtCols = JSON.parse(localStorage.getItem('RprtCols'));
-        var rprtCol = rprtCols.filter(s => s.RprtId == o.id && s.UserCode == sessionStorage.userName);
+        /*var rprtCols = JSON.parse(localStorage.getItem('RprtCols'));
+        var rprtCol = rprtCols.filter(s => s.RprtId == o.id && s.UserCode == userName);
         if (rprtCol.length == 0) {
             rprtCol = rprtCols.filter(s => s.RprtId == o.id && s.UserCode == "*Default*");
-        }
+        }*/
         for (i = 0; i < input.length; i++) {
             var visible = 0;
             var code = $(input[i]).attr("data-name");
             $(input[i]).is(':checked') == true ? visible = 1 : visible = 0;
             tmp = {
-                'UserCode': sessionStorage.userName,
+                'UserCode': userName,
                 'RprtId': o.id,
                 'Code': code,
                 'Visible': visible,
@@ -744,11 +788,8 @@
             };
             list.push(tmp);
 
-            rCol = rprtCol.filter(c => c.Code == code)[0];
+            rCol = o.columns.filter(c => c.Code == code)[0];
             rCol.Visible = visible;
-
-            col = o.columns.filter(c => c.Code == code)[0];
-            col.Visible = visible;
         }
 
         var actionValue = { actionName: "SaveColumns", columns: o.columns, data: list };
@@ -756,7 +797,9 @@
 
         var url = CreateUrl(o.baseValue.ace, o.baseValue.sal, o.baseValue.group, 'RprtColsSave') // آدرس ذخیره ستون ها
         ajaxFunction(url, 'POST', list).done(function (response) {
-            localStorage.setItem('RprtCols', JSON.stringify(rprtCols));
+            //var columns = dataGroup[o.baseValue.group][o.baseValue.sal].Columns.dataUser;
+            //var result = columns.filter(c => c.RprtId == o.id && c.UserCode == userName);
+            // dataGroup[o.baseValue.group][o.baseValue.sal].Columns.dataUser = columns;
             if (o.viewData == _viewDataFull)
                 obj._PaintFull();
             else
@@ -1140,7 +1183,7 @@
 
         obj._ExportData(list, _columns);
     },
-    
+
     RefreshTable: function () {
         obj = this;
         var o = obj.options;
@@ -1168,7 +1211,7 @@
         }
         if (o.sumFields.length > 0) obj._Sum();
     },
-    
+
 
 
     ShowModalControl: function () {

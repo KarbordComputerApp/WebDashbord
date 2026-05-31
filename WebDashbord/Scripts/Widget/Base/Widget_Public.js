@@ -82,6 +82,9 @@ const btn_Defult = '<a action-name="' + f_Defult + '" title="پیش فرض"><i c
 
 const widgetPublic = '#WidgetPublic';
 
+const icon_ShowControl1 = "bi-menu-up"
+const icon_ShowControl2 = "bi-menu-down"
+
 var cssMaximin = {
     "top": "0px",
     "left": "0px",
@@ -259,7 +262,7 @@ if (!String.prototype.format) {
 async function GetData(o, refresh, param) {
     var uri = CreateUrl(o.baseValue.ace, o.baseValue.sal, o.baseValue.group, o.id);
     var method = 'POST';
-    var userCode = sessionStorage.userName;
+    var userCode = userName;
     var object = [];
 
 
@@ -556,8 +559,6 @@ function FindSortField(list, fieldName) {
 }
 
 
-var idBox = 0;
-
 function BoxDashbord_Create(obj, divHead, divBody) {
     var o = obj.options;
     var itemData = dashbordData.find(c => c.uuid == o.uuid);
@@ -569,7 +570,7 @@ function BoxDashbord_Create(obj, divHead, divBody) {
     }
 
     var divCart = $('<div class="item_dashbord grid-stack-item ui-draggable ui-resizable ui-resizable-autohide" style ="visibility:' + //min-height: 505px; min-width: 450px; 
-        (o.visible == false ? 'hidden' : 'visible') + '" idBox = "' + idBox + '" uuid = "' + o.uuid + '" gs-x="' + o.position.x + '" gs-y="' + o.position.y +
+        (o.visible == false ? 'hidden' : 'visible') + '" uuid = "' + o.uuid + '" gs-x="' + o.position.x + '" gs-y="' + o.position.y +
         '" gs-w="' + o.position.w + '" gs-h="' + o.position.h + '" minW="3"  minH="3">');
     var divContent = $('<div class="grid-stack-item-content" style="background-color:white">');
 
@@ -579,8 +580,14 @@ function BoxDashbord_Create(obj, divHead, divBody) {
     var div = $('<div class="headButton">');
 
 
+    var icon_ShowControl = icon_ShowControl1;
 
-    var b_ShowControl = $('<a action-name="ShowControl" style="padding-left: 5px;" title="کنترل گزارش"><i class="bi bi-caret-down"></a>');
+    var showControl = itemData.dataSetting.where(c => c.code == "ShowControl");
+    if (showControl.length > 0)
+        var icon_ShowControl = showControl[0].value == "0" ? icon_ShowControl1 : icon_ShowControl2;
+
+
+    var b_ShowControl = $('<a action-name="ShowControl" style="padding-left: 5px;" title="کنترل گزارش"><i class="bi ' + icon_ShowControl + '"></a>');
     div.append(b_ShowControl);
 
     if (o.headButton != null) {
@@ -647,6 +654,17 @@ function BoxDashbord_Create(obj, divHead, divBody) {
             BoxDashbord_Close(obj);
         }
         else if (actionName == f_ShowControl) {
+            var a = $(o.o);
+            var i = $(this).find("i");
+            if (a.find('.' + icon_ShowControl1).length > 0) {
+                i.removeClass(icon_ShowControl1);
+                i.addClass(icon_ShowControl2);
+            }
+            else {
+                i.removeClass(icon_ShowControl2);
+                i.addClass(icon_ShowControl1);
+            }
+
             BoxDashbord_ShowControl(obj);
         }
         else if (actionName == f_Refresh) {
@@ -662,21 +680,6 @@ function BoxDashbord_Create(obj, divHead, divBody) {
             BoxDashbord_Columns(obj);
         }
         else if (actionName == f_Maximum) {
-            var a = $(o.o);
-            styleMaximum = a[0].style;
-            var zIndex = a.css("z-index");
-            var i = $(this).find("i");
-            if (zIndex == "auto") {
-                a.css(cssMaximin);
-                i.removeClass("bi-window");
-                i.addClass("bi-window-stack");
-            }
-            else {
-                a[0].style = styleMaximum;
-                i.addClass("bi-window");
-                i.removeClass("bi-window-stack");
-            }
-        } else if (actionName == f_Maximum) {
             var a = $(o.o);
             styleMaximum = a[0].style;
             var zIndex = a.css("z-index");
@@ -719,14 +722,10 @@ function BoxDashbord_Create(obj, divHead, divBody) {
 
     itemData.caption = o.caption;
     itemData.baseValue = o.baseValue;
-    objectDashbord.add(divCart[0]);
-    o.idBox = idBox;
-    idBox++;
+    objectDashbord.add({ uuid: o.uuid, o: divCart[0] });
     o.o = divCart[0];
     grid.el.appendChild(o.o);
-
     let w = grid.makeWidget(o.o, { x: o.position.x, y: o.position.y, w: o.position.w, h: o.position.h, minW: 4 });
-
     //let w = grid.addWidget({content: o.o, x: o.position.x, y: o.position.y, w: o.position.w, h: o.position.h, minW: 4 });
 }
 
@@ -831,10 +830,11 @@ function BoxDashbord_Close(obj) {
                 var itemData = dashbordData.find(c => c.uuid == o.uuid);
                 //if (itemData != null) {
                 for (var i = 0; i < dashbordData.length; i++) {
-                    if (dashbordData[i].id == o.id) {
+                    if (dashbordData[i].uuid == o.uuid) {
+                        objectDashbord.splice(i, 1);
                         dashbordData.splice(i, 1);
                         grid.removeWidget(o.o);
-                        $("#widget_" + o.id).remove();
+                        //$("#widget_" + o.id).remove();
                         break;
                     }
                 }
@@ -848,7 +848,7 @@ function BoxDashbord_Close(obj) {
     }
     else {
         grid.removeWidget(o.o);
-        $("#widget_" + o.id).remove();
+        //$("#widget_" + o.id).remove();
     }
 };
 

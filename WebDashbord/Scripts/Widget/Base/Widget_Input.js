@@ -141,6 +141,8 @@
             $(_input).val(text);
         }
         o.value = text;
+        var record = { 'value': o.value, 'text': o.value };
+        obj._trigger("KeyUp", event, record);
     },
 
 });

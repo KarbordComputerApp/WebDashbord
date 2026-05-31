@@ -64,10 +64,6 @@ var loginDataDefult =
     version: sessionStorage.ver,
 };
 
-
-
-
-
 var loginData_Save = localStorage.getItem("Karbord_LoginData");
 if (loginData_Save != null && loginData_Save != "[{}]" && loginData_Save.toString() != "null" && loginData_Save.toString() != "") {
     loginData = JSON.parse(loginData_Save);
@@ -472,9 +468,9 @@ function getRprtColsErj(rprtId, username) {
 
 
 
-function GetParam(ace, group, sal, refresh) {
+async function GetParam(ace, group, sal, refresh , async = false) {
     const param = "params";
-    ajaxFunction(ParamUri + ace + '/' + sal + '/' + group, 'GET', null, false).done(function (data) {
+    await ajaxFunction(ParamUri + ace + '/' + sal + '/' + group, 'GET', null, async).done(function (data) {
 
         if (dataGroup[group] == null) {
             dataGroup[group] = {};

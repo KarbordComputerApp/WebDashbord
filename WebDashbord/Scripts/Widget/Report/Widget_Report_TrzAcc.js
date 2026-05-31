@@ -103,8 +103,7 @@
                         var idbox = parseInt($(obj.element[0].closest('.item_dashbord')).attr("idbox"));
 
                         o.objects.userData = userData
-                        var position = SetPosition(o.objGrid);
-
+                        var position = FindFreePosition(o.uuid); 
                         var item = {
                             id: actionName,
                             uuid: 0,
@@ -129,7 +128,8 @@
                             objects: o.objects,
                         });*/
                         AddIteminGrid(item);
-                        SetPositionItems(idbox);
+                        AppendBoxPush(o.uuid);
+                        //SetPositionItems(o.uuid);
                     }
                 },
                 ExportData: function (e, records) {

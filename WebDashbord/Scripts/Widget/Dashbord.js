@@ -42,10 +42,134 @@ var dashbordData_Save = localStorage.getItem("Karbord_DashbordData");
 //dashbordData_Save = `[{"id":"TChk_Sum-1","valueControl":{"day":"10000000"},"position":{"x":0,"y":12,"w":4,"h":3},"caption":"صورت خلاصه چک های پرداختی - گروه 97 - سال 1384","visible":true,"baseValue":{"ace":"Web8","group":"97","sal":"1384"}},{"id":"TChk_Sum-2","valueControl":{"day":"10000000"},"position":{"x":4,"y":3,"w":4,"h":3},"caption":"صورت خلاصه چک های پرداختی - گروه 97 - سال 1403","visible":true,"baseValue":{"ace":"Web8","group":"97","sal":"1403"}},{"id":"TrzFCust_S-1","valueControl":{"top":10,"fromDate":"1384/01/01","modeItem":"S"},"position":{"x":8,"y":0,"w":4,"h":3},"caption":"مانده حساب خریداران - گروه 97 - سال 1403","visible":true,"baseValue":{"ace":"Web8","group":"97","sal":"1403"}},{"id":"TrzFCust_P-1","valueControl":{"top":10,"fromDate":"1384/01/01","modeItem":"P"},"position":{"x":0,"y":3,"w":4,"h":3},"caption":"مانده حساب فروشندگان - گروه 97 - سال 1403","visible":true,"baseValue":{"ace":"Web8","group":"97","sal":"1403"}},{"id":"TChk-3","valueControl":{"day":"1000000"},"position":{"x":0,"y":0,"w":4,"h":3},"caption":"چک های پرداختی - گروه 97 - سال 1403","visible":true,"baseValue":{"ace":"Web8","group":"97","sal":"1403"}},{"id":"TChk-4","valueControl":{"day":"10000000"},"position":{"x":8,"y":3,"w":4,"h":3},"caption":"چک های پرداختی - گروه 97 - سال 1384","visible":true,"baseValue":{"ace":"Web8","group":"97","sal":"1384"}},{"id":"TrzFCust_P-2","valueControl":{"top":10,"fromDate":"1384/01/01","modeItem":"P"},"position":{"x":4,"y":0,"w":4,"h":3},"caption":"مانده حساب فروشندگان - گروه 97 - سال 1384","visible":true,"baseValue":{"ace":"Web8","group":"97","sal":"1384"}}]`
 //dashbordData_Save = `[{"id":"TrzAcc-1","valueControl":{"mode":0,"fromDate":"1384/01/01","modeItem":"S"},"position":{"x":0,"y":0,"w":4,"h":3},"caption":"تراز حساب - گروه 97 - سال 1384","visible":true,"baseValue":{"ace":"Web8","group":"97","sal":"1384"}}]`
 
+
+
+function unique(arr, key) {
+    var u = {}, a = [];
+    var index = 0;
+    for (var i = 0, l = arr.length; i < l; ++i) {
+        if (!u.hasOwnProperty(arr[i][key])) {
+            a.push({ ro: index++, roH: arr[i][key], sumW: 0 });
+            u[arr[i][key]] = 1;
+        }
+    }
+    return a;
+}
+function Fix_UUid() {
+    dashbordData.sort(function (a, b) {
+        //return (a.y > b.y) || (a.x > b.x) ? 1 : -1
+        return ((a.position.y * 10) + a.position.x) > ((b.position.y * 10) + b.position.x) ? 1 : -1
+    });
+    for (var i = 0; i < dashbordData.length; i++) {
+        dashbordData[i].uuid = i + 1;
+        if (dashbordData[i].position == null) {
+            dashbordData[i].position = positionGrid_Defult
+        }
+    }
+}
+
+function SetDataColumns(push) {
+    var pos = [];
+
+    if (push) {
+        var nodes = grid.engine.nodes;
+        for (var i = 0; i < nodes.length; i++) {
+            var item = nodes[i];
+            var uuid = parseInt($(item.el).attr("uuid"));
+            var position = {
+                x: item.x,
+                y: item.y,
+                w: item.w,
+                h: item.h,
+            }
+            pos.push(position);
+        }
+    }
+    else {
+        for (var i = 0; i < dashbordData.length; i++) {
+            pos.push(dashbordData[i].position);
+        }
+    }
+
+    pos.sort(function (a, b) {
+        return ((a.y * 10) + a.x) > ((b.y * 10) + b.x) ? 1 : -1
+    });
+    var rows = unique(pos, 'y');
+    for (var i = 0; i < rows.length; i++) {
+        var r = pos.where(c => c.y == rows[i].roH);
+        r.sort(function (a, b) {
+            return (a.h > b.h) ? 1 : -1
+        });
+
+        var sumW = 0;
+        for (var j = 0; j < r.length; j++) {
+            sumW = sumW + r[j].w;
+        }
+
+        rows[i].maxH = r[r.length - 1].h;
+        rows[i].sumW = sumW;
+    }
+    return rows;
+}
+
+function AppendBoxPush(uuid) {
+    for (var i = uuid; i < objectDashbord.length; i++) {
+        if (objectDashbord[i].uuid > 0) {
+            grid.removeWidget(objectDashbord[i].o);
+        }
+    }
+
+    for (var i = uuid; i < objectDashbord.length; i++) {
+        if (objectDashbord[i].uuid > 0) {
+            var pos = FindFreePosition(0, true);
+            item = objectDashbord[i].o;
+            $(item).attr("gs-x", pos.x);
+            $(item).attr("gs-y", pos.y);
+            grid.el.appendChild(item);
+            grid.makeWidget(item);
+        }
+    }
+}
+
+function FindFreePosition(uuid, push = false) {
+    var position = {};
+    var rows = SetDataColumns(push);
+    if (uuid > 0) {
+        var pos = dashbordData.filter(c => c.uuid == uuid)[0].position;
+
+        if (pos.x + pos.w + positionGrid_Defult.w <= 12) {
+            position.x = pos.x + pos.w;
+            position.y = pos.y;
+        } else {
+            position.x = 0;
+            position.y = pos.h;
+        }
+        position.w = pos.w;
+        position.h = pos.h;
+    } else {
+        position = positionGrid_Defult;
+        var flagSet = false;
+        for (var i = 0; i < rows.length; i++) {
+            if (rows[i].sumW + position.w <= 12) {
+                position.y = rows[i].roH;
+                position.x = rows[i].sumW;
+                flagSet = true;
+                break;
+            }
+        }
+        if (flagSet == false) {
+            var lastRow = rows[rows.length - 1];
+            position.y = lastRow.roH + lastRow.maxH;
+            position.x = 0;
+        }
+    }
+    return position;
+}
+
 if (dashbordData_Save != null && dashbordData_Save != "[{}]" && dashbordData_Save.toString() != "null" && dashbordData_Save.toString() != "") {
     var dashbordData = JSON.parse(dashbordData_Save);
     dashbordData = dashbordData.filter(c => loginData.baseValue.groupsAccess.includes(c.baseValue.group));
-
+    Fix_UUid(dashbordData);
     for (var i = 0; i < dashbordData.length; i++) {
         var baseValue = dashbordData[i].baseValue;
         GetAccess_Group(baseValue.ace, baseValue.group);
@@ -159,13 +283,13 @@ for (var i = 0; i < dashbordData.length; i++) {
     AddIteminGrid(dashbordData[i]);
 }
 
-$("#AddItemDesktop").click(function () {
+$("#AddItemDesktop").click(async function () {
     ViewLoading(true);
     var modeItem = $("#ModeDesktopItem").val();
     var captionItem = $("#CaptionItem").val();
     var groupDesktopItem = $("#GroupDesktopItem").val();
     var salDesktopItem = $("#SalDesktopItem").val();
-    GetParam(ace, groupDesktopItem, salDesktopItem, false);
+    await GetParam(ace, groupDesktopItem, salDesktopItem, false, false);
 
     var uuid = 1;
     if (dashbordData.length > 0) {
@@ -178,11 +302,12 @@ $("#AddItemDesktop").click(function () {
     //const max = Math.max.apply(Math, dashbordData.map(function (o) { return o.uuid; }));
     //var uuid = max + 1;
     //var idItem = modeItem + "-" + index;
+    var position = FindFreePosition(0);
 
     var item = {
         id: modeItem,
         uuid: uuid,
-        position: positionGrid_Defult,
+        position: position,
         caption: captionItem,
         visible: true,
         baseValue: {
@@ -192,10 +317,10 @@ $("#AddItemDesktop").click(function () {
         }
     }
 
-    if (modeItem == "TrzFCust_S" || modeItem == "TrzFKala_S" || modeItem == "FDocR_S"  ) {
+    if (modeItem == "TrzFCust_S" || modeItem == "TrzFKala_S" || modeItem == "FDocR_S") {
         item.isForosh = true;
     }
-    else if (modeItem == "TrzFCust_P" || modeItem == "TrzFKala_P" || modeItem == "FDocR_P" ) {
+    else if (modeItem == "TrzFCust_P" || modeItem == "TrzFKala_P" || modeItem == "FDocR_P") {
         item.isForosh = false;
     }
 
@@ -349,50 +474,50 @@ function SetSalData(ace, group) {
 /*
 var ViewModel = function () {
     var self = this;
-
+ 
     var aceList = [];
     var afi1List = [];
     var afi8List = [];
     var afiList = [];
     var erjList = [];
-
+ 
     var DatabseSalUrl = server + '/api/Web_Data/DatabseSal/'; // آدرس دیتابیس های سال
     self.DatabseSalList = ko.observableArray([]); // دیتابیس های سال
-
+ 
     $('#information').hide();
-
+ 
     if (sessionStorage.userName != 'ACE') {
         $('#show_RepairDatabaseConfig').hide();
         $('#show_RepairDatabase').hide();
     }
-
+ 
     self.currentPageIndexPrintForms = ko.observable(0);
     self.filterPrintForms0 = ko.observable("");
     self.filterPrintForms1 = ko.observable("");
     self.pageSizePrintForms = ko.observable(0);
     self.currentPageIndexKhdt = ko.observable(0);
     self.CodePrint = ko.observable();
-
+ 
     self.sortTablePrintForms = function (viewModel, e) { };
     self.currentPagePrintForms = ko.computed(function () { });
-
+ 
     self.nextPagePrintForms = function () { };
-
+ 
     self.previousPagePrintForms = function () { };
-
+ 
     self.firstPagePrintForms = function () { };
-
-
+ 
+ 
     self.lastPagePrintForms = function () { };
-
-
+ 
+ 
     self.PageIndexPrintForms = function (item) {
         return 0;
     };
-
+ 
 };
-
-
+ 
+ 
 ko.applyBindings(new ViewModel());
 */
 

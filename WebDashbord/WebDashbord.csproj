@@ -871,6 +871,7 @@
     <Content Include="Content\js\knockout-3.5.0.js" />
     <Content Include="Content\js\sweet2.js" />
     <Content Include="Content\new\css\bootstrap-icons.css" />
+    <Content Include="Content\report\fa.xml" />
     <Content Include="Scripts\PublicVariant.js" />
     <Content Include="Scripts\Widget\Base\Widget_Setting.js" />
     <Content Include="Scripts\Widget\Base\Widget_Input.js" />

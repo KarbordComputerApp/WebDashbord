@@ -313,7 +313,7 @@ $.widget("ui.Print", {
         var o = obj.options;
 
         if (o.optionPrint == null) {
-            Stimulsoft.Base.Localization.StiLocalization.addLocalizationFile("/Content/Report/Lang/fa.xml", true, "persion (fa)");
+            Stimulsoft.Base.Localization.StiLocalization.addLocalizationFile("/Content/report/fa.xml", true, "persion (fa)");
             Stimulsoft.Base.StiFontCollection.addOpentypeFontFile("/Content/fonts/BZiba.ttf", "Karbord_Ziba");
             Stimulsoft.Base.StiFontCollection.addOpentypeFontFile("/Content/fonts/BZAR.ttf", "Karbord_ZAR");
             Stimulsoft.Base.StiFontCollection.addOpentypeFontFile("/Content/fonts/BYEKAN.ttf", "Karbord_YEKAN");
