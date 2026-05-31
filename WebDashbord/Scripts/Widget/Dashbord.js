@@ -136,7 +136,6 @@ function FindFreePosition(uuid, push = false) {
     var rows = SetDataColumns(push);
     if (uuid > 0) {
         var pos = dashbordData.filter(c => c.uuid == uuid)[0].position;
-
         if (pos.x + pos.w + positionGrid_Defult.w <= 12) {
             position.x = pos.x + pos.w;
             position.y = pos.y;
@@ -148,19 +147,21 @@ function FindFreePosition(uuid, push = false) {
         position.h = pos.h;
     } else {
         position = positionGrid_Defult;
-        var flagSet = false;
-        for (var i = 0; i < rows.length; i++) {
-            if (rows[i].sumW + position.w <= 12) {
-                position.y = rows[i].roH;
-                position.x = rows[i].sumW;
-                flagSet = true;
-                break;
+        if (rows.length > 0) {
+            var flagSet = false;
+            for (var i = 0; i < rows.length; i++) {
+                if (rows[i].sumW + position.w <= 12) {
+                    position.y = rows[i].roH;
+                    position.x = rows[i].sumW;
+                    flagSet = true;
+                    break;
+                }
             }
-        }
-        if (flagSet == false) {
-            var lastRow = rows[rows.length - 1];
-            position.y = lastRow.roH + lastRow.maxH;
-            position.x = 0;
+            if (flagSet == false) {
+                var lastRow = rows[rows.length - 1];
+                position.y = lastRow.roH + lastRow.maxH;
+                position.x = 0;
+            }
         }
     }
     return position;
