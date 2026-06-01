@@ -4303,9 +4303,36 @@
 
 @font-face {
     font-family: 'vazir';
-    src: url('../../fonts/Vazir-Bold-FD-WOL.eot') format('embedded-opentype'), url('../../fonts/Vazir-Bold-FD-WOL.ttf') format('truetype'), url('../../fonts/Vazir-Bold-FD-WOL.woff') format('woff'), url('../../fonts/Vazir-FD-WOL.eot') format('embedded-opentype'), url('../../fonts/Vazir-FD-WOL.ttf') format('truetype'), url('../../fonts/Vazir-FD-WOL.woff') format('woff'), url('../../fonts/Vazir-FD-WOLReport.ttf') format('truetype');
+    src: url('../../fonts/Vazir-Bold-FD-WOL.eot') format('embedded-opentype'), url('../../fonts/Vazir-Bold-FD-WOL.ttf') format('truetype'), url('../../fonts/Vazir-Bold-FD-WOL.woff');
 }
 
+@font-face {
+    font-family: 'vazirLite';
+    src: url('../../fonts/Vazir-FD-WOL.eot') format('embedded-opentype'), url('../../fonts/Vazir-FD-WOL.ttf') format('truetype'), url('../../fonts/Vazir-FD-WOL.woff') format('woff'), url('../../fonts/Vazir-FD-WOLReport.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Iranian Sans';
+    src: url('../../fonts/Iranian Sans.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'BKOODB';
+    src: url('../../fonts/BKOODB.TTF') format('truetype');
+}
+@font-face {
+    font-family: 'BLOTUS';
+    src: url('../../fonts/BLOTUS.TTF') format('truetype');
+}
+@font-face {
+    font-family: 'BArash';
+    src: url('../../fonts/BArash.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'BBADR';
+    src: url('../../fonts/BBADR.TTF') format('truetype');
+}
 
 body, html {
     background-color: #f1f2f7;

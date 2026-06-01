@@ -1165,6 +1165,7 @@
     <Content Include="Content\new\js\fa.json" />
     <Content Include="Content\new\css\fonts\bootstrap-icons.woff" />
     <Content Include="Content\new\css\fonts\bootstrap-icons.woff2" />
+    <Content Include="Content\fonts\Iranian Sans.ttf" />
     <None Include="packages.config" />
     <Content Include="Views\AFIFactor\AddFdoc.cshtml" />
     <Content Include="Views\Shared\_LayoutLogin.cshtml" />

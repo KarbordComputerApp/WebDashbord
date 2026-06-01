@@ -1,13 +1,32 @@
-@font-face {
-    font-family: 'vazir';
-    src: url('../fonts/Vazir-Bold-FD-WOL.eot?#') format('eot'), url('../fonts/Vazir-Bold-FD-WOL.woff') format('woff'), url('../fonts/Vazir-Bold-FD-WOL.ttf') format('truetype')
-}
 
 @font-face {
     font-family: 'Merriweather-Light';
     src: url('../fonts/Merriweather-Light.ttf') format('truetype');
 }
 
+
+@font-face {
+    font-family: 'Iranian Sans';
+    src: url('../fonts/Iranian Sans.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'BKOODB';
+    src: url('../fonts/BKOODB.TTF') format('truetype');
+}
+@font-face {
+    font-family: 'BLOTUS';
+    src: url('../fonts/BLOTUS.TTF') format('truetype');
+}
+@font-face {
+    font-family: 'BArash';
+    src: url('../fonts/BArash.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'BBADR';
+    src: url('../fonts/BBADR.TTF') format('truetype');
+}
 .material-half-bg {
     height: 100vh;
     background-color: #e7e7e7;

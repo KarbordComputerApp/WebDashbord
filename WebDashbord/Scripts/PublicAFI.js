@@ -116,6 +116,13 @@ if (publicData_Save != null && publicData_Save != "[{}]" && publicData_Save.toSt
 }
 
 
+$("#fs").change(function () {
+    $('body').css("font-family", $(this).val());
+});
+
+$("#size").change(function () {
+    $('body').css("font-size", $(this).val() + "px");
+});
 
 window.onbeforeunload = function () {
     SaveVariant();
