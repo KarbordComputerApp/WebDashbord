@@ -186,7 +186,7 @@ var dataSettingDefult = {
         { code: "ViewData", caption: caption_ViewData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_ViewData_Desktop }, { key: 1, value: caption_ViewData_Mobile }] },
     ],
     Dftr: [
-        { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_GetAutoData_Auto }, { key: 1, value: caption_GetAutoData_Manual }] },
+        { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 1, value: 1, items: [{ key: 0, value: caption_GetAutoData_Auto }, { key: 1, value: caption_GetAutoData_Manual }] },
         { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 1, value: 1, items: [{ key: 0, value: caption_ShowControl_Show }, { key: 1, value: caption_ShowControl_Hide }] },
         { code: "ViewData", caption: caption_ViewData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_ViewData_Desktop }, { key: 1, value: caption_ViewData_Mobile }] },
     ],
@@ -249,6 +249,10 @@ var dataSettingDefult = {
         { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_GetAutoData_Auto }, { key: 1, value: caption_GetAutoData_Manual }] },
         { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 1, value: 1, items: [{ key: 0, value: caption_ShowControl_Show }, { key: 1, value: caption_ShowControl_Hide }] },
         { code: "ViewData", caption: caption_ViewData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_ViewData_Desktop }, { key: 1, value: caption_ViewData_Mobile }] },
+    ],
+    TarazFasli: [
+        { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_GetAutoData_Auto }, { key: 1, value: caption_GetAutoData_Manual }] },
+        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 1, value: 1, items: [{ key: 0, value: caption_ShowControl_Show }, { key: 1, value: caption_ShowControl_Hide }] },
     ],
 };
 

@@ -1,6 +1,6 @@
-﻿$.widget("ui.TChk", {
+﻿$.widget("ui.TarazFasli", {
     options: {
-        rprtId: 'TChk',
+        rprtId: 'TarazFasli',
         uuid: null,
         caption: null,
         baseValue: {
@@ -40,17 +40,11 @@
         div.append(_Sum);
         divSum.append(div);
 
-        div = $('<div class="form-inline" style="margin-right:auto">');
-        h5 = $('<h5>تعداد : </h5>');
-        var _Count = $('<h5 class="l_Count" style="padding-right:5px">0</h5>');
-        div.append(h5);
-        div.append(_Count);
-        divSum.append(div);
-
         //Grid
         var divGrid = $('<div>');
-        var table = $('<table class="' + o.rprtId + '_Table table table-hover">');
-        divGrid.append(table);
+        var chart = $('<canvas style="width:100%;max-width:700px"></canvas>');
+        o.objChart = chart;
+        divGrid.append(chart);
 
         o.objGrid = divGrid;
 
@@ -78,10 +72,10 @@
         var divRow = $('<div class="form-inline" style="margin-top: 10px;">');
 
         var divCol = $('<div class="form-inline col-12">');
-        c.day = $('<div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">');
-        divCol.append(c.day);
+        c.mode = $('<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">');
+        divCol.append(c.mode);
 
-        var divBtn = $('<div class="col-lg-9 col-md-9 col-sm-6 col-xs-6">');
+        var divBtn = $('<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">');
         var divBtn1 = $('<div class="pull-left">');
         c.btnReport = $('<button type="button" class="btn btn-primary">گزارش گیری</button>');
         divBtn1.append(c.btnReport);
@@ -99,12 +93,12 @@
         var obj = this;
         var o = obj.options;
         object = {
-            day: {
+            mode: {
                 element: null,
-                value: 8000,
-                maxlength: 10,
-                dataType: type_BigInt,
-                caption: "روز",
+                value: 1,
+                type: "select",
+                caption: "تاریخ",
+                items: [{ key: 0, value: "فصلی" }, { key: 1, value: "ماهانه" }, { key: 2, value: "روزانه" }],
             },
         }
         return object;
@@ -119,60 +113,97 @@
             obj._GetData();
         });
 
-        CreateObjectInput(c, objects, 'day');
+        c.mode.ComboBox(
+            {
+                caption: objects.mode.caption,
+                items: objects.mode.items,
+                value: objects.mode.value,
+                Create: function (e, record) {
+                    objects.mode.element = record.input[0];
+                },
+                Change: function (e, record) {
+                    objects.mode.value = record.value;
+                },
+            },
+        );
     },
 
     _GetData: async function (e) {
         var obj = this;
         var o = obj.options;
         var data = o.objects;
+        var param = dataGroup[o.baseValue.group][o.baseValue.sal]["params"];
 
         var object = {
-            azTarikh: LowDay(data.day.value),
-            taTarikh: "",
-            azShomarh: "",
-            taShomarh: "",
-            AccCode: "",
-            PDMode: "1",
-            CheckStatus: "1",
+            azTarikh: param.BeginDate,
+            taTarikh: LowDay(0),
+            mode: data.mode.value,
         };
-        var uri = server + '/api/ReportAcc/TChk/' + o.baseValue.ace + '/' + o.baseValue.sal + '/' + o.baseValue.group;
+        var uri = server + '/api/ReportFct/TrzFDoreh/' + o.baseValue.ace + '/' + o.baseValue.sal + '/' + o.baseValue.group;
         ajaxFunction(uri, 'POST', object, true).done(function (response) {
             o.controlData = object;
             o.data = response;
-            var l_Count = $(obj.bindings[0]).find('.l_Count');
-            l_Count.text(response.length);
 
-            var sum = 0;
+            var trzFDoreh_labels = []
+            var trzFDoreh_data = []
+            sum = 0;
             for (var i = 0; i < response.length; i++) {
-                sum += response[i].Value
+                trzFDoreh_labels[i] = response[i].docdate;
+                trzFDoreh_data[i] = response[i].totalvalue;
+                sum += response[i].totalvalue
             }
             var l_Sum = $(obj.bindings[0]).find('.l_Sum');
             l_Sum.text(NumberToNumberString(sum));
 
-
-            obj._CreateTable(response);
+            obj._CreateChart(trzFDoreh_labels, trzFDoreh_data);
         });
     },
 
-    _CreateTable: function (data) {
+    _CreateChart: function (labels, datas) {
         var obj = this;
         var o = obj.options;
-        var table = $(obj.bindings[0]).find('.' + o.rprtId + '_Table');
-        table.empty();
-        var tbody = $('<tbody>');
 
-        for (var i = 0; i < data.length; i++) {
-            var tr = $('<tr>');
-            var tdIcon = $('<td style="width:0px"><center><img src="' + GetIconBank(data[i].Bank) + '" width="35" /><p style="color: darkgray;">' + data[i].Shobe + '</p></center>')
-            var tdTrafName = $('<td><div><h5 style="padding-right:5px">' + data[i].TrafName + '</h5><h5 style="padding-right:5px;padding-top: 10px;">چک : ' + data[i].CheckNo + '</h5></div></td>')
-            var tdValue = $('<td style="width:0px"><h5 style="text-align:center">' + NumberToNumberString(data[i].Value) + '</h5><div class="DashbordDateChek">' + data[i].CheckDate + '</div></td>')
-            tr.append(tdIcon);
-            tr.append(tdTrafName);
-            tr.append(tdValue);
-            tbody.append(tr);
-        }
-        table.append(tbody);
+        o.objChart.empty();
+        o.objChart = new Chart(o.objChart, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: '',
+                    data: datas,
+                    backgroundColor: "#ff2d2d",
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                animation: false,
+                responsive: true,
+                responsiveAnimationDuration: 0,
+                legend: {
+                    display: false
+                },
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true,
+                            callback: function (value, index, values) {
+                                value = (value / 1000000).toFixed(0);
+                                return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + 'M';
+                            }
+                        }
+                    }]
+                },
+                tooltips: {
+                    callbacks: {
+                        label: function (tooltipItem, data) {
+                            return tooltipItem.yLabel.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",") + 'ریال';
+                        }
+                    }
+                }
+            }
+        });
+           
+
     },
 
 

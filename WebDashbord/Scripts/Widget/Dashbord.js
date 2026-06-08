@@ -36,7 +36,7 @@ mode_TrzFKala_S = mode_TrzFKala_S == null ? 0 : mode_TrzFKala_S;
 
 
 TestUser();
-
+//localStorage.removeItem("Karbord_DashbordData");
 var dashbordData_Save = localStorage.getItem("Karbord_DashbordData");
 
 //dashbordData_Save = `[{"id":"TChk_Sum-1","valueControl":{"day":"10000000"},"position":{"x":0,"y":12,"w":4,"h":3},"caption":"صورت خلاصه چک های پرداختی - گروه 97 - سال 1384","visible":true,"baseValue":{"ace":"Web8","group":"97","sal":"1384"}},{"id":"TChk_Sum-2","valueControl":{"day":"10000000"},"position":{"x":4,"y":3,"w":4,"h":3},"caption":"صورت خلاصه چک های پرداختی - گروه 97 - سال 1403","visible":true,"baseValue":{"ace":"Web8","group":"97","sal":"1403"}},{"id":"TrzFCust_S-1","valueControl":{"top":10,"fromDate":"1384/01/01","modeItem":"S"},"position":{"x":8,"y":0,"w":4,"h":3},"caption":"مانده حساب خریداران - گروه 97 - سال 1403","visible":true,"baseValue":{"ace":"Web8","group":"97","sal":"1403"}},{"id":"TrzFCust_P-1","valueControl":{"top":10,"fromDate":"1384/01/01","modeItem":"P"},"position":{"x":0,"y":3,"w":4,"h":3},"caption":"مانده حساب فروشندگان - گروه 97 - سال 1403","visible":true,"baseValue":{"ace":"Web8","group":"97","sal":"1403"}},{"id":"TChk-3","valueControl":{"day":"1000000"},"position":{"x":0,"y":0,"w":4,"h":3},"caption":"چک های پرداختی - گروه 97 - سال 1403","visible":true,"baseValue":{"ace":"Web8","group":"97","sal":"1403"}},{"id":"TChk-4","valueControl":{"day":"10000000"},"position":{"x":8,"y":3,"w":4,"h":3},"caption":"چک های پرداختی - گروه 97 - سال 1384","visible":true,"baseValue":{"ace":"Web8","group":"97","sal":"1384"}},{"id":"TrzFCust_P-2","valueControl":{"top":10,"fromDate":"1384/01/01","modeItem":"P"},"position":{"x":4,"y":0,"w":4,"h":3},"caption":"مانده حساب فروشندگان - گروه 97 - سال 1384","visible":true,"baseValue":{"ace":"Web8","group":"97","sal":"1384"}}]`
@@ -334,9 +334,12 @@ $("#AddItemDesktop").click(async function () {
     dashbordData.add(item);
     AddIteminGrid(item);
 
+    var groupData = loginData.baseValue.groupsData.find(c => c.Code == item.baseValue.group);
+    var titleGroup = 'گروه (' + item.baseValue.group + ') ' + groupData.Name + ' - ' + 'سال مالی ' + item.baseValue.sal;
+
     var col = ' <tr id="Obj_' + item.id + '" uuid="' + item.uuid + '"> ' +
-        '<div class="center" title="' + titleGroup + '" style="padding-right: 5px;padding-left: 5px;border: 1px solid #eb8121;border-radius: 10px;top: 8px;margin-left: 8px;">'
-    '<td id="Text_' + item.id + '" uuid="' + item.uuid + '">' + groupDesktopItem + salDesktopItem + '  ' + item.caption + '</td> ' +
+        '<div class="center" style="padding-right: 5px;padding-left: 5px;border: 1px solid #eb8121;border-radius: 10px;top: 8px;margin-left: 8px;">' +
+        '<td id="Text_' + item.id + '" uuid="' + item.uuid + '" ><span style="font-size: 9px;border: 1px solid #eb8121;border-radius: 10px;padding: 3px;margin-left: 5px;" title="' + titleGroup + '" >' + item.baseValue.group + ' - ' + item.baseValue.sal + '</span>' + item.caption + '</td> ' +
         '    <td style="padding: 0px 10px;text-align: left;"> ' +
         '        <input class="CheckedItem" id="Setting_' + item.id + '"  uuid="' + item.uuid + '" type = "checkbox" ' + (item.visible == false ? "" : 'Checked="checked"') + '/>' +
         '    </td > ' +
@@ -361,7 +364,7 @@ $('#modal-DesktopItem').on('show.bs.modal', function () {
 
         col =
             '<tr id="Obj_' + id + '" uuid="' + item.uuid + '">' +
-            '    <td id="Text_' + id + '" uuid="' + item.uuid + '" ><span style="font-size: 9px;border: 1px solid #eb8121;border-radius: 10px;padding: 3px;margin-left: 5px;" title="' + titleGroup + '" >' + item.baseValue.group + ' - ' + item.baseValue.sal + '</span>' + item.caption +  '</td> ' +
+            '    <td id="Text_' + id + '" uuid="' + item.uuid + '" ><span style="font-size: 9px;border: 1px solid #eb8121;border-radius: 10px;padding: 3px;margin-left: 5px;" title="' + titleGroup + '" >' + item.baseValue.group + ' - ' + item.baseValue.sal + '</span>' + item.caption + '</td> ' +
             '    <td style="padding: 0px 10px;text-align: left;"> ' +
             '        <input class="CheckedItem" id = "Setting_' + id + '" uuid="' + item.uuid + '" type = "checkbox" ' + (item.visible == false ? "" : 'Checked="checked"') + '/>' +
             '    </td >' +

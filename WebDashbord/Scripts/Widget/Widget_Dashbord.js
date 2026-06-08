@@ -220,6 +220,67 @@ $.widget("ui.D_TrzFCust", {
 
 });
 
+
+$.widget("ui.D_TarazFasli", {
+    options: {
+        id: null,
+        uuid: null,
+        caption: null,
+        position: [],
+        baseValue: [],
+        visible: true,
+        data: null,
+        element: null,
+        headButton: [f_Setting],
+        controlData: null,
+        objects: null,
+        getAutoData: null,
+        showControl: null,
+    },
+
+    _create: function () {
+        var obj = this;
+        var o = obj.options;
+
+        var setting = GetSetting(o);
+
+        var divReport = $('<div style="padding: 5px;">');
+        divReport.TarazFasli({
+            uuid: o.uuid,
+            baseValue: o.baseValue,
+            showControl: o.showControl == null ? setting.showControl : o.showControl,
+            getAutoData: o.getAutoData == null ? setting.getAutoData : o.getAutoData,
+            viewData: setting.viewData,
+            controlData: o.controlData,
+            objects: o.objects,
+        });
+
+        o.element = divReport;
+        BoxDashbord_Create(obj, null, divReport);
+    },
+
+
+    _Refresh: function () {
+        var obj = this;
+        var o = obj.options.element;
+        o.TarazFasli("Refresh");
+    },
+
+    _Setting: function () {
+        var obj = this;
+        var o = obj.options.element;
+        o.TarazFasli("ShowSetting");
+    },
+
+    _ShowControl: function () {
+        var obj = this;
+        var o = obj.options.element;
+        o.TarazFasli("ShowControl");
+    },
+
+});
+
+/*
 $.widget("ui.D_TarazFasli", {
     options: {
         id: null,
@@ -444,7 +505,7 @@ $.widget("ui.D_TarazFasli", {
             options.Chart.data = dataChart;
             options.Chart.update();*/
             //}
-
+/*
 
             o.data = response;
             var itemData = dashbordData.find(c => c.uuid == o.uuid);
@@ -460,6 +521,7 @@ $.widget("ui.D_TarazFasli", {
 
 });
 
+*/
 $.widget("ui.D_TrzAcc", {
     options: {
         id: null,
@@ -476,8 +538,8 @@ $.widget("ui.D_TrzAcc", {
         headButton: [f_Print, f_Columns, f_Setting],
         controlData: null,
         objects: null,
-        getAutoData : null,
-        showControl : null,
+        getAutoData: null,
+        showControl: null,
         //headButton: [f_GetData, f_Print, f_Columns, f_Maximum, f_ShowControl, f_Refresh, f_Setting]
     },
 
@@ -490,8 +552,8 @@ $.widget("ui.D_TrzAcc", {
         divReport.Report_TrzAcc({
             uuid: o.uuid,
             baseValue: o.baseValue,
-            showControl: o.showControl == null ? setting.showControl : o.showControl,   
-            getAutoData: o.getAutoData == null ? setting.getAutoData : o.getAutoData ,
+            showControl: o.showControl == null ? setting.showControl : o.showControl,
+            getAutoData: o.getAutoData == null ? setting.getAutoData : o.getAutoData,
             viewData: setting.viewData,
             controlData: o.controlData,
             objects: o.objects,
