@@ -90,8 +90,9 @@ const btn_Defult = '<a action-name="' + f_Defult + '" title="پیش فرض"><i c
 
 const widgetPublic = '#WidgetPublic';
 
-const icon_ShowControl1 = "bi-menu-up"
-const icon_ShowControl2 = "bi-menu-down"
+const icon_ShowControl1 = "bi-menu-button-wide";
+const icon_ShowControl2 = "bi-menu-button-wide-fill";
+
 
 var cssMaximin = {
     "top": "0px",
@@ -117,13 +118,13 @@ var columns_TypeCheckStatus = [
 ];
 
 var columns_TypePrint = [
-    { Code: 'code', Name: 'کد', Type: type_Number, Visible: 1 },
+    { Code: 'code', Name: 'کد', Type: type_Number, Visible: 1 , Hide : 1 },
     { Code: 'name', Name: 'نام', Type: type_Farsi, Visible: 0 },
     { Code: 'namefa', Name: 'نام', Type: type_Farsi, Visible: 1 }
 ];
 
 var columns_TypePrint_Setting = [
-    { Code: 'code', Name: 'کد', Type: type_Number, Visible: 1 },
+    { Code: 'code', Name: 'کد', Type: type_Number, Visible: 1, Hide: 1  },
     { Code: 'Selected', Name: 'وضعیت', Type: type_Boolean, Visible: 1 },
     { Code: 'accessGhimat', Name: 'بدون قیمت', Type: type_Boolean, Visible: 1 },
     { Code: 'namefa', Name: 'نام', Type: type_Farsi, Visible: 1 }
@@ -163,25 +164,25 @@ const caption_ShowControl_Hide = "مخفی";
 var dataSettingDefult = {
     all: [
         { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: "دریافت همه" }, { key: 1, value: "دریافت دستی" }, { key: 2, value: "غیر فعال" }] },
-        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_ShowControl_Show }, { key: 1, value: caption_ShowControl_Hide }] },
+        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 1, value: 1, items: [{ key: 0, value: caption_ShowControl_Show }, { key: 1, value: caption_ShowControl_Hide }] },
     ],
     TChk: [
         { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_GetAutoData_Auto }, { key: 1, value: caption_GetAutoData_Manual }] },
-        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_ShowControl_Show }, { key: 1, value: caption_ShowControl_Hide }] },
+        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 1, value: 1, items: [{ key: 0, value: caption_ShowControl_Show }, { key: 1, value: caption_ShowControl_Hide }] },
         { code: "ViewData", caption: caption_ViewData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_ViewData_Desktop }, { key: 1, value: caption_ViewData_Mobile }] },
     ],
     TChk_Sum: [
         { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_GetAutoData_Auto }, { key: 1, value: caption_GetAutoData_Manual }] },
-        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_ShowControl_Show }, { key: 1, value: caption_ShowControl_Hide }] },
+        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 1, value: 1, items: [{ key: 0, value: caption_ShowControl_Show }, { key: 1, value: caption_ShowControl_Hide }] },
     ],
     TrzFCust: [
         { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_GetAutoData_Auto }, { key: 1, value: caption_GetAutoData_Manual }] },
-        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_ShowControl_Show }, { key: 1, value: caption_ShowControl_Hide }] },
+        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 1, value: 1, items: [{ key: 0, value: caption_ShowControl_Show }, { key: 1, value: caption_ShowControl_Hide }] },
         { code: "ViewData", caption: caption_ViewData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_ViewData_Desktop }, { key: 1, value: caption_ViewData_Mobile }] },
     ],
     TrzAcc: [
         { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_GetAutoData_Auto }, { key: 1, value: caption_GetAutoData_Manual }] },
-        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_ShowControl_Show }, { key: 1, value: caption_ShowControl_Hide }] },
+        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 1, value: 1, items: [{ key: 0, value: caption_ShowControl_Show }, { key: 1, value: caption_ShowControl_Hide }] },
         { code: "ViewData", caption: caption_ViewData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_ViewData_Desktop }, { key: 1, value: caption_ViewData_Mobile }] },
     ],
     Dftr: [
@@ -196,57 +197,57 @@ var dataSettingDefult = {
     ],
     AGMkz: [
         { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_GetAutoData_Auto }, { key: 1, value: caption_GetAutoData_Manual }] },
-        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_ShowControl_Show }, { key: 1, value: caption_ShowControl_Hide }] },
+        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 1, value: 1, items: [{ key: 0, value: caption_ShowControl_Show }, { key: 1, value: caption_ShowControl_Hide }] },
         { code: "ViewData", caption: caption_ViewData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_ViewData_Desktop }, { key: 1, value: caption_ViewData_Mobile }] },
     ],
     AGOpr: [
         { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_GetAutoData_Auto }, { key: 1, value: caption_GetAutoData_Manual }] },
-        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_ShowControl_Show }, { key: 1, value: caption_ShowControl_Hide }] },
+        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 1, value: 1, items: [{ key: 0, value: caption_ShowControl_Show }, { key: 1, value: caption_ShowControl_Hide }] },
         { code: "ViewData", caption: caption_ViewData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_ViewData_Desktop }, { key: 1, value: caption_ViewData_Mobile }] },
     ],
     GrdZAcc: [
         { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_GetAutoData_Auto }, { key: 1, value: caption_GetAutoData_Manual }] },
-        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_ShowControl_Show }, { key: 1, value: caption_ShowControl_Hide }] },
+        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 1, value: 1, items: [{ key: 0, value: caption_ShowControl_Show }, { key: 1, value: caption_ShowControl_Hide }] },
         { code: "ViewData", caption: caption_ViewData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_ViewData_Desktop }, { key: 1, value: caption_ViewData_Mobile }] },
     ],
     KhlAcc: [
         { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_GetAutoData_Auto }, { key: 1, value: caption_GetAutoData_Manual }] },
-        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_ShowControl_Show }, { key: 1, value: caption_ShowControl_Hide }] },
+        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 1, value: 1, items: [{ key: 0, value: caption_ShowControl_Show }, { key: 1, value: caption_ShowControl_Hide }] },
         { code: "ViewData", caption: caption_ViewData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_ViewData_Desktop }, { key: 1, value: caption_ViewData_Mobile }] },
     ],
     KhlZAcc: [
         { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_GetAutoData_Auto }, { key: 1, value: caption_GetAutoData_Manual }] },
-        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_ShowControl_Show }, { key: 1, value: caption_ShowControl_Hide }] },
+        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 1, value: 1, items: [{ key: 0, value: caption_ShowControl_Show }, { key: 1, value: caption_ShowControl_Hide }] },
         { code: "ViewData", caption: caption_ViewData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_ViewData_Desktop }, { key: 1, value: caption_ViewData_Mobile }] },
     ],
     TrzFKala: [
         { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_GetAutoData_Auto }, { key: 1, value: caption_GetAutoData_Manual }] },
-        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_ShowControl_Show }, { key: 1, value: caption_ShowControl_Hide }] },
+        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 1, value: 1, items: [{ key: 0, value: caption_ShowControl_Show }, { key: 1, value: caption_ShowControl_Hide }] },
         { code: "ViewData", caption: caption_ViewData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_ViewData_Desktop }, { key: 1, value: caption_ViewData_Mobile }] },
     ],
     FDocR: [
         { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_GetAutoData_Auto }, { key: 1, value: caption_GetAutoData_Manual }] },
-        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_ShowControl_Show }, { key: 1, value: caption_ShowControl_Hide }] },
+        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 1, value: 1, items: [{ key: 0, value: caption_ShowControl_Show }, { key: 1, value: caption_ShowControl_Hide }] },
         { code: "ViewData", caption: caption_ViewData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_ViewData_Desktop }, { key: 1, value: caption_ViewData_Mobile }] },
     ],
     Krdx: [
         { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_GetAutoData_Auto }, { key: 1, value: caption_GetAutoData_Manual }] },
-        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_ShowControl_Show }, { key: 1, value: caption_ShowControl_Hide }] },
+        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 1, value: 1, items: [{ key: 0, value: caption_ShowControl_Show }, { key: 1, value: caption_ShowControl_Hide }] },
         { code: "ViewData", caption: caption_ViewData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_ViewData_Desktop }, { key: 1, value: caption_ViewData_Mobile }] },
     ],
     TrzIKala: [
         { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_GetAutoData_Auto }, { key: 1, value: caption_GetAutoData_Manual }] },
-        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_ShowControl_Show }, { key: 1, value: caption_ShowControl_Hide }] },
+        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 1, value: 1, items: [{ key: 0, value: caption_ShowControl_Show }, { key: 1, value: caption_ShowControl_Hide }] },
         { code: "ViewData", caption: caption_ViewData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_ViewData_Desktop }, { key: 1, value: caption_ViewData_Mobile }] },
     ],
     TrzIKalaExf: [
         { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_GetAutoData_Auto }, { key: 1, value: caption_GetAutoData_Manual }] },
-        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_ShowControl_Show }, { key: 1, value: caption_ShowControl_Hide }] },
+        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 1, value: 1, items: [{ key: 0, value: caption_ShowControl_Show }, { key: 1, value: caption_ShowControl_Hide }] },
         { code: "ViewData", caption: caption_ViewData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_ViewData_Desktop }, { key: 1, value: caption_ViewData_Mobile }] },
     ],
     IDocR: [
         { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_GetAutoData_Auto }, { key: 1, value: caption_GetAutoData_Manual }] },
-        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_ShowControl_Show }, { key: 1, value: caption_ShowControl_Hide }] },
+        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 1, value: 1, items: [{ key: 0, value: caption_ShowControl_Show }, { key: 1, value: caption_ShowControl_Hide }] },
         { code: "ViewData", caption: caption_ViewData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_ViewData_Desktop }, { key: 1, value: caption_ViewData_Mobile }] },
     ],
 };
@@ -580,7 +581,7 @@ function BoxDashbord_Create(obj, divHead, divBody) {
     var divCart = $('<div class="item_dashbord grid-stack-item ui-draggable ui-resizable ui-resizable-autohide" style ="visibility:' + //min-height: 505px; min-width: 450px; 
         (o.visible == false ? 'hidden' : 'visible') + '" uuid = "' + o.uuid + '" gs-x="' + o.position.x + '" gs-y="' + o.position.y +
         '" gs-w="' + o.position.w + '" gs-h="' + o.position.h + '" minW="3"  minH="3">');
-    var divContent = $('<div class="grid-stack-item-content" style="background-color:white">');
+    var divContent = $('<div class="grid-stack-item-content" style="background-color:white;border-radius:8px">');
 
     //Header
     var divHeader = $('<div class="modal-header form-inline focused" style="position: sticky;top: 0px;background: white;z-index: 10;padding-bottom: 5px;">');
@@ -626,17 +627,30 @@ function BoxDashbord_Create(obj, divHead, divBody) {
     div.append(b_Maximum);
     div.append(b_Close);
 
-    var h4 = $('<h4 class="modal-title" style="">' + o.caption + '</h4>');
-    divHeader.append(h4);
-
-    var divBase = $('<div style="padding-right: 10px;padding-left: 10px;border: 1px solid red;border-radius: 10px;position: absolute;top: 8px;left: 160px;">');
-
     var groupData = loginData.baseValue.groupsData.find(c => c.Code == o.baseValue.group);
-    var p1 = $('<p style="font-size: 9px;">' + o.baseValue.group + ' - ' + groupData.Name + '</p>');
-    var p2 = $('<p style="font-size: 9px;">سال مالی ' + o.baseValue.sal + '</p>');
+    var titleGroup ='گروه (' +  o.baseValue.group + ') ' + groupData.Name + ' - ' + 'سال مالی ' + o.baseValue.sal; 
+    var divCaption = $('<div class="form-inline">');
+    var divBase = $(
+        '<div class="center" title="' + titleGroup+'" ' +
+        'style="padding-right: 5px;padding-left: 5px;border: 1px solid #eb8121;border-radius: 10px;top: 8px;margin-left: 8px;">'
+    );
+    divBase.append(h4);
+   
+    /*var p1 = $('<p style="font-size: 9px;">' + o.baseValue.group + ' - ' + groupData.Name + '</p>');
+    var p2 = $('<p style="font-size: 9px;">سال مالی ' + o.baseValue.sal + '</p>');*/
+
+    var p1 = $('<p style="font-size: 8px;">' + o.baseValue.group +'</p>');
+    var p2 = $('<p style="font-size: 8px;">' + o.baseValue.sal + '</p>');
     divBase.append(p1);
     divBase.append(p2);
-    divHeader.append(divBase);
+    divCaption.append(divBase);
+
+    var h4 = $('<h4 class="modal-title" style="">' + o.caption + '</h4>');
+    divCaption.append(h4);
+
+    divHeader.append(divCaption);
+
+
 
     divHeader.append(div);
 

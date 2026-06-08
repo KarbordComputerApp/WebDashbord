@@ -43,6 +43,13 @@ var dashbordData_Save = localStorage.getItem("Karbord_DashbordData");
 //dashbordData_Save = `[{"id":"TrzAcc-1","valueControl":{"mode":0,"fromDate":"1384/01/01","modeItem":"S"},"position":{"x":0,"y":0,"w":4,"h":3},"caption":"تراز حساب - گروه 97 - سال 1384","visible":true,"baseValue":{"ace":"Web8","group":"97","sal":"1384"}}]`
 
 
+let grid = GridStack.init({
+    cellHeight: 'initial', // start square but will set to % of window width later
+    animate: true, // show immediate (animate: true is nice for user dragging though)
+    disableOneColumnMode: !isMobile, // will manually do 1 column
+    lazyLoad: true,
+});
+
 
 function unique(arr, key) {
     var u = {}, a = [];
@@ -175,6 +182,7 @@ function FindFreePosition(uuid, push = false) {
     return position;
 }
 
+
 if (dashbordData_Save != null && dashbordData_Save != "[{}]" && dashbordData_Save.toString() != "null" && dashbordData_Save.toString() != "") {
     var dashbordData = JSON.parse(dashbordData_Save);
     dashbordData = dashbordData.filter(c => loginData.baseValue.groupsAccess.includes(c.baseValue.group));
@@ -193,10 +201,7 @@ if (dashbordData_Save != null && dashbordData_Save != "[{}]" && dashbordData_Sav
         }
 
     }
-
     dataGroup = dataGroup;
-
-
 
     /* for (var i = 0; i < userGroupAccess.length; i++) {
          var objectGroup = dashbordData.filter(c => loginData.baseValue.groups.includes(c.baseValue.group));
@@ -210,9 +215,7 @@ if (dashbordData_Save != null && dashbordData_Save != "[{}]" && dashbordData_Sav
              dashbordData.splice(i, 1);
          }
      }*/
-
 }
-
 
 function SaveVariantDashbord() {
     var myJsonString = JSON.stringify(dashbordData)
@@ -276,12 +279,7 @@ $("#SaveItems").click(function () {
 
 
 
-let grid = GridStack.init({
-    cellHeight: 'initial', // start square but will set to % of window width later
-    animate: true, // show immediate (animate: true is nice for user dragging though)
-    disableOneColumnMode: true, // will manually do 1 column
-    lazyLoad: true,
-});
+
 
 
 var cols = '';
@@ -337,7 +335,8 @@ $("#AddItemDesktop").click(async function () {
     AddIteminGrid(item);
 
     var col = ' <tr id="Obj_' + item.id + '" uuid="' + item.uuid + '"> ' +
-        '    <td id="Text_' + item.id + '" uuid="' + item.uuid + '">' + item.caption + '</td> ' +
+        '<div class="center" title="' + titleGroup + '" style="padding-right: 5px;padding-left: 5px;border: 1px solid #eb8121;border-radius: 10px;top: 8px;margin-left: 8px;">'
+    '<td id="Text_' + item.id + '" uuid="' + item.uuid + '">' + groupDesktopItem + salDesktopItem + '  ' + item.caption + '</td> ' +
         '    <td style="padding: 0px 10px;text-align: left;"> ' +
         '        <input class="CheckedItem" id="Setting_' + item.id + '"  uuid="' + item.uuid + '" type = "checkbox" ' + (item.visible == false ? "" : 'Checked="checked"') + '/>' +
         '    </td > ' +
@@ -356,12 +355,17 @@ $('#modal-DesktopItem').on('show.bs.modal', function () {
     for (var i = 0; i < dashbordData.length; i++) {
         var item = dashbordData[i];
         id = item.id;
-        col = ' <tr id="Obj_' + id + '" uuid="' + item.uuid + '"> ' +
-            '    <td id="Text_' + id + '"  uuid="' + item.uuid + '">' + item.caption + '</td> ' +
+        var groupData = loginData.baseValue.groupsData.find(c => c.Code == item.baseValue.group);
+        var titleGroup = 'گروه (' + item.baseValue.group + ') ' + groupData.Name + ' - ' + 'سال مالی ' + item.baseValue.sal;
+
+
+        col =
+            '<tr id="Obj_' + id + '" uuid="' + item.uuid + '">' +
+            '    <td id="Text_' + id + '" uuid="' + item.uuid + '" ><span style="font-size: 9px;border: 1px solid #eb8121;border-radius: 10px;padding: 3px;margin-left: 5px;" title="' + titleGroup + '" >' + item.baseValue.group + ' - ' + item.baseValue.sal + '</span>' + item.caption +  '</td> ' +
             '    <td style="padding: 0px 10px;text-align: left;"> ' +
             '        <input class="CheckedItem" id = "Setting_' + id + '" uuid="' + item.uuid + '" type = "checkbox" ' + (item.visible == false ? "" : 'Checked="checked"') + '/>' +
-            '    </td > ' +
-            '</tr> ';
+            '    </td >' +
+            '</tr>';
         $('#TableDesktopItem').append(col);
     }
 });

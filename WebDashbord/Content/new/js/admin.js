@@ -137,7 +137,7 @@ $.MyAdmin = {}, $.MyAdmin.options = {
 }), localStorage.getItem("sidebar_option") && jQuery("body").addClass(localStorage.getItem("sidebar_option")), $("body").hasClass("side-closed") ? $(".sidebar-user-panel").css({
     display: "none"
 }) : $(".sidebar-user-panel").css({
-    display: "block"
+        display: "block"
 }), jQuery(document).on("click", ".sidemenu-collapse", function () {
     var e = "";
     if ($("body").hasClass("side-closed")) {

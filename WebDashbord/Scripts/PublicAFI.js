@@ -39,6 +39,17 @@ if (hrefWindows[3] != "") {
     var hrefPage = '/' + hrefWindows[3] + '/' + hrefWindows[4];
 }
 
+var isMobile = window.innerWidth <= 768;
+window.onresize = () => {
+    if (window.innerWidth <= 768) {// switch to mobile
+        isMobile = true;
+        grid.opts.disableOneColumnMode = true;
+    } else {
+        isMobile = false;
+        grid.opts.disableOneColumnMode = false;
+    }
+}
+
 var loginDataDefult =
 {
     machineId: null,
@@ -376,10 +387,38 @@ sessionStorage.CoName = localStorage.getItem('CoName');
 sessionStorage.aceName = localStorage.getItem('aceName');
 */
 
+/*
+if (window.matchMedia('screen and (max-width: 768px)').matches) {
+    var a = 10;
+}
+
+var w = screen.width;
+var h = screen.height;
+var ratio = window.devicePixelRatio || 1;
+var w = screen.width * ratio;
+var h = screen.height * ratio;
+var a = navigator.userAgent;
+var ratio = window.devicePixelRatio || 1;
+var is_touch_device = 'ontouchstart' in document.documentElement;
+var touch_status = (is_touch_device) ? 'touch' : 'no-touch';
+touch_status = ' ts:' + touch_status;
+var width_height = 'wh:' + screen.width + 'x' + screen.height;
+var client_width_height = ' cwh:' + document.documentElement.clientWidth + 'x' + document.documentElement.clientHeight;
+var rw = screen.width * ratio;
+var rh = screen.height * ratio;
+var ratio_width_height = ' r:' + ratio + ' rwh:' + rw + 'x' + rh;
+var data_string = width_height + client_width_height + ratio_width_height + touch_status;
+
+*/
+
+
+
+
+
+
 if (loginData.logoutmin != 0) {
     setInterval(LogOut, loginData.logoutmin * 60000);
 }
-
 function LogOut() {
     if (userName != '' && userName != null && hrefPage != urlPage_Login) {
         var LogOutObject = {
@@ -460,7 +499,16 @@ function getRprtCols(group, sal, rprtId, username) {
         columns = dataGroup[group][sal].Columns.dataDefult;
         result = columns.filter(c => c.RprtId == rprtId && c.UserCode == "*Default*");
     }
-    return result;
+    var listA = result.where(c => c.Position > 0);
+    var listB = result.where(c => c.Position == 0);
+    listA.sort(function (a, b) {
+        return (a.Position > b.Position) ? 1 : -1
+    });
+    for (var i = 0; i < listB.length; i++) {
+        listA.add(listB[i]);
+    }
+    
+     return listA;
 }
 
 
@@ -475,26 +523,24 @@ function getRprtColsErj(rprtId, username) {
 
 
 
-async function GetParam(ace, group, sal, refresh , async = false) {
+async function GetParam(ace, group, sal, refresh, async = false) {
     const param = "params";
-    await ajaxFunction(ParamUri + ace + '/' + sal + '/' + group, 'GET', null, async).done(function (data) {
-
-        if (dataGroup[group] == null) {
-            dataGroup[group] = {};
-        }
-        if (dataGroup[group][sal] == null) {
-            dataGroup[group][sal] = {};
-        }
-
-        if (dataGroup[group][sal][param] == null || refresh == true) {
+    if (dataGroup[group] == null) {
+        dataGroup[group] = {};
+    }
+    if (dataGroup[group][sal] == null) {
+        dataGroup[group][sal] = {};
+    }
+    if (dataGroup[group][sal][param] == null || refresh == true) {
+        await ajaxFunction(ParamUri + ace + '/' + sal + '/' + group, 'GET', null, async).done(function (data) {
             var item = { "data": data };
             item.CoName = FindParamValue(data, "CoName", "Value");
             item.BeginDate = FindParamValue(data, "SalMali", "BeginDate");
             item.EndDate = FindParamValue(data, "SalMali", "EndDate");
             item.Deghat = FindParamValue(data, "Deghat", "Deghat");
             dataGroup[group][sal][param] = item;
-        }
-    });
+        });
+    }
 }
 
 GetAccess_Account(ace);
@@ -941,7 +987,7 @@ $("#FirstPageUrl").change(function () {
 
 
 
-
+/*
 if (ShowNewTab == "ShowNewTab" && (hrefPage != urlPage_Index && hrefPage != urlPage_Setting && hrefPage != urlPage_Dashbord)) {
     $("#P_Setting").css({ display: "none" });
     //$("#P_Home").css({ display: "none" });
@@ -955,8 +1001,13 @@ else {
     $("body").removeClass("side-closed");
     $("body").removeClass("submenu-closed");
     $(".sidebar-user-panel").css({ display: "block" });
+}*/
+if (!$("body").hasClass("side-closed")) {
+    $("body").addClass("side-closed");
+    $("body").addClass("submenu-closed");
+    $(".sidebar-user-panel").css({ display: "none" });
+    $("#P_Setting").css({ display: "none" });
 }
-
 
 if (ShowNewTab == "ShowNewTab" && hrefPage == urlPage_Index) {
     //$("#P_Home").css({ display: "none" });
@@ -1544,7 +1595,7 @@ function SearchKey(key, myArray) {
     return '';
 }
 
-
+/*
 function SetSelectProgram(group, sal) {
 
     if (loginData.apiAddress == '' || loginData.apiAddress == null) {
@@ -1680,7 +1731,7 @@ function SaveParam(group, sal) {
     });
 }
 
-
+*/
 $("#repairDatabase").click(function () {
     group = $("#DropGroup").val();
     sal = $("#DropSal").val();
@@ -1817,7 +1868,7 @@ function getProgName(value) {
 
 
 
-
+/*
 //Get Param List
 async function getParamList() {
     ajaxFunction(ParamUri + ace + '/' + sal + '/' + group, 'GET', null, false).done(function (data) {
@@ -2417,7 +2468,7 @@ function getParamAcc() {
     });
 }
 
-
+*/
 
 function getDataVstr() {
     vstrcode = localStorage.getItem("userVstrCode");
@@ -2430,7 +2481,7 @@ function getDataVstr() {
     }
 }
 
-
+/*
 function CheckAccess(TrsName, Prog) {
     if (Prog != null) {
         if (localStorage.getItem('admin_Afi1') == '1' && ace == prog_Web1)
@@ -2513,26 +2564,10 @@ function CheckAccessReportErj(Code) {
     return false;
 }
 
-
-function FindTextField(field, data) {
-    for (var i = 0; i < data.length; i++) {
-        if (data[i].Code == field && data[i].Visible == 1) {
-            return data[i].Name;
-        }
-    }
-    return 0;
-}
-
-function FindTypeField(field, data) {
-    for (var i = 0; i < data.length; i++) {
-        if (data[i].Code == field && data[i].Visible == 1) {
-            return data[i].Type;
-        }
-    }
-    return 0;
-}
+*/
 
 //Get Access List
+/*
 function getAccessList(GoHome) {
     ajaxFunctionAccount(AccountUri + account_UserName + '/' + account_Password, 'GET', true).done(function (data) {
         if (data === null) {
@@ -2806,9 +2841,28 @@ function getAccessList(GoHome) {
 SetValidation();
 SetValidationErj();
 
+*/
 var DateNow;
 var SalNow;
 var timeNow;
+function FindTextField(field, data) {
+    for (var i = 0; i < data.length; i++) {
+        if (data[i].Code == field && data[i].Visible == 1) {
+            return data[i].Name;
+        }
+    }
+    return 0;
+}
+
+function FindTypeField(field, data) {
+    for (var i = 0; i < data.length; i++) {
+        if (data[i].Code == field && data[i].Visible == 1) {
+            return data[i].Type;
+        }
+    }
+    return 0;
+}
+
 
 function getTimeServer() {
     if (loginData.apiAddress != null) {
@@ -2894,6 +2948,7 @@ function TestUser() {
     };
 }
 
+/*
 function SetValidation() {
 
     if (access == null) return false;
@@ -3368,7 +3423,7 @@ function SetValidationErj() {
         $("#P_NotificationErja").hide();
     }
 }
-
+*/
 
 
 $('.rightClick').on("contextmenu", function () {

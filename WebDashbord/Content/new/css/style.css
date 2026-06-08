@@ -4301,20 +4301,22 @@
  *  Description: This scss file for all common style classes
  */
 
-@font-face {
-    font-family: 'vazir';
-    src: url('../../fonts/Vazir-Bold-FD-WOL.eot') format('embedded-opentype'), url('../../fonts/Vazir-Bold-FD-WOL.ttf') format('truetype'), url('../../fonts/Vazir-Bold-FD-WOL.woff');
-}
 
 @font-face {
-    font-family: 'vazirLite';
+    font-family: 'vazirBold';
+    src: url('../../fonts/Vazir-Bold-FD-WOL.eot') format('embedded-opentype'), url('../../fonts/Vazir-Bold-FD-WOL.ttf') format('truetype'), url('../../fonts/Vazir-Bold-FD-WOL.woff');
+}
+  
+@font-face {
+    font-family: 'vazir';
     src: url('../../fonts/Vazir-FD-WOL.eot') format('embedded-opentype'), url('../../fonts/Vazir-FD-WOL.ttf') format('truetype'), url('../../fonts/Vazir-FD-WOL.woff') format('woff'), url('../../fonts/Vazir-FD-WOLReport.ttf') format('truetype');
 }
 
 @font-face {
     font-family: 'Iranian Sans';
-    src: url('../../fonts/Iranian Sans.ttf') format('truetype');
+    src: url('../../fonts/IRANSansWeb(FaNum)_Bold.eot') format('embedded-opentype'), url('../../fonts/IRANSansWeb(FaNum)_Bold.ttf') format('truetype'), url('../../fonts/IRANSansWeb(FaNum)_Bold.woff') format('woff');
 }
+
 
 @font-face {
     font-family: 'BKOODB';

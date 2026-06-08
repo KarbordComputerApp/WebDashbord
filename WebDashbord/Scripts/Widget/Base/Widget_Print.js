@@ -50,8 +50,11 @@ $.widget("ui.Print", {
         var _divBtn = $('<div style="position: absolute;left: 0px;">')
         var _aSetting = $('<a style="margin-left: 5px;" title="تنظیمات فرم چاپ"><i class="bi bi-gear"></a>')
         var _aRefresh = $(btn_Refresh);
-        o.aSettingElement = _aSetting;
-        _divBtn.append(_aSetting);
+
+        if (userName == user_Ace) {
+            _divBtn.append(_aSetting);
+        }
+       
         _divBtn.append(_aRefresh);
 
         _header.append(_divBtn);
@@ -328,13 +331,7 @@ $.widget("ui.Print", {
             o.optionPrint.appearance.scrollbarsMode = true;
             o.optionPrint.toolbar.showSaveButton = true;
 
-            o.optionPrint.toolbar.showDesignButton = sessionStorage.UserAdmin == 'true';
-
-            if (sessionStorage.UserAdmin == 'true') {
-                $(o.aSettingElement).attr('style', 'display: unset');
-            } else {
-                $(o.aSettingElement).attr('style', 'display: none');
-            }
+            o.optionPrint.toolbar.showDesignButton = userName == user_Ace;
 
             o.optionPrint.toolbar.showFullScreenButton = false;
 

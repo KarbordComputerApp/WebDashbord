@@ -211,7 +211,12 @@
         }
 
         for (var i = 0; i < _columns.length; i++) {
-            var _th = $('<th columnname="' + _columns[i].Code + '" mode="header">');
+
+            var _th = $('<th columnname="' + _columns[i].Code +
+                '" mode="header" ' + (_columns[i].Hide == 1 ? 'hidden' : '') +' '+
+                'style="' + (_columns[i].Type == type_Boolean ? 'width:0px;' : '') + '"' +
+                '>');
+
             var _thSpan = $('<span>' + _columns[i].Name + '</span>');
             _th.append(_thSpan);
             _tr.append(_th);
@@ -290,8 +295,8 @@
                     'class="' + (_columns[j].Type == type_Farsi ? 'ellipsis' : _columns[j].Type == type_Boolean ? 'center' : '') + '"' +
                     'style="' +
                     (_columns[j].Type == type_Currency ? 'direction: ltr; ' : '') +
-                    (value < 0 ? ' color: red; ' : '')
-                    + '"' +
+                    (value < 0 ? ' color: red; ' : '') + '"' +
+                    (_columns[j].Hide == 1 ? 'hidden' : '') +
                     '>' + valueShow + '</td>');
                 if (_columns[j].Type == type_Boolean) {
                     var _input = $('<input data-name="' + _columns[j].Code + '" data-value="' + value + '" mode="' + td_Mode + '" type="checkbox" style="width: 16px;margin: 0px;">');
@@ -524,7 +529,7 @@
         }
 
         for (var i = 0; i < _columns.length; i++) {
-            var _td = $('<td style="padding: 0px 3px;" class="focused">');
+            var _td = $('<td style="padding: 0px 3px;" class="focused" ' + (_columns[i].Hide == 1 ? 'hidden' : '') +'>');
             var _input = $('<input type="text" columnname="' + _columns[i].Code + '" mode="search" class="form-control ' + NameTypeKey(_columns[i].Type) + '" style="height: 2.4rem;">');
             _td.append(_input);
             _tr.append(_td);
@@ -871,7 +876,7 @@
 
 
     /*
-    
+     
         _CreateObjectPrint: function (headBtn, element) {
             var obj = this;
             var o = obj.options;
@@ -891,22 +896,22 @@
             );
             obj.element.append(_div);
         },
-    
+     
         _ShowObjectPrint: function () {
             var obj = this;
             var o = obj.options;
             if (o.data.length > 0) {
                 var objPrint = $(obj.bindings[0]).find('.K_DivModal' + f_Print);
-    
+     
                 printVariable = o.controlData;
                 printVariable["ReportDate"] = localStorage.getItem("DateNow");
-    
+     
                 for (var i = 0; i < o.columns.length; i++) {
                     if (o.columns[i].Sum != null) {
                         printVariable['Sum' + o.columns[i].Code] = o.columns[i].Sum;
                     }
                 }
-    
+     
                 objPrint.Print("option", "printVariable", printVariable);
                 objPrint.Print("option", "data", o.data);
                 objPrint.Print("ShowModalPrint");
@@ -915,7 +920,7 @@
                 return showNotification('اطلاعاتی برای چاپ وجود ندارد. ابتدا گزارش گیری کنید', 0);
             }
         },
-    
+     
     */
 
     _FirstPage: function () {
