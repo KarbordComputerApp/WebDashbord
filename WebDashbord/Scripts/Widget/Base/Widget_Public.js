@@ -118,13 +118,13 @@ var columns_TypeCheckStatus = [
 ];
 
 var columns_TypePrint = [
-    { Code: 'code', Name: 'کد', Type: type_Number, Visible: 1 , Hide : 1 },
+    { Code: 'code', Name: 'کد', Type: type_Number, Visible: 1, Hide: 1 },
     { Code: 'name', Name: 'نام', Type: type_Farsi, Visible: 0 },
     { Code: 'namefa', Name: 'نام', Type: type_Farsi, Visible: 1 }
 ];
 
 var columns_TypePrint_Setting = [
-    { Code: 'code', Name: 'کد', Type: type_Number, Visible: 1, Hide: 1  },
+    { Code: 'code', Name: 'کد', Type: type_Number, Visible: 1, Hide: 1 },
     { Code: 'Selected', Name: 'وضعیت', Type: type_Boolean, Visible: 1 },
     { Code: 'accessGhimat', Name: 'بدون قیمت', Type: type_Boolean, Visible: 1 },
     { Code: 'namefa', Name: 'نام', Type: type_Farsi, Visible: 1 }
@@ -175,7 +175,12 @@ var dataSettingDefult = {
         { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_GetAutoData_Auto }, { key: 1, value: caption_GetAutoData_Manual }] },
         { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 1, value: 1, items: [{ key: 0, value: caption_ShowControl_Show }, { key: 1, value: caption_ShowControl_Hide }] },
     ],
-    TrzFCust: [
+    TrzFCust_S: [
+        { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_GetAutoData_Auto }, { key: 1, value: caption_GetAutoData_Manual }] },
+        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 1, value: 1, items: [{ key: 0, value: caption_ShowControl_Show }, { key: 1, value: caption_ShowControl_Hide }] },
+        { code: "ViewData", caption: caption_ViewData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_ViewData_Desktop }, { key: 1, value: caption_ViewData_Mobile }] },
+    ],
+    TrzFCust_P: [
         { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_GetAutoData_Auto }, { key: 1, value: caption_GetAutoData_Manual }] },
         { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 1, value: 1, items: [{ key: 0, value: caption_ShowControl_Show }, { key: 1, value: caption_ShowControl_Hide }] },
         { code: "ViewData", caption: caption_ViewData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_ViewData_Desktop }, { key: 1, value: caption_ViewData_Mobile }] },
@@ -220,18 +225,28 @@ var dataSettingDefult = {
         { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 1, value: 1, items: [{ key: 0, value: caption_ShowControl_Show }, { key: 1, value: caption_ShowControl_Hide }] },
         { code: "ViewData", caption: caption_ViewData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_ViewData_Desktop }, { key: 1, value: caption_ViewData_Mobile }] },
     ],
-    TrzFKala: [
+    TrzFKala_S: [
         { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_GetAutoData_Auto }, { key: 1, value: caption_GetAutoData_Manual }] },
         { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 1, value: 1, items: [{ key: 0, value: caption_ShowControl_Show }, { key: 1, value: caption_ShowControl_Hide }] },
         { code: "ViewData", caption: caption_ViewData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_ViewData_Desktop }, { key: 1, value: caption_ViewData_Mobile }] },
     ],
-    FDocR: [
+    TrzFKala_P: [
+        { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_GetAutoData_Auto }, { key: 1, value: caption_GetAutoData_Manual }] },
+        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 1, value: 1, items: [{ key: 0, value: caption_ShowControl_Show }, { key: 1, value: caption_ShowControl_Hide }] },
+        { code: "ViewData", caption: caption_ViewData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_ViewData_Desktop }, { key: 1, value: caption_ViewData_Mobile }] },
+    ],
+    FDocR_S: [
+        { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_GetAutoData_Auto }, { key: 1, value: caption_GetAutoData_Manual }] },
+        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 1, value: 1, items: [{ key: 0, value: caption_ShowControl_Show }, { key: 1, value: caption_ShowControl_Hide }] },
+        { code: "ViewData", caption: caption_ViewData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_ViewData_Desktop }, { key: 1, value: caption_ViewData_Mobile }] },
+    ],
+    FDocR_P: [
         { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_GetAutoData_Auto }, { key: 1, value: caption_GetAutoData_Manual }] },
         { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 1, value: 1, items: [{ key: 0, value: caption_ShowControl_Show }, { key: 1, value: caption_ShowControl_Hide }] },
         { code: "ViewData", caption: caption_ViewData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_ViewData_Desktop }, { key: 1, value: caption_ViewData_Mobile }] },
     ],
     Krdx: [
-        { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_GetAutoData_Auto }, { key: 1, value: caption_GetAutoData_Manual }] },
+        { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 1, value: 1, items: [{ key: 0, value: caption_GetAutoData_Auto }, { key: 1, value: caption_GetAutoData_Manual }] },
         { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 1, value: 1, items: [{ key: 0, value: caption_ShowControl_Show }, { key: 1, value: caption_ShowControl_Hide }] },
         { code: "ViewData", caption: caption_ViewData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_ViewData_Desktop }, { key: 1, value: caption_ViewData_Mobile }] },
     ],
@@ -582,7 +597,7 @@ function BoxDashbord_Create(obj, divHead, divBody) {
         o.position = itemData.position;
     }
 
-    var divCart = $('<div class="item_dashbord grid-stack-item ui-draggable ui-resizable ui-resizable-autohide" style ="visibility:' + //min-height: 505px; min-width: 450px; 
+    var divCart = $('<div class="' + o.id + ' item_dashbord grid-stack-item ui-draggable ui-resizable ui-resizable-autohide" style ="visibility:' + //min-height: 505px; min-width: 450px; 
         (o.visible == false ? 'hidden' : 'visible') + '" uuid = "' + o.uuid + '" gs-x="' + o.position.x + '" gs-y="' + o.position.y +
         '" gs-w="' + o.position.w + '" gs-h="' + o.position.h + '" minW="3"  minH="3">');
     var divContent = $('<div class="grid-stack-item-content" style="background-color:white;border-radius:8px">');
@@ -595,7 +610,11 @@ function BoxDashbord_Create(obj, divHead, divBody) {
 
     var icon_ShowControl = icon_ShowControl1;
 
-    var showControl = itemData.dataSetting.where(c => c.code == "ShowControl");
+    var showControl = [];
+    if (itemData.dataSetting != null) {
+        showControl = itemData.dataSetting.where(c => c.code == "ShowControl");
+    }
+
     if (showControl.length > 0)
         var icon_ShowControl = showControl[0].value == "0" ? icon_ShowControl1 : icon_ShowControl2;
 
@@ -632,18 +651,18 @@ function BoxDashbord_Create(obj, divHead, divBody) {
     div.append(b_Close);
 
     var groupData = loginData.baseValue.groupsData.find(c => c.Code == o.baseValue.group);
-    var titleGroup ='گروه (' +  o.baseValue.group + ') ' + groupData.Name + ' - ' + 'سال مالی ' + o.baseValue.sal; 
+    var titleGroup = 'گروه (' + o.baseValue.group + ') ' + groupData.Name + ' - ' + 'سال مالی ' + o.baseValue.sal;
     var divCaption = $('<div class="form-inline">');
     var divBase = $(
-        '<div class="center" title="' + titleGroup+'" ' +
+        '<div class="center" title="' + titleGroup + '" ' +
         'style="padding-right: 5px;padding-left: 5px;border: 1px solid #eb8121;border-radius: 10px;top: 8px;margin-left: 8px;">'
     );
     divBase.append(h4);
-   
+
     /*var p1 = $('<p style="font-size: 9px;">' + o.baseValue.group + ' - ' + groupData.Name + '</p>');
     var p2 = $('<p style="font-size: 9px;">سال مالی ' + o.baseValue.sal + '</p>');*/
 
-    var p1 = $('<p style="font-size: 8px;">' + o.baseValue.group +'</p>');
+    var p1 = $('<p style="font-size: 8px;">' + o.baseValue.group + '</p>');
     var p2 = $('<p style="font-size: 8px;">' + o.baseValue.sal + '</p>');
     divBase.append(p1);
     divBase.append(p2);
@@ -944,7 +963,9 @@ function CreateObjectSelect(elements, objects, name, filter, externalModal, stri
             striped: striped == null ? true : striped,
             externalModal: externalModal == null ? false : externalModal,
             filter: filter,
+            selected: objects[name].selected,
             Select: function (e, record) {
+                objects[name].selected = record.selected;
                 objects[name].value = record.dataString;
             },
         }

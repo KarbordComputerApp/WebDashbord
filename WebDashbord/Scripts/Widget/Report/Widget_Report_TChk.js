@@ -180,14 +180,14 @@
                 value: "",
                 maxlength: 10,
                 dataType: type_BigInt,
-                caption: "از شماره",
+                caption: "از شماره چک",
             },
             toNumber: {
                 element: null,
                 value: "",
                 maxlength: 10,
                 dataType: type_BigInt,
-                caption: "تا شماره",
+                caption: "تا شماره چک",
             },
             pDMode: {
                 element: null,

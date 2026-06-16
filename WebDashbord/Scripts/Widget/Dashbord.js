@@ -217,13 +217,14 @@ if (dashbordData_Save != null && dashbordData_Save != "[{}]" && dashbordData_Sav
      }*/
 }
 
+/*
 function SaveVariantDashbord() {
     var myJsonString = JSON.stringify(dashbordData)
     localStorage.setItem("Karbord_DashbordData", myJsonString);
 }
 window.onbeforeunload = function () {
     SaveVariantDashbord();
-};
+};*/
 
 function CreateListDesktop(ace, group) {
     if (dataGroup[group] == null) {
@@ -248,7 +249,6 @@ function CreateListDesktop(ace, group) {
         }
         dataGroup[group]["ListMode"] = listModeDesktop;
     }
-    loginData.baseValue.defultGroup = group;
 }
 
 
@@ -273,7 +273,7 @@ $("#SaveItems").click(function () {
         $(itemDashbord).css("visibility", item.is(':checked') == true ? "visible" : "hidden");
     }
 
-    SaveVariantDashbord();
+    SaveVariant();
     $('#modal-DesktopItem').modal('hide');
 });
 
@@ -425,6 +425,8 @@ $('#modal-DesktopNewItem').on('show.bs.modal', function () {
     //$("#CaptionItem").val(listModeDesktop[0].caption + ' - گروه ' + $('#GroupDesktopItem').val() + ' - سال ' + $('#SalDesktopItem').val());
     $("#CaptionItem").val(listModeDesktop[0].caption);
     $('#GroupDesktopItem').val(group);
+    //var sal = loginData.baseValue.defultSal;
+    //$('#SalDesktopItem').val(sal == null ? 0 : sal);
 })
 
 $("#ModeDesktopItem").change(function () {
@@ -448,11 +450,14 @@ $("#GroupDesktopItem").change(function () {
     SetSalData(ace, group);
     //$("#CaptionItem").val($("#ModeDesktopItem option:selected").text() + ' - گروه ' + $('#GroupDesktopItem').val() + ' - سال ' + $('#SalDesktopItem option:selected').text());
     $("#CaptionItem").val($("#ModeDesktopItem option:selected").text() + ' - گروه ' + $('#GroupDesktopItem').val() + ' - سال ' + $('#SalDesktopItem option:selected').text());
+    loginData.baseValue.defultGroup = group;
 });
 
 $("#SalDesktopItem").change(function () {
+    var sal = $(this).val();
     // $("#CaptionItem").val($("#ModeDesktopItem option:selected").text() + ' - گروه ' + $('#GroupDesktopItem').val() + ' - سال ' + $('#SalDesktopItem option:selected').text());
     $("#CaptionItem").val($("#ModeDesktopItem option:selected").text());
+    loginData.baseValue.defultSal = sal;
 });
 
 

@@ -257,20 +257,28 @@
         }
 
         if (o.objects != null) {
-            if (o.objects.userData != null) {
-                object.acc.value = o.objects.userData.AccCode;
-                object.acc.selected = [{ code: o.objects.userData.AccCode, name: o.objects.userData.AccName }];
-            }
+            var userData = o.objects.userData;
+
             object.fromDate = o.objects.fromDate;
             object.toDate = o.objects.toDate;
             object.aMode = o.objects.aMode;
+            object.acc = o.objects.acc;
             object.mkz = o.objects.mkz;
             object.opr = o.objects.opr;
 
-            if (o.objects.status != null) object.status = o.objects.status;
+            if (userData.AccCode != null) {
+                object.acc.value = userData.AccCode;
+                object.acc.selected = [{ code: userData.AccCode, name: userData.AccName }];
+            }
 
-            if (o.objects.level != null)
+            if (o.objects.status != null) {
+                object.status = o.objects.status;
+            }
+
+            if (o.objects.level != null) {
                 object.dispBands.value = o.objects.level.value == 1 ? 1 : 10;
+            }
+
         }
 
         return object;

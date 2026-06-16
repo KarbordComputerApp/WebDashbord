@@ -1,4 +1,5 @@
-﻿$.widget("ui.ModalReport", {
+﻿/*
+$.widget("ui.ModalReport", {
     options: {
         uuid: 0,
         reportId: null,
@@ -211,3 +212,4 @@
     },
 
 });
+*/

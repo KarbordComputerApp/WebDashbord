@@ -51,7 +51,7 @@
         o.columns = getRprtCols(o.baseValue.group, o.baseValue.sal, o.rprtId, userName);
 
         var action = [
-            { code: "ADocR", name: "دفتر روزنامه", icon: "/Content/img/view.svg" },
+           // { code: "ADocR", name: "دفتر روزنامه", icon: "/Content/img/view.svg" },
         ];
 
         divGrid.Table(
@@ -67,13 +67,12 @@
                 pageCount: 0,
                 pageSize: 10,
                 keyField: 'ZAccCode',
-                isTableFix: true,
+                isTableFix: false,
                 keyRow: [],
                 radif: true,
                 sumFields: ['Bede', 'Best', 'MonBede', 'MonBest', 'MonTotal'],
                 height: '375px',
                 striped: true,
-                action: action,
                 actionDropdown: true,
                 baseValue: o.baseValue,
                 controlBody: controlBody,

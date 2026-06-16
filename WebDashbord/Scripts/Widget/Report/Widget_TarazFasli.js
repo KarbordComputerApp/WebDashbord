@@ -163,8 +163,9 @@
         var obj = this;
         var o = obj.options;
 
+
         o.objChart.empty();
-        o.objChart = new Chart(o.objChart, {
+        const objChart = new Chart(o.objChart, {
             type: 'bar',
             data: {
                 labels: labels,

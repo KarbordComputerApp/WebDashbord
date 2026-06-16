@@ -53,7 +53,7 @@
         //o.columns = getRprtCols(o.rprtId, sessionStorage.userName);
 
         var action = [
-            { code: "ADocR", name: "دفتر روزنامه", icon: "/Content/img/view.svg" },
+            { code: "Dftr", name: "دفتر حساب", icon: "/Content/img/view.svg" },
         ];
 
         divGrid.Table(
@@ -64,11 +64,11 @@
                 headBtnDefult: [f_GetData, f_Print, f_Columns],
                 showHeadBtnDefult: false,
                 columns: o.columns,
-                sort: 'OprCode',
+                sort: 'AccCode',
                 sortMode: '',
                 pageCount: 0,
                 pageSize: 10,
-                keyField: 'OprCode',
+                keyField: 'AccCode',
                 isTableFix: true,
                 keyRow: [],
                 radif: true,
@@ -95,6 +95,31 @@
                     }
                 },
                 ActionClick: function (e, records) {
+                    var actionName = records.actionName;
+                    var actionCaption = records.actionCaption;
+                    if (actionName != null) {
+                        o.objects.userData = {
+                            AccCode: records.data.AccCode,
+                            AccName: records.data.AccName,
+                            OprCode: records.data.OprCode,
+                            OprName: records.data.OprName,
+                        };
+                        var position = FindFreePosition(o.uuid);
+                        var item = {
+                            id: actionName,
+                            uuid: 0,
+                            position: position,
+                            caption: actionCaption,
+                            visible: true,
+                            baseValue: o.baseValue,
+                            objects: o.objects,
+                            showControl: false,
+                            getAutoData: true,
+                        };
+
+                        AddIteminGrid(item);
+                        AppendBoxPush(o.uuid);
+                    }
                 },
                 ExportData: function (e, records) {
                     o.columns = records.columns;

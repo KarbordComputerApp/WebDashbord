@@ -25,6 +25,8 @@
     _create: function () {
         var obj = this;
         var o = obj.options;
+        var mode_Forosh = o.isForosh == true ? "S" : "P";
+        o.rprtId = o.rprtId + '_' + mode_Forosh;
         var param = dataGroup[o.baseValue.group][o.baseValue.sal]["params"];
         o.objects = obj._SetObjects(param);
         var divContent = $('<div style="background-color: white;">');
@@ -50,9 +52,11 @@
         getRprtAllCols(o.baseValue.ace, o.baseValue.group, o.baseValue.sal, userName);
         o.columns = getRprtCols(o.baseValue.group, o.baseValue.sal, o.rprtId, userName);
 
+        var caption_Forosh = o.isForosh == true ? "فروش" : "خرید";
         var action = [
-            { code: "ADocR", name: "دفتر روزنامه", icon: "/Content/img/view.svg" },
+            { code: "ADoc", name: "نمایش فاکتور " + caption_Forosh, icon: "/Content/img/view.svg" },
         ];
+
 
         divGrid.Table(
             {
@@ -93,6 +97,26 @@
                     }
                 },
                 ActionClick: function (e, records) {
+                    var actionName = records.actionName;
+                    var actionCaption = records.actionCaption;
+                    if (actionName != null) {
+                        o.objects.userData = { AccCode: records.data.AccCode, AccName: records.data.AccName };
+                        var position = FindFreePosition(o.uuid);
+                        var item = {
+                            id: actionName,
+                            uuid: 0,
+                            position: position,
+                            caption: actionCaption,
+                            visible: true,
+                            baseValue: o.baseValue,
+                            objects: o.objects,
+                            showControl: false,
+                            getAutoData: true,
+                        };
+
+                        AddIteminGrid(item);
+                        AppendBoxPush(o.uuid);
+                    }
                 },
                 ExportData: function (e, records) {
                     o.columns = records.columns;
@@ -344,6 +368,32 @@
                 value: ""
             },
         }
+
+        if (o.objects != null) {
+            object.fromDate = o.objects.fromDate;
+            object.toDate = o.objects.toDate;
+            object.modeCode = o.objects.modeCode;
+            object.mkz = o.objects.mkz;
+            object.opr = o.objects.opr;
+            object.cGru = o.objects.cGru;
+            object.cust = o.objects.cust;
+            object.inv = o.objects.inv;
+            object.kala = o.objects.kala;
+            object.kGru = o.objects.kGru;
+            object.status = o.objects.status;
+
+            var userData = o.objects.userData;
+            if (userData.rprtId == 'TrzFKala_S' || userData.rprtId == 'TrzFKala_P') {
+                object.kala.value = o.objects.userData.KalaCode;
+                object.kala.selected = [{ code: o.objects.userData.KalaCode, name: o.objects.userData.KalaName }];
+
+            } else if (userData.rprtId == 'TrzFCust_S' || userData.rprtId == 'TrzFCust_P') {
+                object.cust.value = o.objects.userData.CustCode;
+                object.cust.selected = [{ code: o.objects.userData.CustCode, name: o.objects.userData.CustName }];
+            }
+        }
+
+
         return object;
     },
 

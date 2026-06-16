@@ -219,6 +219,7 @@
                 keyCaption: 'Name',
                 keyRow: [{ column: 'Level', value: 1, act: '==' }],
                 baseValue: o.baseValue,
+                selected: [],
                 param: { mode: 0 },
                 value: ""
             },
@@ -266,17 +267,22 @@
         }
 
         if (o.objects != null) {
-            object.acc.value = o.objects.userData.AccCode;
+            var userData = o.objects.userData;
             object.fromDate = o.objects.fromDate;
             object.toDate = o.objects.toDate;
             object.aMode = o.objects.aMode;
+            //object.acc = o.objects.acc;
             object.mkz = o.objects.mkz;
-            if (o.objects.userData.MkzCode != null) {
-                object.mkz.value = o.objects.userData.MkzCode;
-                object.mkz.selected = [{ code: o.objects.userData.MkzCode, name: o.objects.userData.MkzName }];
-            }
-
             object.opr = o.objects.opr;
+
+            if (userData.AccCode != null) {
+                object.acc.value = userData.AccCode;
+                object.acc.selected = [{ code: userData.AccCode, name: userData.AccName }];
+            }
+            if (userData.MkzCode != null) {
+                object.mkz.value = userData.MkzCode;
+                object.mkz.selected = [{ code: userData.MkzCode, name: userData.MkzName }];
+            }
         }
 
         if (o.controlData != null) {

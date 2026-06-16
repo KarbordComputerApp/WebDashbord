@@ -10,6 +10,7 @@ $.widget("ui.Select", {
         },
         keyField: '',
         keyCaption: '',
+        selected: [],
         param: null,
         externalModal: false,
         striped: true,
@@ -32,6 +33,9 @@ $.widget("ui.Select", {
         var divInput0 = $('<div class="form-line focused date fix">');
         var input = $('<input class="form-control InputRes" readonly="">');
         var labelInput = $('<label class="form-label">' + o.caption + '</label>');
+
+        input.val(o.selected.length > 0 ? '(' + o.selected[0].code + ') ' + o.selected[0].name : "انتخاب " + o.caption );
+
 
         divInput0.append(input);
         divInput0.append(labelInput);
@@ -205,7 +209,12 @@ $.widget("ui.Select", {
         res = o.keyCaption == "" ? record[o.keyField] : '(' + record[o.keyField] + ') ' + record[o.keyCaption];
         $(inputRes).val(res);
 
-        var list = { data: record, dataString: record[o.keyField] };
+        var list = {
+            data: record,
+            dataString: record[o.keyField],
+            selected: [{ code: record[o.keyField], name: record[o.keyCaption] }]
+        };
+
 
         obj._trigger("Select", event, list);
     },

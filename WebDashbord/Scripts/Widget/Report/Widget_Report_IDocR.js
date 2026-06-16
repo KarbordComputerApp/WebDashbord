@@ -50,7 +50,7 @@
         o.columns = getRprtCols(o.baseValue.group, o.baseValue.sal, o.rprtId, userName);
 
         var action = [
-            { code: "ADocR", name: "دفتر روزنامه", icon: "/Content/img/view.svg" },
+            { code: "IODoc", name: "نمایش سند", icon: "/Content/img/view.svg" },
         ];
 
         divGrid.Table(
@@ -281,6 +281,27 @@
                 value: ""
             },
         }
+
+        if (o.objects != null) {
+            object.fromDate = o.objects.fromDate;
+            object.toDate = o.objects.toDate;
+            object.iMode = o.objects.iMode;
+            object.mkz = o.objects.mkz;
+            object.opr = o.objects.opr;
+            object.kGru = o.objects.kGru;
+            object.tGru = o.objects.tGru;
+            object.thvl = o.objects.thvl;
+            object.status = o.objects.status;
+
+            var userData = o.objects.userData;
+            object.kala.value = o.objects.userData.KalaCode;
+            object.kala.selected = [{ code: o.objects.userData.KalaCode, name: o.objects.userData.KalaName }];
+
+            object.inv.value = o.objects.userData.InvCode;
+            object.inv.selected = [{ code: o.objects.userData.InvCode, name: o.objects.userData.InvName }];
+
+        }
+
         return object;
     },
 

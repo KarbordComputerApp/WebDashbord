@@ -49,9 +49,7 @@
         getRprtAllCols(o.baseValue.ace, o.baseValue.group, o.baseValue.sal, userName);
         o.columns = getRprtCols(o.baseValue.group, o.baseValue.sal, o.rprtId, userName);
 
-        var action = [
-            { code: "ADocR", name: "دفتر روزنامه", icon: "/Content/img/view.svg" }
-        ];
+        var action = [];
 
         divGrid.Table(
             {
@@ -66,7 +64,7 @@
                 pageCount: 0,
                 pageSize: 10,
                 keyField: 'AccCode',
-                isTableFix: true,
+                isTableFix: false,
                 keyRow: [{ column: 'Tag', value: 1, act: '==' }],
                 radif: true,
                 sumFields: ['Bede', 'Best', 'MonBede', 'MonBest', 'MonTotal'],

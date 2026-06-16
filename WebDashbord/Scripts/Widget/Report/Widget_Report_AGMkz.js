@@ -96,6 +96,34 @@
                     var actionName = records.actionName;
                     var actionCaption = records.actionCaption;
                     if (actionName != null) {
+                        o.objects.userData = {
+                            AccCode: records.data.AccCode,
+                            AccName: records.data.AccName,
+                            MkzCode: records.data.MkzCode,
+                            MkzName: records.data.MkzName,
+                        };
+                        var position = FindFreePosition(o.uuid);
+                        var item = {
+                            id: actionName,
+                            uuid: 0,
+                            position: position,
+                            caption: actionCaption,
+                            visible: true,
+                            baseValue: o.baseValue,
+                            objects: o.objects,
+                            showControl: false,
+                            getAutoData: true,
+                        };
+
+                        AddIteminGrid(item);
+                        AppendBoxPush(o.uuid);
+                    }
+
+
+
+                    /* var actionName = records.actionName;
+                    var actionCaption = records.actionCaption;
+                    if (actionName != null) {
                         userData = {
                             AccCode: records.data.AccCode,
                             AccName: records.data.AccName,
@@ -114,7 +142,7 @@
                             viewData: _viewDataFull,
                             objects: o.objects,
                         });
-                    }
+                    }*/
 
                 },
                 ExportData: function (e, records) {

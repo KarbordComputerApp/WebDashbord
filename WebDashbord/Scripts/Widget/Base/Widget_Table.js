@@ -213,7 +213,7 @@
         for (var i = 0; i < _columns.length; i++) {
 
             var _th = $('<th columnname="' + _columns[i].Code +
-                '" mode="header" ' + (_columns[i].Hide == 1 ? 'hidden' : '') +' '+
+                '" mode="header" ' + (_columns[i].Hide == 1 ? 'hidden' : '') + ' ' +
                 'style="' + (_columns[i].Type == type_Boolean ? 'width:0px;' : '') + '"' +
                 '>');
 
@@ -310,46 +310,50 @@
             // action
             var action = o.action;
             if (action.length > 0) {
+                var keyValue = list[i][o.keyField];
                 var _td = $('<td style="background-color: white">');
-                if (o.actionDropdown == true) {
-                    var _aMenu = $('<a class="dropdown-toggle" data-toggle="dropdown" style="padding:10px">');
-                    var _span = $('<span class="caret"></span>');
-                    _aMenu.append(_span);
-                    _td.append(_aMenu);
+                if (keyValue != "") {
+                    if (o.actionDropdown == true) {
+                        var _aMenu = $('<a class="dropdown-toggle" data-toggle="dropdown" style="padding:10px">');
+                        var _span = $('<span class="caret"></span>');
+                        _aMenu.append(_span);
+                        _td.append(_aMenu);
 
-                    var _ul = $('<ul class="dropdown-menu">');
-                    for (var k = 0; k < action.length; k++) {
-                        visible = action[k].visible == null ? true : action[k].visible;
-                        if (visible != true) {
-                            if (visible.act == '==') {
-                                visible = list[i][visible.key] == visible.value;
+                        var _ul = $('<ul class="dropdown-menu">');
+                        for (var k = 0; k < action.length; k++) {
+                            visible = action[k].visible == null ? true : action[k].visible;
+                            if (visible != true) {
+                                if (visible.act == '==') {
+                                    visible = list[i][visible.key] == visible.value;
+                                }
+                                else
+                                    visible == false;
                             }
-                            else
-                                visible == false;
+                            if (visible == true) {
+                                var _li = $('<li>');
+                                var _a = $('<a action-name="' + action[k].code + '" title="' + action[k].name + '" style="font-size: 11px;text-align: right;">');
+                                var _img = $('<img src="' + action[k].icon + '"width="18" height="18" style="margin-left:10px">');
+                                var _span = $('<span>' + action[k].name + '</span>');
+                                _a.append(_img);
+                                _a.append(_span);
+                                _li.append(_a);
+                                _ul.append(_li);
+                            }
                         }
-                        if (visible == true) {
-                            var _li = $('<li>');
-                            var _a = $('<a action-name="' + action[k].code + '" title="' + action[k].name + '" style="font-size: 11px;text-align: right;">');
-                            var _img = $('<img src="' + action[k].icon + '"width="18" height="18" style="margin-left:10px">');
-                            var _span = $('<span>' + action[k].name + '</span>');
-                            _a.append(_img);
-                            _a.append(_span);
-                            _li.append(_a);
-                            _ul.append(_li);
-                        }
+                        _td.append(_ul);
                     }
-                    _td.append(_ul);
-                }
-                else {
-                    for (var k = 0; k < action.length; k++) {
-                        var _a = $('<a action-name="' + action[k].code + '" title="' + action[k].name + '">');
-                        var _img = $('<img src="' + action[k].icon + '" width="16" height="16" style="margin-left:10px">');
-                        _a.append(_img);
-                        _td.append(_a);
+                    else {
+                        for (var k = 0; k < action.length; k++) {
+                            var _a = $('<a action-name="' + action[k].code + '" title="' + action[k].name + '">');
+                            var _img = $('<img src="' + action[k].icon + '" width="16" height="16" style="margin-left:10px">');
+                            _a.append(_img);
+                            _td.append(_a);
+                        }
                     }
                 }
 
                 _tr.append(_td);
+
             }
             body.append(_tr);
         }
@@ -529,7 +533,7 @@
         }
 
         for (var i = 0; i < _columns.length; i++) {
-            var _td = $('<td style="padding: 0px 3px;" class="focused" ' + (_columns[i].Hide == 1 ? 'hidden' : '') +'>');
+            var _td = $('<td style="padding: 0px 3px;" class="focused" ' + (_columns[i].Hide == 1 ? 'hidden' : '') + '>');
             var _input = $('<input type="text" columnname="' + _columns[i].Code + '" mode="search" class="form-control ' + NameTypeKey(_columns[i].Type) + '" style="height: 2.4rem;">');
             _td.append(_input);
             _tr.append(_td);
@@ -1175,11 +1179,38 @@
         for (var i = 0; i < _columns.length; i++)
             _columns[i].Sum = 0;
 
+
         for (var i = 0; i < list.length; i++) {
             for (var j = 0; j < _columns.length; j++) {
-                _columns[j].Sum += list[i][_columns[j].Code];
+                if (o.id == "TrzAcc") {
+                    var sath = o.controlData.sath.value;
+                    if (sath == 2 && list[i].Level == 1)
+                        _columns[j].Sum += list[i][_columns[j].Code];
+                    else if (sath == 1)
+                        _columns[j].Sum += list[i][_columns[j].Code];
+                }
+                else {
+                    _columns[j].Sum += list[i][_columns[j].Code];
+                }
             }
         }
+
+        // if (o.id == "TrzAcc") {
+
+        //   totalMonBede = totalMonTotal >= 0 ? totalMonTotal : 0
+        //   totalMonBest = totalMonTotal < 0 ? Math.abs(totalMonTotal) : 0
+        // }
+
+        if (o.id == "TrzAcc") {
+            var totalBede = _columns.find(c => c.Code == "Bede").Sum;
+            var totalBest = _columns.find(c => c.Code == "Best").Sum;
+            var totalMon = totalBede - totalBest;
+            _columns.find(c => c.Code == "MonBede").Sum = totalMon >= 0 ? totalMon : 0;
+            _columns.find(c => c.Code == "MonBest").Sum = totalMon < 0 ? Math.abs(totalMon) : 0;
+            _columns.find(c => c.Code == "MonTotal").Sum = totalMon;
+        }
+
+
 
         for (var i = 0; i < _columns.length; i++) {
             var _td = table.find("[columnname=" + _columns[i].Code + "][mode='sum']");

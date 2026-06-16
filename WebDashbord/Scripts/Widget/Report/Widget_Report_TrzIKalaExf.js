@@ -50,7 +50,8 @@
         o.columns = getRprtCols(o.baseValue.group, o.baseValue.sal, o.rprtId, userName);
 
         var action = [
-            { code: "ADocR", name: "دفتر روزنامه", icon: "/Content/img/view.svg" },
+            { code: "Krdx", name: "کاردکس", icon: "/Content/img/view.svg" },
+            { code: "IDocR", name: "ریز گردش اسناد انبارداری", icon: "/Content/img/view.svg" },
         ];
 
         divGrid.Table(
@@ -65,7 +66,7 @@
                 sortMode: '',
                 pageCount: 0,
                 pageSize: 10,
-                keyField: 'KalaCode',
+                keyField: 'InvCode',
                 isTableFix: true,
                 keyRow: [{ column: 'Tag', value: 1, act: '==' }],
                 radif: true,
@@ -92,6 +93,29 @@
                     }
                 },
                 ActionClick: function (e, records) {
+                    var actionName = records.actionName;
+                    var actionCaption = records.actionCaption;
+                    if (actionName != null) {
+                        o.objects.userData = {
+                            KalaCode: records.data.KalaCode, KalaName: records.data.KalaName,
+                            InvCode: records.data.InvCode, InvName: records.data.InvName,
+                        };
+                        var position = FindFreePosition(o.uuid);
+                        var item = {
+                            id: actionName,
+                            uuid: 0,
+                            position: position,
+                            caption: actionCaption,
+                            visible: true,
+                            baseValue: o.baseValue,
+                            objects: o.objects,
+                            showControl: false,
+                            getAutoData: true,
+                        };
+
+                        AddIteminGrid(item);
+                        AppendBoxPush(o.uuid);
+                    }
                 },
                 ExportData: function (e, records) {
                     o.columns = records.columns;

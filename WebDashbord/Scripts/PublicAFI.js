@@ -145,6 +145,9 @@ function SaveVariant() {
 
     myJsonString = JSON.stringify([publicData]);
     localStorage.setItem("Karbord_PublicData", myJsonString);
+
+    var myJsonString = JSON.stringify(dashbordData)
+    localStorage.setItem("Karbord_DashbordData", myJsonString);
 }
 
 
@@ -673,8 +676,8 @@ var accessMode_Public = [
     { code: access_FSDOC, caption: "اسناد فروش", prog: prog_Fct, parent: "" },
     { code: access_FPDOC, caption: "اسناد خرید", prog: prog_Fct, parent: "" },
     { code: access_RPRT, caption: "گزارشات", prog: "", parent: "" },
-    { code: "TChk_Sum", caption: "صورت خلاصه چک های پرداختی", prog: prog_Acc, parent: access_RPRT },
-    { code: "TChk", caption: "چک های پرداختی", prog: prog_Acc, parent: access_RPRT },
+    { code: "TChk_Sum", caption: "چک‌ها پرداختنی به تفکیک بانک", prog: prog_Acc, parent: access_RPRT },
+    { code: "TChk", caption: "صورت خلاصه چک ها", prog: prog_Acc, parent: access_RPRT },
     { code: "TrzAcc", caption: "تراز حساب", prog: prog_Acc, parent: access_RPRT },
     { code: "Dftr", caption: "دفتر حساب", prog: prog_Acc, parent: access_RPRT },
     { code: "ADocR", caption: "دفتر روزنامه", prog: prog_Acc, parent: access_RPRT },

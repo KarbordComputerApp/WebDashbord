@@ -99,11 +99,8 @@
                     var actionName = records.actionName;
                     var actionCaption = records.actionCaption;
                     if (actionName != null) {
-                        userData = { AccCode: records.data.AccCode, AccName: records.data.AccName };
-                        var idbox = parseInt($(obj.element[0].closest('.item_dashbord')).attr("idbox"));
-
-                        o.objects.userData = userData
-                        var position = FindFreePosition(o.uuid); 
+                        o.objects.userData = { AccCode: records.data.AccCode, AccName: records.data.AccName };
+                        var position = FindFreePosition(o.uuid);
                         var item = {
                             id: actionName,
                             uuid: 0,
@@ -116,17 +113,6 @@
                             getAutoData: true,
                         };
 
-                        /*_body.ModalReport({
-                            reportId: actionName,
-                            caption: actionCaption,
-                            baseValue: o.baseValue,
-                            headButton: [f_Print, f_Columns],
-                            controlData: null,
-                            showControl: false,
-                            getAutoData: true,
-                            viewData: _viewDataFull,
-                            objects: o.objects,
-                        });*/
                         AddIteminGrid(item);
                         AppendBoxPush(o.uuid);
                         //SetPositionItems(o.uuid);
@@ -383,6 +369,7 @@
             o.controlData = object;
             //object["data"] = [data];
             o.objGrid.Table("option", "data", response);
+            o.objGrid.Table("option", "controlData", data);
             o.objGrid.Table("RefreshTable");
 
             var itemSetting = dashbordData.filter(c => c.uuid == uuid);

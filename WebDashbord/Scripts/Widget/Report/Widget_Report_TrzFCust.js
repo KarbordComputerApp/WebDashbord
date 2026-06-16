@@ -25,6 +25,8 @@
     _create: function () {
         var obj = this;
         var o = obj.options;
+        var mode_Forosh = o.isForosh == true ? "S" : "P";
+        o.rprtId = o.rprtId + '_' + mode_Forosh;
         var param = dataGroup[o.baseValue.group][o.baseValue.sal]["params"];
         o.objects = obj._SetObjects(param);
         var divContent = $('<div style="background-color: white;">');
@@ -50,8 +52,10 @@
         getRprtAllCols(o.baseValue.ace, o.baseValue.group, o.baseValue.sal, userName);
         o.columns = getRprtCols(o.baseValue.group, o.baseValue.sal, o.rprtId, userName);
 
+        var caption_Forosh = o.isForosh == true ? "فروش" : "خرید";
+
         var action = [
-            { code: "ADocR", name: "دفتر روزنامه", icon: "/Content/img/view.svg" },
+            { code: "FDocR_" + mode_Forosh, name: "ریز گردش اسناد " + caption_Forosh, icon: "/Content/img/view.svg" },
         ];
 
         divGrid.Table(
@@ -93,6 +97,27 @@
                     }
                 },
                 ActionClick: function (e, records) {
+                    var actionName = records.actionName;
+                    var actionCaption = records.actionCaption;
+                    if (actionName != null) {
+                        o.objects.userData = { rprtId: o.rprtId, CustCode: records.data.CustCode, CustName: records.data.CustName };
+                        var position = FindFreePosition(o.uuid);
+                        var item = {
+                            id: actionName,
+                            uuid: 0,
+                            position: position,
+                            caption: actionCaption,
+                            visible: true,
+                            baseValue: o.baseValue,
+                            objects: o.objects,
+                            showControl: false,
+                            getAutoData: true,
+                            isForosh: o.isForosh,
+                        };
+
+                        AddIteminGrid(item);
+                        AppendBoxPush(o.uuid);
+                    }
                 },
                 ExportData: function (e, records) {
                     o.columns = records.columns;
@@ -319,7 +344,7 @@
                     forSale: null,
                     updatedate: null,
                     mode: 0,
-                    custCode:''
+                    custCode: ''
                 },
                 selected: [],
             },
@@ -375,10 +400,10 @@
         );
         CreateObjectSelectEntesab(c, objects, 'status', null, o.externalModal);
         CreateObjectSelectEntesab(c, objects, 'inv', null, o.externalModal);
-        CreateObjectSelectEntesab(c, objects, 'kGru', null, o.externalModal,false);
+        CreateObjectSelectEntesab(c, objects, 'kGru', null, o.externalModal, false);
         CreateObjectSelectEntesab(c, objects, 'kala', null, o.externalModal);
 
-        CreateObjectSelectEntesab(c, objects, 'cGru', null, o.externalModal,false);
+        CreateObjectSelectEntesab(c, objects, 'cGru', null, o.externalModal, false);
         CreateObjectSelectEntesab(c, objects, 'cust', null, o.externalModal);
         CreateObjectSelectEntesab(c, objects, 'mkz', null, o.externalModal);
         CreateObjectSelectEntesab(c, objects, 'opr', null, o.externalModal);
