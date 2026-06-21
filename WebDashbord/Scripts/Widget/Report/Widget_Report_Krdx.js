@@ -122,41 +122,41 @@
 
         var divCol = $('<div class="form-inline col-lg-9 col-md-9 col-sm-12 col-xs-12" >');
         c.inv = $('<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">');
-        c.kGru = $('<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">');
+        //c.kGru = $('<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">');
         c.kala = $('<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">');
-
+        c.status = $('<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">');
 
         divCol.append(c.inv);
-        divCol.append(c.kGru);
+        //divCol.append(c.kGru);
         divCol.append(c.kala);
-
+        divCol.append(c.status);
         divRow.append(divCol);
 
 
         var divCol = $('<div class="form-inline col-lg-12 col-md-12 col-sm-12 col-xs-12">');
-        c.status = $('<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">');
         c.iMode = $('<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">');
         c.thvl = $('<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">');
         c.mkz = $('<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">');
-
-        divCol.append(c.status);
+        c.opr = $('<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">');
+       
         divCol.append(c.iMode);
         divCol.append(c.thvl);
         divCol.append(c.mkz);
+        divCol.append(c.opr);
         divRow.append(divCol);
 
 
         var divCol = $('<div class="form-inline col-lg-12 col-md-12 col-sm-12 col-xs-12"">');
         c.naghl = $('<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">');
-        c.opr = $('<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">');
+        
 
-        var divBtn = $('<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">');
+        var divBtn = $('<div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">');
         var divBtn1 = $('<div class="pull-left">');
         c.btnReport = $('<button type="button" class="btn btn-primary">گزارش گیری</button>');
         divBtn1.append(c.btnReport);
         divBtn.append(divBtn1);
 
-        divCol.append(c.opr);
+        
         divCol.append(c.naghl);
         divCol.append(divBtn);
         divRow.append(divCol);
@@ -193,7 +193,7 @@
                 value: "",
                 selected: [],
             },
-            kGru: {
+           /* kGru: {
                 id: d_kGru,
                 type: "Select_Entesab",
                 caption: 'گروه کالا',
@@ -203,7 +203,7 @@
                 value: "",
                 param: { Mode: 0 },
                 selected: [],
-            },
+            },*/
             kala: {
                 id: d_kala,
                 type: "Select",
@@ -288,7 +288,7 @@
             object.iMode = o.objects.iMode;
             object.mkz = o.objects.mkz;
             object.opr = o.objects.opr;
-            object.kGru = o.objects.kGru;
+            //object.kGru = o.objects.kGru;
             object.tGru = o.objects.tGru;
             object.thvl = o.objects.thvl;
             object.status = o.objects.status;
@@ -319,7 +319,7 @@
         CreateObjectDate(c, objects, 'toDate');
 
         CreateObjectSelect(c, objects, 'inv', null, o.externalModal);
-        CreateObjectSelectEntesab(c, objects, 'kGru', null, o.externalModal);
+        //CreateObjectSelectEntesab(c, objects, 'kGru', null, o.externalModal);
         CreateObjectSelect(c, objects, 'kala', null, o.externalModal);
         CreateObjectSelectEntesab(c, objects, 'status', null, o.externalModal);
         CreateObjectSelectEntesab(c, objects, 'iMode', null, o.externalModal);
@@ -360,7 +360,7 @@
             taTarikh: data.toDate.value.toEnglishDigit(),
             ModeCode: data.iMode.value,
             InvCode: data.inv.value,
-            KGruCode: data.kGru.value,
+            //KGruCode: data.kGru.value,
             KalaCode: data.kala.value,
             ThvlCode: data.thvl.value,
             MkzCode: data.mkz.value,

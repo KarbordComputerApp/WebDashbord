@@ -1189,6 +1189,16 @@
                     else if (sath == 1)
                         _columns[j].Sum += list[i][_columns[j].Code];
                 }
+                else if (o.id == "AGMkz" || o.id == "KhlAcc") {
+                    if (list[i].Tag == 1)
+                        _columns[j].Sum += list[i][_columns[j].Code];
+                } else if (o.id == "GrdZAcc") {
+                    if (list[i].Tag > 1)
+                        _columns[j].Sum += list[i][_columns[j].Code];
+                } else if (o.id == "TrzIKalaExf") {
+                    if (list[i].Tag == 2)
+                        _columns[j].Sum += list[i][_columns[j].Code];
+                }
                 else {
                     _columns[j].Sum += list[i][_columns[j].Code];
                 }
@@ -1201,7 +1211,7 @@
         //   totalMonBest = totalMonTotal < 0 ? Math.abs(totalMonTotal) : 0
         // }
 
-        if (o.id == "TrzAcc") {
+        if (o.id == "TrzAcc" || o.id == "AGMkz" || o.id == "GrdZAcc" || o.id == "KhlAcc") {
             var totalBede = _columns.find(c => c.Code == "Bede").Sum;
             var totalBest = _columns.find(c => c.Code == "Best").Sum;
             var totalMon = totalBede - totalBest;

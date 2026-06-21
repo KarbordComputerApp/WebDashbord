@@ -695,9 +695,10 @@ var accessMode_Public = [
     { code: "FDocR_S", caption: "ریز گردش اسناد فروش", prog: prog_Fct, parent: access_RPRT },
     { code: "FDocR_P", caption: "ریز گردش اسناد خرید", prog: prog_Fct, parent: access_RPRT },
     { code: "Krdx", caption: "کاردکس کالا", prog: prog_Inv, parent: access_RPRT },
+    { code: "IDocR", caption: "ریز گردش اسناد انبارداری", prog: prog_Inv, parent: access_RPRT },
     { code: "TrzIKala", caption: "موجودی کالا", prog: prog_Inv, parent: access_RPRT },
     { code: "TrzIKalaExf", caption: "موجودی کالا به تفکیک ویژگی", prog: prog_Inv, parent: access_RPRT },
-    { code: "IDocR", caption: "ریز گردش اسناد انبارداری", prog: prog_Inv, parent: access_RPRT },
+
 ];
 
 if (hrefPage != urlPage_Login) {
