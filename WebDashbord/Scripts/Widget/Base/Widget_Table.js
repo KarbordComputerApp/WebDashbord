@@ -61,7 +61,7 @@
         var obj = this;
         var o = obj.options;
         var list = o.data;
-        var _columns = o.columns.filter(c => c['Visible'] == 1);
+        //var _columns = o.columns.filter(c => c['Visible'] == 1);
 
         var _divFinal = $('<div class="TableContent">')
         var _divTable = $('<div style="height:' + o.height + ';overflow:auto;border: 1px #ddd solid;">');
@@ -535,6 +535,7 @@
         for (var i = 0; i < _columns.length; i++) {
             var _td = $('<td style="padding: 0px 3px;" class="focused" ' + (_columns[i].Hide == 1 ? 'hidden' : '') + '>');
             var _input = $('<input type="text" columnname="' + _columns[i].Code + '" mode="search" class="form-control ' + NameTypeKey(_columns[i].Type) + '" style="height: 2.4rem;">');
+            _input.val(_columns[i].Search == null ? "" : _columns[i].Search);
             _td.append(_input);
             _tr.append(_td);
         }
@@ -728,9 +729,12 @@
         var obj = this;
         var o = obj.options;
         $(row).empty();
+
+        //column = column.filter(c => c['Visible'] == 1);
+        
         for (var i = 0; i < column.length; i++) {
             var _divInline = $('<div class="form-inline" style="padding: 5px 10px 5px 10px;">');
-            var _input = $('<input data-name="' + column[i].Code + '" mode = "' + td_Mode + '" type="checkbox" style="margin:0px">');
+            var _input = $('<input data-name="' + column[i].Code + '" mode = "' + td_Mode + '" data-position="' + column[i].Position + '" type="checkbox" style="margin:0px">');
             var _strong = $('<strong style="padding-right: 10px;">' + column[i].Name + '</strong>');
 
             _input.prop('checked', column[i].Visible == 1);
@@ -759,17 +763,27 @@
     _SetDefultColumns: function () {
         var obj = this;
         var o = obj.options;
-        var modal = $(obj.bindings[0]).find('.K_Modal' + f_Columns);
-        var input = modal.find('[mode="' + td_Mode + '"]');
 
-        var url = CreateUrl(o.baseValue.ace, o.baseValue.sal, o.baseValue.group, 'RprtColsDefult') // آدرس دریافت ستون ها پیش فرض
+        //getRprtAllCols(o.baseValue.ace, o.baseValue.group, o.baseValue.sal, "");
+        var columns = getRprtCols(o.baseValue.group, o.baseValue.sal, o.id, "");
+        var _divRow = this.element.find('.columnslist');
+        obj._CreateListFilter(columns, _divRow);
+
+        // var modal = $(obj.bindings[0]).find('.K_Modal' + f_Columns);
+       // var input = modal.find('[mode="' + td_Mode + '"]');
+
+        /*var url = CreateUrl(o.baseValue.ace, o.baseValue.sal, o.baseValue.group, 'RprtColsDefult') // آدرس دریافت ستون ها پیش فرض
         ajaxFunction(url + '/' + o.id, 'GET').done(function (list) {
+            var _divRow = $('<div class = "columnslist">');
+            var divRow = obj._CreateListFilter(list, _divRow);
+
+
             for (i = 0; i < input.length; i++) {
                 var code = $(input[i]).attr("data-name");
                 column = list.filter(c => c.Code == code)[0];
                 $(input[i]).prop('checked', column.Visible == 1);
             }
-        });
+        });*/
     },
 
     _SetResultModalColumn: function () {
@@ -786,13 +800,14 @@
         for (i = 0; i < input.length; i++) {
             var visible = 0;
             var code = $(input[i]).attr("data-name");
+            var position = $(input[i]).attr("data-position");
             $(input[i]).is(':checked') == true ? visible = 1 : visible = 0;
             tmp = {
                 'UserCode': userName,
                 'RprtId': o.id,
                 'Code': code,
                 'Visible': visible,
-                'Position': i,
+                'Position': position,
                 'Width': 100
             };
             list.push(tmp);
@@ -1112,6 +1127,7 @@
             type = _columns[i].Type;
             code = _columns[i].Code;
             val = table.find("[columnname=" + code + "][mode='search']").val();
+            _columns[i].Search = val;
             if (val != "" && val != null) {
                 dataFilter.add(
                     {
@@ -1165,6 +1181,7 @@
         _th.append(_thIcon);
     },
 
+
     _Sum: function () {
         var obj = this;
         var o = obj.options;
@@ -1174,7 +1191,7 @@
 
         var table = $(obj.bindings[0]).find('.K_DataGrid');
 
-        var _columns = o.columns.filter(c => c['Visible'] == 1 && c['Type'] == type_Currency);
+        var _columns = o.columns.filter(c => c['Type'] == type_Currency);
 
         for (var i = 0; i < _columns.length; i++)
             _columns[i].Sum = 0;
@@ -1205,19 +1222,22 @@
             }
         }
 
-        // if (o.id == "TrzAcc") {
-
-        //   totalMonBede = totalMonTotal >= 0 ? totalMonTotal : 0
-        //   totalMonBest = totalMonTotal < 0 ? Math.abs(totalMonTotal) : 0
-        // }
-
         if (o.id == "TrzAcc" || o.id == "AGMkz" || o.id == "GrdZAcc" || o.id == "KhlAcc") {
-            var totalBede = _columns.find(c => c.Code == "Bede").Sum;
-            var totalBest = _columns.find(c => c.Code == "Best").Sum;
+            var monBede = _columns.find(c => c.Code == "MonBede");
+            var monBest = _columns.find(c => c.Code == "MonBest");
+            var monTotal = _columns.find(c => c.Code == "MonTotal");
+
+            var totalBede = _columns.find(c => c.Code == "Bede");
+            var totalBest = _columns.find(c => c.Code == "Best");
+
+            if (totalBede != null) totalBede = totalBede.Sum; else totalBede = 0;
+            if (totalBest != null) totalBest = totalBest.Sum; else totalBest = 0;
+
             var totalMon = totalBede - totalBest;
-            _columns.find(c => c.Code == "MonBede").Sum = totalMon >= 0 ? totalMon : 0;
-            _columns.find(c => c.Code == "MonBest").Sum = totalMon < 0 ? Math.abs(totalMon) : 0;
-            _columns.find(c => c.Code == "MonTotal").Sum = totalMon;
+
+            if (monBede != null) monBede.Sum = totalMon >= 0 ? totalMon : 0;
+            if (monBest != null) monBest.Sum = totalMon < 0 ? Math.abs(totalMon) : 0;
+            if (monTotal != null) monTotal.Sum = totalMon;
         }
 
 
@@ -1238,6 +1258,12 @@
             o.allData.add(o.data[i]);
         }
         obj._FirstPage();
+
+        // حذف مقادیری جستجو در اتصاب
+        var inputsSearch = $(obj.bindings[0]).find('.K_DataGrid tfoot tr input');
+        for (var i = 0; i < inputsSearch.length; i++) {
+            $(inputsSearch[i]).val('');
+        }
 
         if (o.sumFields.length > 0) obj._Sum();
     },

@@ -143,11 +143,13 @@ function SaveVariant() {
     var myJsonString = JSON.stringify([loginData]);
     localStorage.setItem("Karbord_LoginData", myJsonString);
 
-    myJsonString = JSON.stringify([publicData]);
-    localStorage.setItem("Karbord_PublicData", myJsonString);
+    if (hrefPage == urlPage_Dashbord) {
+        myJsonString = JSON.stringify([publicData]);
+        localStorage.setItem("Karbord_PublicData", myJsonString);
 
-    var myJsonString = JSON.stringify(dashbordData)
-    localStorage.setItem("Karbord_DashbordData", myJsonString);
+        var myJsonString = JSON.stringify(dashbordData)
+        localStorage.setItem("Karbord_DashbordData", myJsonString);
+    }
 }
 
 
@@ -497,11 +499,13 @@ function getRprtAllCols(ace, group, sal, userName) {
 
 function getRprtCols(group, sal, rprtId, username) {
     var columns = dataGroup[group][sal].Columns.dataUser;
-    var result = columns.filter(c => c.RprtId == rprtId && c.UserCode == username);
+    var result = columns.filter(c => c.RprtId == rprtId && c.UserCode == username && c.Name != "" );
+
     if (result.length == 0) {
         columns = dataGroup[group][sal].Columns.dataDefult;
-        result = columns.filter(c => c.RprtId == rprtId && c.UserCode == "*Default*");
+        result = columns.filter(c => c.RprtId == rprtId && c.UserCode == "*Default*" && c.Name != "" );
     }
+
     var listA = result.where(c => c.Position > 0);
     var listB = result.where(c => c.Position == 0);
     listA.sort(function (a, b) {
