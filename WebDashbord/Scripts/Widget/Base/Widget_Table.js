@@ -64,7 +64,7 @@
         //var _columns = o.columns.filter(c => c['Visible'] == 1);
 
         var _divFinal = $('<div class="TableContent">')
-        var _divTable = $('<div style="height:' + o.height + ';overflow:auto;border: 1px #ddd solid;">');
+        var _divTable = $('<div style="min-height:' + o.height + ';overflow:auto;border: 1px #ddd solid;">');
         var _table = $('<table class="table table-hover ' + (o.striped == false ? '' : 'table-striped') + ' K_DataGrid ' + (o.isTableFix ? 'table-responsive-md tableFix' : '') + '">'); //tableFixList
 
         var _divBtn = $('<div class="divBtn" style="height: 30px;text-align: left;' + (o.showHeadBtnDefult ? '' : 'display:none;') + '">');
@@ -415,7 +415,7 @@
                     }
                     value[k] = valueData;
                 }
-                tdValue = temp[j].format(value[0], value[1], value[2], value[3], value[4]);
+                tdValue = temp[j].format(value[0], value[1], value[2], value[3], value[4], value[5], value[6], value[7], value[8], value[9]);
                 var td = $(tdValue);
                 _tr.append(td);
             }
@@ -687,7 +687,7 @@
 
 
         //body
-        var _body = $('<div class="modal-body" style="height: 350px;overflow:auto;">');
+        var _body = $('<div class="modal-body" style="min-height: 350px;overflow:auto;">');
 
         var columns = o.columns.filter(c => c.Name != '');
         var _divRow = $('<div class = "columnslist">');
@@ -731,7 +731,7 @@
         $(row).empty();
 
         //column = column.filter(c => c['Visible'] == 1);
-        
+
         for (var i = 0; i < column.length; i++) {
             var _divInline = $('<div class="form-inline" style="padding: 5px 10px 5px 10px;">');
             var _input = $('<input data-name="' + column[i].Code + '" mode = "' + td_Mode + '" data-position="' + column[i].Position + '" type="checkbox" style="margin:0px">');
@@ -770,7 +770,7 @@
         obj._CreateListFilter(columns, _divRow);
 
         // var modal = $(obj.bindings[0]).find('.K_Modal' + f_Columns);
-       // var input = modal.find('[mode="' + td_Mode + '"]');
+        // var input = modal.find('[mode="' + td_Mode + '"]');
 
         /*var url = CreateUrl(o.baseValue.ace, o.baseValue.sal, o.baseValue.group, 'RprtColsDefult') // آدرس دریافت ستون ها پیش فرض
         ajaxFunction(url + '/' + o.id, 'GET').done(function (list) {
@@ -1206,7 +1206,7 @@
                     else if (sath == 1)
                         _columns[j].Sum += list[i][_columns[j].Code];
                 }
-                else if (o.id == "AGMkz" || o.id == "KhlAcc") {
+                else if (o.id == "AGMkz" ||o.id == "AGOpr" || o.id == "KhlAcc") {
                     if (list[i].Tag == 1)
                         _columns[j].Sum += list[i][_columns[j].Code];
                 } else if (o.id == "GrdZAcc") {
@@ -1222,7 +1222,7 @@
             }
         }
 
-        if (o.id == "TrzAcc" || o.id == "AGMkz" || o.id == "GrdZAcc" || o.id == "KhlAcc") {
+        if (o.id == "TrzAcc" || o.id == "AGMkz" ||o.id == "AGOpr" || o.id == "GrdZAcc" || o.id == "KhlAcc") {
             var monBede = _columns.find(c => c.Code == "MonBede");
             var monBest = _columns.find(c => c.Code == "MonBest");
             var monTotal = _columns.find(c => c.Code == "MonTotal");

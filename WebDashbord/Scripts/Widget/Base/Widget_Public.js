@@ -17,6 +17,8 @@ const d_aMode = 'AMode';
 const d_iMode = 'IMode';
 const d_thvl = 'Thvl';
 const d_tGru = 'TGru';
+const d_erjCust = 'ErjCust';
+const d_khdt = 'Khdt';
 
 const type_Farsi = 1;
 const type_En = 2;
@@ -269,6 +271,16 @@ var dataSettingDefult = {
         { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_GetAutoData_Auto }, { key: 1, value: caption_GetAutoData_Manual }] },
         { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 1, value: 1, items: [{ key: 0, value: caption_ShowControl_Show }, { key: 1, value: caption_ShowControl_Hide }] },
     ],
+    ErjDocK: [
+        { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_GetAutoData_Auto }, { key: 1, value: caption_GetAutoData_Manual }] },
+        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 1, value: 1, items: [{ key: 0, value: caption_ShowControl_Show }, { key: 1, value: caption_ShowControl_Hide }] },
+        { code: "ViewData", caption: caption_ViewData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_ViewData_Desktop }, { key: 1, value: caption_ViewData_Mobile }] },
+    ],
+    ErjDocB_Last: [
+        { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_GetAutoData_Auto }, { key: 1, value: caption_GetAutoData_Manual }] },
+        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 1, value: 1, items: [{ key: 0, value: caption_ShowControl_Show }, { key: 1, value: caption_ShowControl_Hide }] },
+        { code: "ViewData", caption: caption_ViewData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_ViewData_Desktop }, { key: 1, value: caption_ViewData_Mobile }] },
+    ],
 };
 
 
@@ -293,8 +305,14 @@ async function GetData(o, refresh, param) {
     var userCode = userName;
     var object = [];
 
+    if (baseData[o.baseValue.group] == null){
+        baseData[o.baseValue.group] = {};
+    }
+    if (baseData[o.baseValue.group][o.baseValue.sal] == null) {
+        baseData[o.baseValue.group][o.baseValue.sal] = {};
+    }
 
-    if (baseData[o.id] == null || refresh) {
+    if (baseData[o.baseValue.group][o.baseValue.sal][o.id] == null || refresh) {
         if (o.id == d_inv) {
             method = 'GET';
             uri += '/0/' + userCode;
@@ -345,6 +363,19 @@ async function GetData(o, refresh, param) {
                 Where: localStorage.getItem('whereAcc'),
             }
         }
+
+        else if (o.id == d_erjCust) {
+            var object = {
+                mode: param.mode,
+                UserCode: userCode,
+            }
+        }
+
+
+        else if (o.id == d_khdt) {
+            method = 'GET';
+        }
+
         else if (o.id == d_opr) {
             method = 'GET';
         }
@@ -395,7 +426,7 @@ async function GetData(o, refresh, param) {
         }
 
         await ajaxFunction(uri, method, object, true).done(function (response) {
-            baseData[o.id] = response;
+            baseData[o.baseValue.group][o.baseValue.sal][o.id] = response;
         });
     }
 }
@@ -651,7 +682,7 @@ function BoxDashbord_Create(obj, divHead, divBody) {
     div.append(b_Close);
 
     var groupData = loginData.baseValue.groupsData.find(c => c.Code == o.baseValue.group);
-    var titleGroup = 'گروه (' + o.baseValue.group + ') ' + groupData.Name + ' - ' + 'سال مالی ' + o.baseValue.sal;
+    var titleGroup = 'گروه (' + o.baseValue.group + ') ' + groupData.Name +  (o.baseValue.sal != "0000" ? (' - ' + 'سال مالی ' + o.baseValue.sal) : '');
     var divCaption = $('<div class="form-inline">');
     var divBase = $(
         '<div class="center" title="' + titleGroup + '" ' +
@@ -665,7 +696,10 @@ function BoxDashbord_Create(obj, divHead, divBody) {
     var p1 = $('<p style="font-size: 8px;">' + o.baseValue.group + '</p>');
     var p2 = $('<p style="font-size: 8px;">' + o.baseValue.sal + '</p>');
     divBase.append(p1);
-    divBase.append(p2);
+    if (o.baseValue.sal != "0000") {
+        divBase.append(p2);
+    }
+    
     divCaption.append(divBase);
 
     var h4 = $('<h4 class="modal-title" style="">' + o.caption + '</h4>');
@@ -1206,6 +1240,12 @@ function AddIteminGrid(itemObject) {
     }
     else if (id == "IDocR") {
         element.D_IDocR(param);
+    }
+    else if (id == "ErjDocK") {
+        element.D_ErjDocK(param);
+    }
+    else if (id == "ErjDocB_Last") {
+        element.D_ErjDocB_Last(param);
     }
 
 }

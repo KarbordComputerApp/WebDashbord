@@ -63,7 +63,6 @@ function LoginAccount(userAccount, passAccount, flagMessage = false) {
 
             loginData.baseValue.ace = ace;
             loginData.baseValue.groups = ace == prog_Web1 ? data.AFI1_Group : ace == prog_Web8 ? data.AFI8_Group : ace == prog_Web2 ? data.ERJ_Group : "";
-
             loginData.progCaption = ace == prog_Web1 ? "مالی بازرگانی" : ace == prog_Web8 ? "سیستم جامع" : ace == prog_Web2 ? "اتوماسیون" : "سایر";
             loginData.lockNumber = data.lockNumber;
             loginData.multilang = data.multilang;
@@ -217,6 +216,40 @@ function LoginUser(userName, password) {
                                     }
 
                                 });
+
+
+                                if (loginData.erj_Group != "" && loginData.erj_Group != null ) {
+                                    var erjGroup = loginData.erj_Group.split("-");
+                                    var appendGroup = "";
+                                    for (var i = 0; i < erjGroup.length; i++) {
+                                        if (loginData.baseValue.groups.search(erjGroup[i]) < 0) {
+                                            appendGroup = erjGroup[i] + '-';
+                                        }
+                                    }
+                                    if (appendGroup.length > 0) {
+                                        appendGroup = appendGroup.slice(0, -1)
+                                    }
+
+                                    loginData.baseValue.groups += "-" + appendGroup;
+                                    var GroupsObject = {
+                                        ProgName: prog_Erj,
+                                        User: loginData.userName,
+                                        Groups: appendGroup,
+                                    }
+
+                                    ajaxFunction(loginData.apiAddress + '/api/Web_Data/Groups', 'POST', GroupsObject).done(function (data) {
+                                        for (var i = 0; i < data.length; i++) {
+                                            data[i]["ErjOnly"] = true;
+                                            loginData.baseValue.groupsData.push(data[i]);
+                                            loginData.baseValue.groupsAccess += ReplaceGroup(data[i].Code) + ",";
+                                        }
+                                     });
+                                }
+
+
+                              
+
+                              
 
                                 loginData.firstInputWeb = true;
                                 if (loginData.baseValue.groups != "") {

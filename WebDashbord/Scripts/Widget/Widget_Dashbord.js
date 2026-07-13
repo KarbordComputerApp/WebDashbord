@@ -1526,3 +1526,145 @@ $.widget("ui.D_IDocR", {
 
 });
 
+$.widget("ui.D_ErjDocK", {
+    options: {
+        id: null,
+        uuid: null,
+        caption: null,
+        position: [],
+        baseValue: [],
+        visible: true,
+        data: null,
+        element: null,
+        headButton: [f_Print, f_Columns, f_Setting],
+        controlData: null,
+        objects: null,
+        getAutoData: null,
+        showControl: null,
+    },
+
+    _create: function () {
+        var obj = this;
+        var o = obj.options;
+
+        var setting = GetSetting(o);
+
+        var divReport = $('<div style="padding: 5px;">');
+        divReport.Report_ErjDocK({
+            uuid: o.uuid,
+            baseValue: o.baseValue,
+            showControl: o.showControl == null ? setting.showControl : o.showControl,
+            getAutoData: o.getAutoData == null ? setting.getAutoData : o.getAutoData,
+            viewData: setting.viewData,
+            controlData: o.controlData,
+            objects: o.objects,
+        });
+
+        o.element = divReport;
+        BoxDashbord_Create(obj, null, divReport);
+    },
+
+
+    _Refresh: function () {
+        var obj = this;
+        var o = obj.options.element;
+        o.Report_ErjDocK("Refresh");
+    },
+
+    _Setting: function () {
+        var obj = this;
+        var o = obj.options.element;
+        o.Report_ErjDocK("ShowSetting");
+    },
+
+    _ShowControl: function () {
+        var obj = this;
+        var o = obj.options.element;
+        o.Report_ErjDocK("ShowControl");
+    },
+
+    _ShowPrint: function () {
+        var obj = this;
+        var o = obj.options.element;
+        o.Report_ErjDocK("ShowPrint");
+    },
+
+    _ShowColumns: function () {
+        var obj = this;
+        var o = obj.options.element;
+        o.Report_ErjDocK("ShowColumns");
+    },
+
+});
+
+$.widget("ui.D_ErjDocB_Last", {
+    options: {
+        id: null,
+        uuid: null,
+        caption: null,
+        position: [],
+        baseValue: [],
+        visible: true,
+        data: null,
+        element: null,
+        headButton: [f_Print, f_Columns, f_Setting],
+        controlData: null,
+        objects: null,
+        getAutoData: null,
+        showControl: null,
+    },
+
+    _create: function () {
+        var obj = this;
+        var o = obj.options;
+
+        var setting = GetSetting(o);
+
+        var divReport = $('<div style="padding: 5px;">');
+        divReport.Report_ErjDocB_Last({
+            uuid: o.uuid,
+            baseValue: o.baseValue,
+            showControl: o.showControl == null ? setting.showControl : o.showControl,
+            getAutoData: o.getAutoData == null ? setting.getAutoData : o.getAutoData,
+            viewData: setting.viewData,
+            controlData: o.controlData,
+            objects: o.objects,
+        });
+
+        o.element = divReport;
+        BoxDashbord_Create(obj, null, divReport);
+    },
+
+
+    _Refresh: function () {
+        var obj = this;
+        var o = obj.options.element;
+        o.Report_ErjDocB_Last("Refresh");
+    },
+
+    _Setting: function () {
+        var obj = this;
+        var o = obj.options.element;
+        o.Report_ErjDocB_Last("ShowSetting");
+    },
+
+    _ShowControl: function () {
+        var obj = this;
+        var o = obj.options.element;
+        o.Report_ErjDocB_Last("ShowControl");
+    },
+
+    _ShowPrint: function () {
+        var obj = this;
+        var o = obj.options.element;
+        o.Report_ErjDocB_Last("ShowPrint");
+    },
+
+    _ShowColumns: function () {
+        var obj = this;
+        var o = obj.options.element;
+        o.Report_ErjDocB_Last("ShowColumns");
+    },
+
+});
+

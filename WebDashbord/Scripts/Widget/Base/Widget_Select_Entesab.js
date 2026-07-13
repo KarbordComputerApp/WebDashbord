@@ -282,7 +282,7 @@ $.widget("ui.Select_Entesab", {
 
 
         if (o.filter != null) {
-            o.data = baseData[o.id].filter(item => {
+            o.data = baseData[o.baseValue.group][o.baseValue.sal][o.id].filter(item => {
                 for (var i = 0; i < o.filter.length; i++) {
                     if (o.filter[i].act == '<=') {
                         return item[o.filter[i].key] <= o.filter[i].value == true
@@ -293,7 +293,7 @@ $.widget("ui.Select_Entesab", {
             });
         }
         else
-            o.data = baseData[o.id];
+            o.data = baseData[o.baseValue.group][o.baseValue.sal][o.id];
 
 
 

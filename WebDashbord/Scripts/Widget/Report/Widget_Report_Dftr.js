@@ -283,6 +283,10 @@
                 object.mkz.value = userData.MkzCode;
                 object.mkz.selected = [{ code: userData.MkzCode, name: userData.MkzName }];
             }
+            if (userData.OprCode != null) {
+                object.opr.value = userData.OprCode;
+                object.opr.selected = [{ code: userData.OprCode, name: userData.OprCode }];
+            }
         }
 
         if (o.controlData != null) {

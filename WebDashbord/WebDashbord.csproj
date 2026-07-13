@@ -883,7 +883,9 @@
     <Content Include="Scripts\Widget\Base\Widget_ModalReport.js" />
     <Content Include="Scripts\Widget\Base\Widget_Table.js" />
     <Content Include="Scripts\Widget\Report\Widget_Report_ADocR.js" />
+    <Content Include="Scripts\Widget\Report\Widget_Report_ErjDocB_Last.js" />
     <Content Include="Scripts\Widget\Report\Widget_Report_IDocR.js" />
+    <Content Include="Scripts\Widget\Report\Widget_Report_ErjDocK.js" />
     <Content Include="Scripts\Widget\Report\Widget_Report_TrzIKalaExf.js" />
     <Content Include="Scripts\Widget\Report\Widget_Report_TrzIKala.js" />
     <Content Include="Scripts\Widget\Report\Widget_Report_Krdx.js" />

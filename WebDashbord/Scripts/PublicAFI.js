@@ -588,18 +588,32 @@ function GetAccess_Group(prog, group) {
     if (dataGroup[group]["Access_" + prog] == null) {
         if (userName == user_Ace) {
             dataGroup[group]["Access_" + prog] = { "*": true };
+            userModeErj = "ADMIN";
         }
         else {
             ajaxFunction(AccessUri + prog + '/' + group + '/' + userName, 'GET', true).done(function (data) {
                 if (data.length > 0) {
                     var item = {};
+
+                    var modeErj = data.where(c => c.OrgProgName == prog_Erj && c.TrsName.toUpperCase() == "ADMIN");
+                    if (modeErj.length > 0)
+                        userModeErj = "ADMIN";
+                    else
+                        userModeErj = "USER";
+
+                    
                     for (var i = 0; i < data.length; i++) {
-                        var trsName = data[i].TrsName.toUpperCase();
-                        if (trsName == access_DOC || trsName == access_RPRT) {
-                            item['_' + trsName] = true;
-                        }
-                        else {
-                            item[data[i].OrgProgName.toUpperCase() + '_' + trsName] = true;
+                        if (data[i].TrsName != null) {
+                            var trsName = data[i].TrsName.toUpperCase();
+                            if (true) {
+
+                            }
+                            if (trsName == access_DOC || trsName == access_RPRT) {
+                                item['_' + trsName] = true;
+                            }
+                            else {
+                                item[data[i].OrgProgName.toUpperCase() + '_' + trsName] = true;
+                            }
                         }
                     }
                     dataGroup[group]["Access_" + prog] = item;
@@ -702,7 +716,8 @@ var accessMode_Public = [
     { code: "IDocR", caption: "ریز گردش اسناد انبارداری", prog: prog_Inv, parent: access_RPRT },
     { code: "TrzIKala", caption: "موجودی کالا", prog: prog_Inv, parent: access_RPRT },
     { code: "TrzIKalaExf", caption: "موجودی کالا به تفکیک ویژگی", prog: prog_Inv, parent: access_RPRT },
-
+    { code: "ErjDocK", caption: "فهرست پرونده ها", prog: prog_Erj, parent: access_RPRT },
+    { code: "ErjDocB_Last", caption: "لیست ارجاعات پرونده ها", prog: prog_Erj, parent: access_RPRT },
 ];
 
 if (hrefPage != urlPage_Login) {

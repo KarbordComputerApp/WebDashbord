@@ -211,3 +211,4 @@ var accessPublic = {};
 var defultGroup;
 var account_UserName;
 var account_Password;
+var userModeErj;

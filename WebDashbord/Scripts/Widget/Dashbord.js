@@ -45,6 +45,7 @@ var dashbordData_Save = localStorage.getItem("Karbord_DashbordData");
 
 let grid = GridStack.init({
     cellHeight: 'initial', // start square but will set to % of window width later
+    cellHeight: 'initial', // start square but will set to % of window width later
     animate: true, // show immediate (animate: true is nice for user dragging though)
     disableOneColumnMode: !isMobile, // will manually do 1 column
     lazyLoad: true,
@@ -182,6 +183,7 @@ function FindFreePosition(uuid, push = false) {
     return position;
 }
 
+var listGroups = loginData.baseValue.groupsData;
 
 if (dashbordData_Save != null && dashbordData_Save != "[{}]" && dashbordData_Save.toString() != "null" && dashbordData_Save.toString() != "") {
     var dashbordData = JSON.parse(dashbordData_Save);
@@ -191,8 +193,15 @@ if (dashbordData_Save != null && dashbordData_Save != "[{}]" && dashbordData_Sav
         var baseValue = dashbordData[i].baseValue;
         GetAccess_Group(baseValue.ace, baseValue.group);
         GetParam(baseValue.ace, baseValue.group, baseValue.sal, false);
-        //if (loginData.erj_Access != "") GetAccess_Group(prog_Web2, defultGroup);
         CreateListDesktop(baseValue.ace, baseValue.group);
+
+        if (loginData.erj_Access != "") {
+            var pos = loginData.erj_Group.search(baseValue.group);
+            if (pos == 0) {
+                GetAccess_Group(prog_Web2, baseValue.group);
+                //CreateListDesktop(prog_Web2, baseValue.group);
+            }
+        }
 
         var access = dataGroup[baseValue.group]["ListMode"];
         var list = access.filter(c => c.code == dashbordData[i].id);
@@ -230,11 +239,42 @@ function CreateListDesktop(ace, group) {
     if (dataGroup[group] == null) {
         GetAccess_Group(ace, group);
     }
-    if (dataGroup[group]["ListMode"] == null) {
+    var listMode = dataGroup[group]["ListMode"];
+
+    if (listMode != null && ace != prog_Web2) {
+        if (listMode.where(c => c.prog != prog_Erj).length == 0) {
+            listMode = null;
+        }
+    }
+
+    if (listMode == null) {
         listModeDesktop = [];
-        for (var i = 0; i < accessMode_Public.length; i++) {
-            var item = accessMode_Public[i];
-            var access = IsAccess(ace, item.prog, group, item.code, item.parent);
+
+        var isErj = false;
+        if (loginData.erj_Group != "" && loginData.erj_Group != null) {
+            var pos = loginData.erj_Group.search(group);
+            isErj = pos >= 0;
+        }
+
+        var erjOnly = listGroups.where(c => c.Code == group);
+        var aceProg = ace;
+        if (erjOnly.length > 0) {
+            if (erjOnly[0].ErjOnly == true)
+                aceProg = prog_Web2;
+        }
+
+        var accessMode = accessMode_Public;
+        if (aceProg == prog_Web2) {
+            accessMode = accessMode_Public.where(c => c.prog == prog_Erj || c.code == "RPRT");
+        }
+
+        for (var i = 0; i < accessMode.length; i++) {
+            var item = accessMode[i];
+            var prog = item.prog;
+            var aceProg = isErj && prog == prog_Erj ? prog_Web2 : aceProg;
+
+            var access = IsAccess(aceProg, item.prog, group, item.code, item.parent);
+
             if (item.parent == "") {
                 accessPublic[item.code] = access;
             }
@@ -295,8 +335,16 @@ $("#AddItemDesktop").click(async function () {
     var modeItem = $("#ModeDesktopItem").val();
     var captionItem = $("#CaptionItem").val();
     var groupDesktopItem = $("#GroupDesktopItem").val();
-    var salDesktopItem = $("#SalDesktopItem").val();
-    await GetParam(ace, groupDesktopItem, salDesktopItem, false, false);
+    var salDesktopItem = "0000";
+    var aceProg = ace;
+
+    if (modeItem == "ErjDocK" || modeItem == "ErjDocB_Last") {
+        aceProg = prog_Web2;
+    }
+    else
+        salDesktopItem = $("#SalDesktopItem").val();
+
+    await GetParam(aceProg, groupDesktopItem, salDesktopItem, false, false);
 
     var uuid = 1;
     if (dashbordData.length > 0) {
@@ -318,9 +366,9 @@ $("#AddItemDesktop").click(async function () {
         caption: captionItem,
         visible: true,
         baseValue: {
-            ace: ace,
+            ace: aceProg,
             group: groupDesktopItem,
-            sal: salDesktopItem
+            sal: salDesktopItem,
         }
     }
 
@@ -335,11 +383,11 @@ $("#AddItemDesktop").click(async function () {
     AddIteminGrid(item);
 
     var groupData = loginData.baseValue.groupsData.find(c => c.Code == item.baseValue.group);
-    var titleGroup = 'گروه (' + item.baseValue.group + ') ' + groupData.Name + ' - ' + 'سال مالی ' + item.baseValue.sal;
+    var titleGroup = 'گروه (' + item.baseValue.group + ') ' + groupData.Name + (item.baseValue.sal != "0000" ? (' - ' + item.baseValue.sal) : '');
 
     var col = ' <tr id="Obj_' + item.id + '" uuid="' + item.uuid + '"> ' +
         '<div class="center" style="padding-right: 5px;padding-left: 5px;border: 1px solid #eb8121;border-radius: 10px;top: 8px;margin-left: 8px;">' +
-        '<td id="Text_' + item.id + '" uuid="' + item.uuid + '" ><span style="font-size: 9px;border: 1px solid #eb8121;border-radius: 10px;padding: 3px;margin-left: 5px;" title="' + titleGroup + '" >' + item.baseValue.group + ' - ' + item.baseValue.sal + '</span>' + item.caption + '</td> ' +
+        '<td id="Text_' + item.id + '" uuid="' + item.uuid + '" ><span style="font-size: 9px;border: 1px solid #eb8121;border-radius: 10px;padding: 3px;margin-left: 5px;" title="' + titleGroup + '" >' + item.baseValue.group + (item.baseValue.sal != "0000" ? (' - ' + item.baseValue.sal) : '') + '</span>' + item.caption + '</td> ' +
         '    <td style="padding: 0px 10px;text-align: left;"> ' +
         '        <input class="CheckedItem" id="Setting_' + item.id + '"  uuid="' + item.uuid + '" type = "checkbox" ' + (item.visible == false ? "" : 'Checked="checked"') + '/>' +
         '    </td > ' +
@@ -359,12 +407,12 @@ $('#modal-DesktopItem').on('show.bs.modal', function () {
         var item = dashbordData[i];
         id = item.id;
         var groupData = loginData.baseValue.groupsData.find(c => c.Code == item.baseValue.group);
-        var titleGroup = 'گروه (' + item.baseValue.group + ') ' + groupData.Name + ' - ' + 'سال مالی ' + item.baseValue.sal;
+        var titleGroup = 'گروه (' + item.baseValue.group + ') ' + groupData.Name + (item.baseValue.sal != "0000" ? (' - ' + 'سال مالی ' + item.baseValue.sal) : '');
 
 
         col =
             '<tr id="Obj_' + id + '" uuid="' + item.uuid + '">' +
-            '    <td id="Text_' + id + '" uuid="' + item.uuid + '" ><span style="font-size: 9px;border: 1px solid #eb8121;border-radius: 10px;padding: 3px;margin-left: 5px;" title="' + titleGroup + '" >' + item.baseValue.group + ' - ' + item.baseValue.sal + '</span>' + item.caption + '</td> ' +
+            '    <td id="Text_' + id + '" uuid="' + item.uuid + '" ><span style="font-size: 9px;border: 1px solid #eb8121;border-radius: 10px;padding: 3px;margin-left: 5px;" title="' + titleGroup + '" >' + item.baseValue.group + (item.baseValue.sal != "0000" ? (' - ' + item.baseValue.sal) : '') + '</span>' + item.caption + '</td> ' +
             '    <td style="padding: 0px 10px;text-align: left;"> ' +
             '        <input class="CheckedItem" id = "Setting_' + id + '" uuid="' + item.uuid + '" type = "checkbox" ' + (item.visible == false ? "" : 'Checked="checked"') + '/>' +
             '    </td >' +
@@ -397,9 +445,22 @@ settingObject.click(function () {
 
 function CreateListModeDesktop(group) {
     $('#ModeDesktopItem').empty();
-    var listModeDesktop = dataGroup[group]["ListMode"]
+    var listModeDesktop = dataGroup[group]["ListMode"];
     for (var i = 0; i < listModeDesktop.length; i++) {
-        $('#ModeDesktopItem').append($('<option>', { value: listModeDesktop[i].code, text: listModeDesktop[i].caption }));
+        var color = "white";
+        if (listModeDesktop[i].prog == prog_Acc) {
+            color = "aliceblue";
+        } else if (listModeDesktop[i].prog == prog_Fct) {
+            color = "antiquewhite";
+        } else if (listModeDesktop[i].prog == prog_Inv) {
+            color = "aquamarine";
+        } else if (listModeDesktop[i].prog == prog_Erj) {
+            color = "white";
+        } 
+        var option = $('<option>', { value: listModeDesktop[i].code, text: listModeDesktop[i].caption });
+        option.css('background-color', color);
+        $('#ModeDesktopItem').append(option);
+
     }
 }
 
@@ -410,18 +471,46 @@ for (var i = 0; i < listModeDesktop.length; i++) {
 }
 */
 
-listGroups = loginData.baseValue.groupsData;
+
 for (var i = 0; i < listGroups.length; i++) {
     $('#GroupDesktopItem').append($('<option>', { value: ReplaceGroup(listGroups[i].Code), text: listGroups[i].Code + " - " + listGroups[i].Name }));
 }
 $('#GroupDesktopItem').val(loginData.baseValue.defultGroup);
 
 
+
+function SetAce(ace, group) {
+    var erjOnly = listGroups.where(c => c.Code == group);
+    aceProg = ace;
+    if (erjOnly.length > 0) {
+        if (erjOnly[0].ErjOnly == true)
+            aceProg = prog_Web2;
+    }
+    return aceProg
+}
+
 $('#modal-DesktopNewItem').on('show.bs.modal', function () {
     var group = ReplaceGroup(loginData.baseValue.defultGroup);
-    CreateListDesktop(ace, group);
+
+    /*var erjOnly = listGroups.where(c => c.Code == group);
+    aceProg = ace;
+    if (erjOnly.length > 0) {
+        if (erjOnly[0].ErjOnly == true)
+            aceProg = prog_Web2;
+    }*/
+    var aceProg = SetAce(ace, group);
+    CreateListDesktop(aceProg, group);
     CreateListModeDesktop(group);
-    SetSalData(ace, group);
+    if (aceProg != prog_Web2) {
+        $('#span_SalDesktopItem').show();
+        $('#SalDesktopItem').show();
+        SetSalData(ace, group);
+    }
+    else {
+        $('#span_SalDesktopItem').hide();
+        $('#SalDesktopItem').hide();
+    }
+
     //$("#CaptionItem").val(listModeDesktop[0].caption + ' - گروه ' + $('#GroupDesktopItem').val() + ' - سال ' + $('#SalDesktopItem').val());
     $("#CaptionItem").val(listModeDesktop[0].caption);
     $('#GroupDesktopItem').val(group);
@@ -449,7 +538,7 @@ $("#GroupDesktopItem").change(function () {
     CreateListModeDesktop(group);
     SetSalData(ace, group);
     //$("#CaptionItem").val($("#ModeDesktopItem option:selected").text() + ' - گروه ' + $('#GroupDesktopItem').val() + ' - سال ' + $('#SalDesktopItem option:selected').text());
-    $("#CaptionItem").val($("#ModeDesktopItem option:selected").text() + ' - گروه ' + $('#GroupDesktopItem').val() + ' - سال ' + $('#SalDesktopItem option:selected').text());
+    $("#CaptionItem").val($("#ModeDesktopItem option:selected").text());
     loginData.baseValue.defultGroup = group;
 });
 
@@ -479,10 +568,15 @@ function SetSalData(ace, group) {
 
     ajaxFunction(DatabseSalUrl, 'Post', DatabseSalObject).done(function (data) {
         if (data.length > 0) {
+            $("#span_SalDesktopItem").show();
+            $("#SalDesktopItem").show();
             for (var i = 0; i < data.length; i++) {
                 $('#SalDesktopItem').append($('<option>', { value: data[i].Code, text: data[i].Name }));
             }
             $("#SalDesktopItem").val(data[i - 1].Code);
+        } else {
+            $("#span_SalDesktopItem").hide();
+            $("#SalDesktopItem").hide();
         }
     });
 }
