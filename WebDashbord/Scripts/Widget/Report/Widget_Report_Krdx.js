@@ -348,10 +348,10 @@
         var o = obj.options;
         var data = o.objects;
 
-        if (data.inv.value == "") {
+        if (data.inv.value == "" || data.inv.value == null) {
             return showNotification(translate('انبار را انتخاب کنید'), 0);
         }
-        if (data.kala.value == "") {
+        if (data.kala.value == "" || data.kala.value == null) {
             return showNotification(translate('کالا را انتخاب کنید'), 0);
         }
 

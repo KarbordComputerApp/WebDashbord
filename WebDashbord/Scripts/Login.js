@@ -41,7 +41,7 @@ function LoginAccount(userAccount, passAccount, flagMessage = false) {
             if (flagMessage) {
                 localStorage.removeItem("Karbord_LoginData");
                 localStorage.removeItem("Karbord_PublicData");
-                //localStorage.removeItem("Karbord_DashbordData");
+                localStorage.removeItem("Karbord_DashbordData");
                 publicData = {};
                 loginData = loginDataDefult;
             }
@@ -228,22 +228,23 @@ function LoginUser(userName, password) {
                                     }
                                     if (appendGroup.length > 0) {
                                         appendGroup = appendGroup.slice(0, -1)
-                                    }
 
-                                    loginData.baseValue.groups += "-" + appendGroup;
-                                    var GroupsObject = {
-                                        ProgName: prog_Erj,
-                                        User: loginData.userName,
-                                        Groups: appendGroup,
-                                    }
 
-                                    ajaxFunction(loginData.apiAddress + '/api/Web_Data/Groups', 'POST', GroupsObject).done(function (data) {
-                                        for (var i = 0; i < data.length; i++) {
-                                            data[i]["ErjOnly"] = true;
-                                            loginData.baseValue.groupsData.push(data[i]);
-                                            loginData.baseValue.groupsAccess += ReplaceGroup(data[i].Code) + ",";
+                                        loginData.baseValue.groups += "-" + appendGroup;
+                                        var GroupsObject = {
+                                            ProgName: prog_Erj,
+                                            User: loginData.userName,
+                                            Groups: appendGroup,
                                         }
-                                     });
+
+                                        ajaxFunction(loginData.apiAddress + '/api/Web_Data/Groups', 'POST', GroupsObject).done(function (data) {
+                                            for (var i = 0; i < data.length; i++) {
+                                                data[i]["ErjOnly"] = true;
+                                                loginData.baseValue.groupsData.push(data[i]);
+                                                loginData.baseValue.groupsAccess += ReplaceGroup(data[i].Code) + ",";
+                                            }
+                                        });
+                                    }
                                 }
 
 

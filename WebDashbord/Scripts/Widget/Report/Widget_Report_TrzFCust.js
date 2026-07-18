@@ -85,9 +85,19 @@
                 viewData: o.viewData,
                 deghat: param.Deghat == "" ? 0 : parseInt(param.Deghat),
                 viewDataLowTemplate: [
-                    '<td style="width:0px"><h5 data-name="CustCode">{0}</h5></td>',
-                    '<td style="padding: 10px;" ><h5 data-name="CustName" style="word-break: break-word;white-space: normal;">{0}</h5></td>',
-                    '<td style="width:0px"><h5 data-name="AccMon" data-type="' + type_Currency + '" style="direction: ltr;text-align:end;">{0}</h5></td>',
+                    '<td style="width:0px"><center><img data-name="" data-type="img_cust" src="{0}" width="35"/></center></td>',
+                    '<td>' +
+                    '   <span data-name="CustCode">{0} - </span> <span data-name="CustName">{1}</span>' +
+                   /* '   <div class="form-inline" style="padding-top: 10px; padding-right: 5px;">' +
+                    '   	<img src="/Content/img/ContactUs.png" width="16" style="margin-left: 5px;">' +
+                    '	    <span data-name="Tel">{2}</span>' +
+                    '   </div>' +
+                    '   <div class="form-inline" style="padding-top: 5px; padding-right: 5px">' +
+                    '   	<img src="/Content/img/ContactUs.png" width="16" style="margin-left: 5px;">' +
+                    '   	<span data-name="Mobile">{3}</span>' +
+                    '   </div>' +*/
+                    '</td>' +
+                    '<td style="width:0px;padding-left:15px"><h5 data-name="AccMon" data-type="' + type_Currency + '" style="text-align:center">{2}</h5></td>',
                 ],
                 ActionHeadClick: function (e, records) {
                     var name = records.actionName;

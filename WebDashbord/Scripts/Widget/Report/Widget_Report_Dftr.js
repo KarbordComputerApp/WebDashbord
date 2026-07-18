@@ -353,7 +353,7 @@
         var o = obj.options;
         var data = o.objects;
 
-        if (data.acc.value == "") {
+        if (data.acc.value == "" || data.acc.value == null) {
             return showNotification(translate('حساب را انتخاب کنید'), 0);
         }
 

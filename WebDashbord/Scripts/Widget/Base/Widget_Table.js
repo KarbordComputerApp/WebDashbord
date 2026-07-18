@@ -412,6 +412,8 @@
                     }
                     else if (_type == "img_bank") {
                         valueData = GetIconBank(valueData)
+                    } else if (_type == "img_cust") {
+                        valueData = GetIconCustomer(valueData)
                     }
                     value[k] = valueData;
                 }
@@ -716,7 +718,22 @@
         });
 
         _aDefult.click(function (e) {
-            obj._SetDefultColumns();
+            Swal.fire({
+                title: mes_DefultColumns,
+                text: "آیا ستون های پیش فرض اعمال شود",
+                type: 'warning',
+                showCancelButton: true,
+                cancelButtonColor: '#3085d6',
+                cancelButtonText: text_No,
+                allowOutsideClick: false,
+                confirmButtonColor: '#d33',
+                confirmButtonText: text_Yes
+            }).then((result) => {
+                if (result.value) {
+                    obj._SetDefultColumns();
+                }
+            })
+
         });
 
         _modal.on('hide.bs.modal', function () {
@@ -1206,7 +1223,7 @@
                     else if (sath == 1)
                         _columns[j].Sum += list[i][_columns[j].Code];
                 }
-                else if (o.id == "AGMkz" ||o.id == "AGOpr" || o.id == "KhlAcc") {
+                else if (o.id == "AGMkz" || o.id == "AGOpr" || o.id == "KhlAcc") {
                     if (list[i].Tag == 1)
                         _columns[j].Sum += list[i][_columns[j].Code];
                 } else if (o.id == "GrdZAcc") {
@@ -1222,7 +1239,7 @@
             }
         }
 
-        if (o.id == "TrzAcc" || o.id == "AGMkz" ||o.id == "AGOpr" || o.id == "GrdZAcc" || o.id == "KhlAcc") {
+        if (o.id == "TrzAcc" || o.id == "Dftr" || o.id == "AGMkz" || o.id == "AGOpr" || o.id == "GrdZAcc" || o.id == "KhlAcc") {
             var monBede = _columns.find(c => c.Code == "MonBede");
             var monBest = _columns.find(c => c.Code == "MonBest");
             var monTotal = _columns.find(c => c.Code == "MonTotal");

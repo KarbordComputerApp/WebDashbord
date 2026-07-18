@@ -705,8 +705,11 @@ var accessMode_Public = [
     { code: "KhlAcc", caption: "صورت خلاصه حساب ها", prog: prog_Acc, parent: access_RPRT },
     { code: "KhlZAcc", caption: "صورت خلاصه زیر حساب ها", prog: prog_Acc, parent: access_RPRT },
     { code: "TarazFasli", caption: "نمودار فروش", prog: prog_Fct, parent: access_RPRT },
-    { code: "TrzFCust_S", caption: "مانده حساب خریداران", prog: prog_Fct, parent: access_RPRT },
-    { code: "TrzFCust_P", caption: "مانده حساب فروشندگان", prog: prog_Fct, parent: access_RPRT },
+    { code: "TrzFCust_S", caption: "تراز فروش به خریداران", prog: prog_Fct, parent: access_RPRT },
+    { code: "TrzFCust_P", caption: "تراز خرید از فروشندگان", prog: prog_Fct, parent: access_RPRT },
+
+    //{ code: "TrzFCust_S", caption: "مانده حساب خریداران", prog: prog_Fct, parent: access_RPRT },
+   // { code: "TrzFCust_P", caption: "مانده حساب فروشندگان", prog: prog_Fct, parent: access_RPRT },
     //{ code: "TrzFKala_S", caption: "بیشترین فروش کالا" , prog: prog_Fct, parent: access_RPRT},
     { code: "TrzFKala_S", caption: "تراز فروش کالاها", prog: prog_Fct, parent: access_RPRT },
     { code: "TrzFKala_P", caption: "تراز خرید کالاها", prog: prog_Fct, parent: access_RPRT },
@@ -864,6 +867,7 @@ var mes_Delete = translate('تایید حذف');
 var text_Yes = translate('بله');
 var text_No = translate('خیر');
 var mes_SaveRelatedGroup = translate('تایید ذخیره در گروه وابسته');
+var mes_DefultColumns = translate('تایید ستون های پیش فرض');
 
 
 
