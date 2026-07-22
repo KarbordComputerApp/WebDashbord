@@ -499,11 +499,11 @@ function getRprtAllCols(ace, group, sal, userName) {
 
 function getRprtCols(group, sal, rprtId, username) {
     var columns = dataGroup[group][sal].Columns.dataUser;
-    var result = columns.filter(c => c.RprtId == rprtId && c.UserCode == username && c.Name != "" );
+    var result = columns.filter(c => c.RprtId == rprtId && c.UserCode == username && c.Name != "");
 
     if (result.length == 0) {
         columns = dataGroup[group][sal].Columns.dataDefult;
-        result = columns.filter(c => c.RprtId == rprtId && c.UserCode == "*Default*" && c.Name != "" );
+        result = columns.filter(c => c.RprtId == rprtId && c.UserCode == "*Default*" && c.Name != "");
     }
 
     var listA = result.where(c => c.Position > 0);
@@ -514,8 +514,8 @@ function getRprtCols(group, sal, rprtId, username) {
     for (var i = 0; i < listB.length; i++) {
         listA.add(listB[i]);
     }
-    
-     return listA;
+
+    return listA;
 }
 
 
@@ -601,13 +601,10 @@ function GetAccess_Group(prog, group) {
                     else
                         userModeErj = "USER";
 
-                    
+
                     for (var i = 0; i < data.length; i++) {
                         if (data[i].TrsName != null) {
                             var trsName = data[i].TrsName.toUpperCase();
-                            if (true) {
-
-                            }
                             if (trsName == access_DOC || trsName == access_RPRT) {
                                 item['_' + trsName] = true;
                             }
@@ -647,16 +644,23 @@ function IsAccessTrs(prog, orgProg, group, trs, parent) {
         return true;
     }
     else {
-        var groupAccess = dataGroup[group]["Access_" + prog];
-        var param = orgProg.toUpperCase() + '_' + trs;
-        if (param == ('ADMIN_' + orgProg)) {
-            return true;
-        }
-        else {
-            if (parent == access_RPRT) {
-                param = access_RPRT + '_' + trs;
+
+        GetAccess_Group(prog, group);
+        try {
+            var groupAccess = dataGroup[group]["Access_" + prog];
+            var param = orgProg.toUpperCase() + '_' + trs;
+            if (param == ('ADMIN_' + orgProg)) {
+                return true;
             }
-            return IsNull(groupAccess[param], false)
+            else {
+                if (parent == access_RPRT) {
+                    param = access_RPRT + '_' + trs;
+                }
+                return IsNull(groupAccess[param], false)
+            }
+        } catch (error) {
+            alert('IsAccountAccess : '+error)
+            var a = error;
         }
     }
 }
@@ -666,7 +670,10 @@ function ReplaceTrs(trs) {
     if (trs == "TChk_Sum") {
         trs = "TChk";
     }
-    else if (trs == "TarazFasli") {
+    else if (trs == "TarazFasli_Chart") {
+        trs = "TrzFKala_S";
+    }
+    else if (trs == "TrzFKala_Chart") {
         trs = "TrzFKala_S";
     }
     return trs;
@@ -704,12 +711,13 @@ var accessMode_Public = [
     { code: "GrdZAcc", caption: "گردش زیر حساب ها", prog: prog_Acc, parent: access_RPRT },
     { code: "KhlAcc", caption: "صورت خلاصه حساب ها", prog: prog_Acc, parent: access_RPRT },
     { code: "KhlZAcc", caption: "صورت خلاصه زیر حساب ها", prog: prog_Acc, parent: access_RPRT },
-    { code: "TarazFasli", caption: "نمودار فروش", prog: prog_Fct, parent: access_RPRT },
+    { code: "TarazFasli_Chart", caption: "نمودار فروش", prog: prog_Fct, parent: access_RPRT },
+    { code: "TrzFKala_Chart", caption: "بیشترین فروش کالا", prog: prog_Fct, parent: access_RPRT },
     { code: "TrzFCust_S", caption: "تراز فروش به خریداران", prog: prog_Fct, parent: access_RPRT },
     { code: "TrzFCust_P", caption: "تراز خرید از فروشندگان", prog: prog_Fct, parent: access_RPRT },
 
     //{ code: "TrzFCust_S", caption: "مانده حساب خریداران", prog: prog_Fct, parent: access_RPRT },
-   // { code: "TrzFCust_P", caption: "مانده حساب فروشندگان", prog: prog_Fct, parent: access_RPRT },
+    // { code: "TrzFCust_P", caption: "مانده حساب فروشندگان", prog: prog_Fct, parent: access_RPRT },
     //{ code: "TrzFKala_S", caption: "بیشترین فروش کالا" , prog: prog_Fct, parent: access_RPRT},
     { code: "TrzFKala_S", caption: "تراز فروش کالاها", prog: prog_Fct, parent: access_RPRT },
     { code: "TrzFKala_P", caption: "تراز خرید کالاها", prog: prog_Fct, parent: access_RPRT },

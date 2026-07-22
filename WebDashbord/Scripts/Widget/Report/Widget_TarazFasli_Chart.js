@@ -1,6 +1,6 @@
-﻿$.widget("ui.TarazFasli", {
+﻿$.widget("ui.TarazFasli_Chart", {
     options: {
-        rprtId: 'TarazFasli',
+        rprtId: 'TarazFasli_Chart',
         uuid: null,
         caption: null,
         baseValue: {
@@ -42,7 +42,7 @@
 
         //Grid
         var divGrid = $('<div>');
-        var chart = $('<canvas style="width:100%;max-width:700px"></canvas>');
+        var chart = $('<canvas style="width:max-content;"></canvas>');
         o.objChart = chart;
         divGrid.append(chart);
 

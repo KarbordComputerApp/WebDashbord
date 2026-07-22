@@ -212,3 +212,18 @@ var defultGroup;
 var account_UserName;
 var account_Password;
 var userModeErj;
+
+
+const _modeForosh = {
+    "SORD": { "Web1": 0, "Web8": "SORD", value: "سفارش فروش", isForosh: true },
+    "SPFCT": { "Web1": 51, "Web8": "SPFCT", value: "پیش فاکتور فروش", isForosh: true },
+    "SFCT": { "Web1": 52, "Web8": "SFCT", value: "فاکتور فروش", isForosh: true },
+    "SRFCT": { "Web1": 53, "Web8": "SRFCT", value: "برگشت از فروش", isForosh: true },
+    "SHVL": { "Web1": 0, "Web8": "SHVL", value: "حواله فروش", isForosh: true },
+    "SEXT": { "Web1": 0, "Web8": "SEXT", value: "برگه خروج", isForosh: true },
+    "PORD": { "Web1": 0, "Web8": "PORD", value: "سفارش خرید", isForosh: false },
+    "PPFCT": { "Web1": 54, "Web8": "PPFCT", value: "پیش فاکتور خرید", isForosh: false },
+    "PFCT": { "Web1": 55, "Web8": "PFCT", value: "فاکتور خرید", isForosh: false },
+    "PRFCT": { "Web1": 56, "Web8": "PRFCT", value: "برگشت از خرید", isForosh: false },
+};
+

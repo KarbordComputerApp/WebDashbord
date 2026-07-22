@@ -218,30 +218,17 @@
         var itemsModeCode = null;
         var selectedModeCode = null;
         if (o.isForosh) {
-            itemsModeCode = [
-                { key: "SFCT", value: "فاکتور فروش" },
-                { key: "SPFCT", value: "پیش فاکتور فروش" },
-                { key: "SRFCT", value: "برگشت از فروش" },
-                { key: "SORD", value: "سفارش فروش" },
-                { key: "SHVL", value: "حواله فروش" },
-                { key: "SEXT", value: "برگه خروج" },
-                { key: "SFCT*SRFCT", value: "فاکتور فروش با احتساب برگشتی" }
-            ];
-            selectedModeCode = "SFCT*SRFCT";
+            selectedModeCode = ace == prog_Web8 ? "SFCT*SRFCT" : "52*53";
+            itemsModeCode = CreateListModeForosh(true);
+            itemsModeCode.push({ key: selectedModeCode, value: "فاکتور فروش با احتساب برگشتی" })
             modeGru = 2;
         }
         else {
-            itemsModeCode = [
-                { key: "PFCT", value: "فاکتور خرید" },
-                { key: "PPFCT", value: "پیش فاکتور خرید" },
-                { key: "PORD", value: "سفارش خرید" },
-                { key: "PRFCT", value: "برگشت از خرید" },
-                { key: "PFCT*PRFCT", value: "فاکتور خرید با احتساب برگشتی" }
-            ];
-            selectedModeCode = "PFCT*PRFCT";
+            selectedModeCode = ace == prog_Web8 ? "PFCT*PRFCT" : "55*56";
+            itemsModeCode = CreateListModeForosh(false);
+            itemsModeCode.push({ key: selectedModeCode, value: "فاکتور خرید با احتساب برگشتی" });
             modeGru = 1;
         }
-
 
         object = {
             fromDate: {

@@ -267,7 +267,11 @@ var dataSettingDefult = {
         { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 1, value: 1, items: [{ key: 0, value: caption_ShowControl_Show }, { key: 1, value: caption_ShowControl_Hide }] },
         { code: "ViewData", caption: caption_ViewData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_ViewData_Desktop }, { key: 1, value: caption_ViewData_Mobile }] },
     ],
-    TarazFasli: [
+    TarazFasli_Chart: [
+        { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_GetAutoData_Auto }, { key: 1, value: caption_GetAutoData_Manual }] },
+        { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 1, value: 1, items: [{ key: 0, value: caption_ShowControl_Show }, { key: 1, value: caption_ShowControl_Hide }] },
+    ],
+    TrzFKala_Chart: [
         { code: "GetAutoData", caption: caption_GetAutoData, mode: f_Select, defult: 0, value: 0, items: [{ key: 0, value: caption_GetAutoData_Auto }, { key: 1, value: caption_GetAutoData_Manual }] },
         { code: "ShowControl", caption: caption_ShowControl, mode: f_Select, defult: 1, value: 1, items: [{ key: 0, value: caption_ShowControl_Show }, { key: 1, value: caption_ShowControl_Hide }] },
     ],
@@ -305,7 +309,7 @@ async function GetData(o, refresh, param) {
     var userCode = userName;
     var object = [];
 
-    if (baseData[o.baseValue.group] == null){
+    if (baseData[o.baseValue.group] == null) {
         baseData[o.baseValue.group] = {};
     }
     if (baseData[o.baseValue.group][o.baseValue.sal] == null) {
@@ -682,7 +686,7 @@ function BoxDashbord_Create(obj, divHead, divBody) {
     div.append(b_Close);
 
     var groupData = loginData.baseValue.groupsData.find(c => c.Code == o.baseValue.group);
-    var titleGroup = 'گروه (' + o.baseValue.group + ') ' + groupData.Name +  (o.baseValue.sal != "0000" ? (' - ' + 'سال مالی ' + o.baseValue.sal) : '');
+    var titleGroup = 'گروه (' + o.baseValue.group + ') ' + groupData.Name + (o.baseValue.sal != "0000" ? (' - ' + 'سال مالی ' + o.baseValue.sal) : '');
     var divCaption = $('<div class="form-inline">');
     var divBase = $(
         '<div class="center" title="' + titleGroup + '" ' +
@@ -699,7 +703,7 @@ function BoxDashbord_Create(obj, divHead, divBody) {
     if (o.baseValue.sal != "0000") {
         divBase.append(p2);
     }
-    
+
     divCaption.append(divBase);
 
     var h4 = $('<h4 class="modal-title" style="">' + o.caption + '</h4>');
@@ -1190,8 +1194,10 @@ function AddIteminGrid(itemObject) {
     else if (id == "TChk") {
         element.D_TChk(param);
     }
-    else if (id == "TarazFasli") {
-        element.D_TarazFasli(param);
+    else if (id == "TarazFasli_Chart") {
+        element.D_TarazFasli_Chart(param);
+    } else if (id == "TrzFKala_Chart") {
+        element.D_TrzFKala_Chart(param);
     }
     else if (id == "TrzAcc") {
         element.D_TrzAcc(param);
@@ -1251,4 +1257,45 @@ function AddIteminGrid(itemObject) {
 }
 
 
+
+
+
+function removeItemOnce(arr, value) {
+    var index = arr.indexOf(value);
+    if (index > -1) {
+        arr.splice(index, 1);
+    }
+    return arr;
+}
+
+
+function ItemModeForosh(mode) {
+    return { key: _modeForosh[mode][ace], value: _modeForosh[mode].value };
+}
+
+
+function CreateListModeForosh(isForosh) {
+    itemsModeCode = [];
+    if (isForosh == true || isForosh == null) {
+        itemsModeCode.push(ItemModeForosh("SORD"));
+        itemsModeCode.push(ItemModeForosh("SFCT"));
+        itemsModeCode.push(ItemModeForosh("SPFCT"));
+        itemsModeCode.push(ItemModeForosh("SRFCT"));
+        itemsModeCode.push(ItemModeForosh("SHVL"));
+        itemsModeCode.push(ItemModeForosh("SEXT"));
+    }
+    if (isForosh == false || isForosh == null) {
+        itemsModeCode.push(ItemModeForosh("PORD"));
+        itemsModeCode.push(ItemModeForosh("PFCT"));
+        itemsModeCode.push(ItemModeForosh("PPFCT"));
+        itemsModeCode.push(ItemModeForosh("PRFCT"));
+    }
+    itemsDelete = itemsModeCode.where(c => c.key == 0);
+    var count = itemsDelete.count;
+    for (var i = 0; i < count; i++) {
+        itemsModeCode.splice(itemsModeCode.findIndex(a => a.value == itemsDelete[i].value), 1)
+    }
+
+    return itemsModeCode;
+}
 

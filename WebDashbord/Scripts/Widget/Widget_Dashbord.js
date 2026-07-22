@@ -221,7 +221,7 @@ $.widget("ui.D_TrzFCust", {
 });
 
 
-$.widget("ui.D_TarazFasli", {
+$.widget("ui.D_TarazFasli_Chart", {
     options: {
         id: null,
         uuid: null,
@@ -245,7 +245,7 @@ $.widget("ui.D_TarazFasli", {
         var setting = GetSetting(o);
 
         var divReport = $('<div style="padding: 5px;">');
-        divReport.TarazFasli({
+        divReport.TarazFasli_Chart({
             uuid: o.uuid,
             baseValue: o.baseValue,
             showControl: o.showControl == null ? setting.showControl : o.showControl,
@@ -263,41 +263,34 @@ $.widget("ui.D_TarazFasli", {
     _Refresh: function () {
         var obj = this;
         var o = obj.options.element;
-        o.TarazFasli("Refresh");
+        o.TarazFasli_Chart("Refresh");
     },
 
     _Setting: function () {
         var obj = this;
         var o = obj.options.element;
-        o.TarazFasli("ShowSetting");
+        o.TarazFasli_Chart("ShowSetting");
     },
 
     _ShowControl: function () {
         var obj = this;
         var o = obj.options.element;
-        o.TarazFasli("ShowControl");
+        o.TarazFasli_Chart("ShowControl");
     },
 
 });
 
-/*
-$.widget("ui.D_TarazFasli", {
+$.widget("ui.D_TrzFKala_Chart", {
     options: {
         id: null,
+        uuid: null,
         caption: null,
-        position: positionGrid_Defult,
-        valueControl: {
-            mode: 0,
-        },
-        baseValue: {
-            ace: null,
-            group: null,
-            sal: null
-        },
+        position: [],
+        baseValue: [],
         visible: true,
         data: null,
-        o: null,
-        chart: null,
+        element: null,
+        headButton: [f_Setting],
         controlData: null,
         objects: null,
         getAutoData: null,
@@ -306,222 +299,47 @@ $.widget("ui.D_TarazFasli", {
 
     _create: function () {
         var obj = this;
-        obj._createModal();
         var o = obj.options;
 
-        var divSum = $('<div class="form-inline" style="padding-top: 10px;width: 100%;">');
-        div = $('<div class="form-inline" style="margin-left:auto">');
-        h5 = $('<h5>مجموع : </h5> <h5 id="' + o.id + '_LSum" style="padding-right:5px">0</h5>');
-        div.append(h5);
-        divSum.append(div);
+        var setting = GetSetting(o);
 
-        div = $('<div class="form-inline" style="margin-right:auto">');
-        h5 = $('<h5 id="' + o.id + '_LTitle" style="padding-right:5px;color:#dcdcdc">0</h5>');
-        div.append(h5);
-        divSum.append(div);
-
-
-        var chart = $('<canvas id="' + o.id + '_Chart" style="width:100%;max-width:700px"></canvas>');
-        BoxDashbord_Create(obj, divSum, chart);
-        obj._GetData(o.valueControl.mode, o.valueControl.fromDate);
-    },
-
-    _createModal: function () {
-        var obj = this;
-        var o = obj.options;
-        body = $('main');
-        $("#" + o.id + "_modal").remove();
-        //modal
-        _modal = $('<div class="modal fade" id="' + o.id + '_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"">');
-        dialog = $('<div class="modal-dialog"></div>');
-        _modal.append(dialog);
-        content = $('<div class="modal-content"></div>');
-        dialog.append(content);
-
-        //head
-        _header = $('<div class="modal-header">');
-        _buttonExit = $('<button type="button" class="close" data-dismiss="modal" aria-label="Close" title="بستن"><i class="bi bi-x-lg"></button >');
-        _header.append(_buttonExit);
-        title = $('<p class="modal-title" style="width: 90%;text-align: center;">' + o.caption + '</p>');
-        _header.append(title);
-        _header.append($('<div>'));
-        // end head
-
-        //body
-        _body = $('<div class="modal-body">');
-        _rowBody = $('<div class="row" style="padding-top:20px">');
-
-        _selectMode = $('<select id="' + o.id + '_mode" class="col-6"  style="margin-bottom:2rem">');
-        _selectMode.append('<option value="0">فصلی</option>');
-        _selectMode.append('<option value="1">ماهانه</option>');
-        _selectMode.append('<option value="2">روزانه</option>');
-
-        _rowBody.append(_selectMode);
-
-        _body.append(_rowBody);
-
-
-        //end body
-
-
-        _footer = $('<div style="padding: 0px; margin: 10px;">');
-        _divFooter1 = $('<div class="row">');
-        _divFooter1.append($('<div class="col-md-6">'));
-
-        _divFooter2 = $('<div class="col-md-6">');
-        _buttonSave = $(' <button type="button" class="btn btn-primary btn-block" style="background-color: #eb8121 !important;">ذخیره</button>');
-        _divFooter2.append(_buttonSave);
-        _divFooter1.append(_divFooter2);
-
-        _footer.append(_divFooter1);
-
-        content.append(_header);
-        content.append(_body);
-        content.append(_footer);
-
-        body.append(_modal);
-
-        //end modal
-
-        //script
-        _selectMode.val(o.valueControl.mode);
-
-        _buttonSave.click(function (e) {
-            var mode = $("#" + o.id + "_mode").val();
-            obj.o.valueControl.mode = mode;
-            obj._GetData(mode, o.valueControl.fromDate);
-
-            $("#" + o.id + "_modal").modal('hide');
-            obj._Button("SaveModal", obj.o);
+        var divReport = $('<div style="padding: 5px;">');
+        divReport.TrzFKala_Chart({
+            uuid: o.uuid,
+            baseValue: o.baseValue,
+            showControl: o.showControl == null ? setting.showControl : o.showControl,
+            getAutoData: o.getAutoData == null ? setting.getAutoData : o.getAutoData,
+            viewData: setting.viewData,
+            controlData: o.controlData,
+            objects: o.objects,
         });
 
-        $("#" + o.id + "_modal").on('show.bs.modal', function () {
-            $("#" + o.id + "_mode").val(o.valueControl.mode);
-        })
-
-
+        o.element = divReport;
+        BoxDashbord_Create(obj, null, divReport);
     },
 
-    _GetData: function (mode, fromDate) {
-        var obj = this;
-        var o = obj.options;
-        var ctrl = o.valueControl;
-        var uri = server + '/api/ReportFct/TrzFDoreh/'; // آدرس گزارش 
-
-        var tObject = {
-            azTarikh: fromDate,
-            taTarikh: LowDay(0),
-            mode: mode,
-        };
-        ajaxFunction(uri + o.baseValue.ace + '/' + o.baseValue.sal + '/' + o.baseValue.group, 'POST', tObject, false).done(function (response) {
-            trzFDoreh_labels = []
-            trzFDoreh_data = []
-            sum = 0;
-            for (var i = 0; i < response.length; i++) {
-                trzFDoreh_labels[i] = response[i].docdate;
-                trzFDoreh_data[i] = response[i].totalvalue;
-                sum += response[i].totalvalue
-            }
-            $("#" + o.id + "_LSum").text(NumberToNumberString(sum) + ' ریال');
-            $("#" + o.id + "_LTitle").text(date_TarazFasli + ' - ' + LowDay(0));
-
-
-            $("#" + o.id + "_Chart").empty();
-            $(o.Chart).remove();
-            //if (o.Chart == null) {
-            o.Chart = new Chart(o.id + "_Chart", {
-                type: 'bar',
-                data: {
-                    labels: trzFDoreh_labels,
-                    datasets: [{
-                        label: '',
-                        data: trzFDoreh_data,
-                        backgroundColor: "#ff2d2d",
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    animation: false,
-                    responsive: true,
-                    responsiveAnimationDuration: 0,
-                    legend: {
-                        display: false
-                    },
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                beginAtZero: true,
-                                callback: function (value, index, values) {
-                                    value = (value / 1000000).toFixed(0);
-                                    return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + 'M';
-                                }
-                            }
-                        }]
-                    },
-                    tooltips: {
-                        callbacks: {
-                            label: function (tooltipItem, data) {
-                                return tooltipItem.yLabel.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",") + 'ریال';
-                            }
-                        }
-                    }
-                }
-            });
-            //}
-            //else {
-            /*var dataChart = {
-                labels: trzFDoreh_labels,
-                datasets: [{
-                    label: '',
-                    data: trzFDoreh_data,
-                    backgroundColor: "#ff2d2d",
-                    borderWidth: 1
-                }]
-            },
-                options = {
-                    animation: false,
-                    responsive: true,
-                    responsiveAnimationDuration: 0,
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                beginAtZero: true,
-                                callback: function (value, index, values) {
-                                    value = (value / 1000000).toFixed(0);
-                                    return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + 'M';
-                                }
-                            }
-                        }]
-                    },
-                    tooltips: {
-                        callbacks: {
-                            label: function (tooltipItem, data) {
-                                return tooltipItem.yLabel.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",") + 'ریال';
-                            }
-                        }
-                    }
-                };
-
-            options.Chart.data = dataChart;
-            options.Chart.update();*/
-            //}
-/*
-
-            o.data = response;
-            var itemData = dashbordData.find(c => c.uuid == o.uuid);
-            itemData.valueControl = o.valueControl;
-        });
-    },
 
     _Refresh: function () {
         var obj = this;
-        var o = obj.options;
-        obj._GetData(o.valueControl.mode, o.valueControl.fromDate);
+        var o = obj.options.element;
+        o.TrzFKala_Chart("Refresh");
+    },
+
+    _Setting: function () {
+        var obj = this;
+        var o = obj.options.element;
+        o.TrzFKala_Chart("ShowSetting");
+    },
+
+    _ShowControl: function () {
+        var obj = this;
+        var o = obj.options.element;
+        o.TrzFKala_Chart("ShowControl");
     },
 
 });
 
-*/
+
 $.widget("ui.D_TrzAcc", {
     options: {
         id: null,
@@ -739,7 +557,6 @@ $.widget("ui.D_ADocR", {
     },
 
 });
-
 
 $.widget("ui.D_AGMkz", {
     options: {

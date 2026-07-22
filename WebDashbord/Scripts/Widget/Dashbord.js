@@ -264,6 +264,11 @@ function CreateListDesktop(ace, group) {
         }
 
         var accessMode = accessMode_Public;
+
+        if (aceProg == prog_Web1) {
+            accessMode_Public.splice(accessMode_Public.findIndex(a => a.code == "TrzIKalaExf"), 1);
+        }
+
         if (aceProg == prog_Web2) {
             accessMode = accessMode_Public.where(c => c.prog == prog_Erj || c.code == "RPRT");
         }
@@ -288,6 +293,9 @@ function CreateListDesktop(ace, group) {
             }
         }
         dataGroup[group]["ListMode"] = listModeDesktop;
+    }
+    else {
+        listModeDesktop = listMode;
     }
 }
 
@@ -512,7 +520,7 @@ $('#modal-DesktopNewItem').on('show.bs.modal', function () {
     }
 
     //$("#CaptionItem").val(listModeDesktop[0].caption + ' - گروه ' + $('#GroupDesktopItem').val() + ' - سال ' + $('#SalDesktopItem').val());
-    $("#CaptionItem").val(listModeDesktop[0].caption);
+    $("#CaptionItem").val(listModeDesktop.length > 0 ? listModeDesktop[0].caption : "");
     $('#GroupDesktopItem').val(group);
     //var sal = loginData.baseValue.defultSal;
     //$('#SalDesktopItem').val(sal == null ? 0 : sal);

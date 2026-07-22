@@ -898,8 +898,9 @@
     <Content Include="Scripts\Widget\Report\Widget_Report_FDocR.js" />
     <Content Include="Scripts\Widget\Report\Widget_Report_TrzFKala.js" />
     <Content Include="Scripts\Widget\Report\Widget_Report_TrzFCust.js" />
+    <Content Include="Scripts\Widget\Report\Widget_TrzFKala_Chart.js" />
     <Content Include="Scripts\Widget\Report\Widget_TrzFCust.js" />
-    <Content Include="Scripts\Widget\Report\Widget_TarazFasli.js" />
+    <Content Include="Scripts\Widget\Report\Widget_TarazFasli_Chart.js" />
     <Content Include="Scripts\Widget\Report\Widget_TChk_Sum.js" />
     <Content Include="Scripts\Widget\Report\Widget_TChk.js" />
     <Content Include="Scripts\Widget\Report\Widget_Report_Dftr.js" />
