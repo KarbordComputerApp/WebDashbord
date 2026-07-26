@@ -267,6 +267,8 @@ function CreateListDesktop(ace, group) {
 
         if (aceProg == prog_Web1) {
             accessMode_Public.splice(accessMode_Public.findIndex(a => a.code == "TrzIKalaExf"), 1);
+            accessMode_Public.splice(accessMode_Public.findIndex(a => a.code == "KhlAcc"), 1);
+            accessMode_Public.splice(accessMode_Public.findIndex(a => a.code == "KhlZAcc"), 1);
         }
 
         if (aceProg == prog_Web2) {
@@ -341,8 +343,21 @@ for (var i = 0; i < dashbordData.length; i++) {
 $("#AddItemDesktop").click(async function () {
     ViewLoading(true);
     var modeItem = $("#ModeDesktopItem").val();
+    if (modeItem == "" || modeItem == null) {
+        return showNotification('نوع را انتخاب کنید', 0);
+    }
+
     var captionItem = $("#CaptionItem").val();
+    if (captionItem == "") {
+        return showNotification('عنوان را وارد کنید', 0);
+    }
+
     var groupDesktopItem = $("#GroupDesktopItem").val();
+
+    if (groupDesktopItem == "") {
+        return showNotification('گروه را انتخاب کنید', 0);
+    }
+
     var salDesktopItem = "0000";
     var aceProg = ace;
 

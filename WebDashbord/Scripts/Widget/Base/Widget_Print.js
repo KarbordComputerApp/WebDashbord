@@ -156,7 +156,7 @@ $.widget("ui.Print", {
         if (o.dataForms == null || refresh) {
             var url = CreateUrl(o.baseValue.ace, null, null, 'PrintForms') //آدرس فرم چاپ
             var object = {
-                LockNumber: lockNumber,
+                LockNumber: loginData.lockNumber,
                 mode: "Report" + o.id
             }
             await ajaxFunction(url, 'POST', object).done(function (list) {
@@ -456,7 +456,7 @@ $.widget("ui.Print", {
         var o = obj.options;
         var url = CreateUrl(o.baseValue.ace, null, null, 'TestSavePrintForm') //آدرس تست فرم چاپ
         var object = {
-            LockNumber: lockNumber,
+            LockNumber: loginData.lockNumber,
             mode: "Report" + o.id,
             Name: name,
         }
@@ -470,7 +470,7 @@ $.widget("ui.Print", {
         var o = obj.options;
         var url = CreateUrl(o.baseValue.ace, null, null, 'SavePrintForm') //آدرس ذخیره فرم چاپ
         var object = {
-            LockNumber: lockNumber,
+            LockNumber: loginData.lockNumber,
             mode: "Report" + o.id,
             Name: name,
             Data: data
@@ -499,7 +499,7 @@ $.widget("ui.Print", {
             if (result.value) {
                 var url = CreateUrl(o.baseValue.ace, null, null, 'DeletePrintForm'); //آدرس حذف فرم چاپ
                 var object = {
-                    LockNumber: lockNumber,
+                    LockNumber: loginData.lockNumber,
                     Address: data.address
                 }
                 ajaxFunction(url, 'POST', object).done(function (list) {
@@ -521,7 +521,7 @@ $.widget("ui.Print", {
             url = CreateUrl(o.baseValue.ace, null, null, 'SelectedAccessGhimatPrintForm'); //آدرس ذخیره فعال کردن قیمت  فرم چاپ
 
         var object = {
-            LockNumber: lockNumber,
+            LockNumber: loginData.lockNumber,
             Address: data.address,
             isPublic: data.isPublic,
         }

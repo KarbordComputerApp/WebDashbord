@@ -585,6 +585,12 @@ function GetAccess_Group(prog, group) {
     if (dataGroup[group] == null) {
         dataGroup[group] = {};
     }
+    var erjOnly = loginData.baseValue.groupsData.where(c => c.ErjOnly == true && c.Code == group);
+
+    if (erjOnly.length > 0 && prog != prog_Web2) {
+        prog = prog_Web2;
+    }
+
     if (dataGroup[group]["Access_" + prog] == null) {
         if (userName == user_Ace) {
             dataGroup[group]["Access_" + prog] = { "*": true };
@@ -594,36 +600,41 @@ function GetAccess_Group(prog, group) {
             ajaxFunction(AccessUri + prog + '/' + group + '/' + userName, 'GET', true).done(function (data) {
                 if (data.length > 0) {
                     var item = {};
-
-                    var modeErj = data.where(c => c.OrgProgName == prog_Erj && c.TrsName.toUpperCase() == "ADMIN");
-                    if (modeErj.length > 0)
-                        userModeErj = "ADMIN";
-                    else
-                        userModeErj = "USER";
-
-
-                    for (var i = 0; i < data.length; i++) {
-                        if (data[i].TrsName != null) {
-                            var trsName = data[i].TrsName.toUpperCase();
-                            if (trsName == access_DOC || trsName == access_RPRT) {
-                                item['_' + trsName] = true;
-                            }
-                            else {
-                                item[data[i].OrgProgName.toUpperCase() + '_' + trsName] = true;
-                            }
-                        }
+                    if (data == "Not access to the group") {
+                        return showNotification("دسترسی ندارید", 0);
                     }
-                    dataGroup[group]["Access_" + prog] = item;
+                    else {
 
-                    uri = prog == prog_Web2 ? AccessReportErjUri : AccessReportUri;
-                    ajaxFunction(uri + prog + '/' + group + '/' + userName, 'GET', true).done(function (data) {
+                        var modeErj = data.where(c => c.OrgProgName == prog_Erj && c.TrsName.toUpperCase() == "ADMIN");
+                        if (modeErj.length > 0)
+                            userModeErj = "ADMIN";
+                        else
+                            userModeErj = "USER";
+
+
                         for (var i = 0; i < data.length; i++) {
-                            if (data[i].Trs == true) {
-                                item[access_RPRT + '_' + data[i].Code.toUpperCase()] = true;
+                            if (data[i].TrsName != null) {
+                                var trsName = data[i].TrsName.toUpperCase();
+                                if (trsName == access_DOC || trsName == access_RPRT) {
+                                    item['_' + trsName] = true;
+                                }
+                                else {
+                                    item[data[i].OrgProgName.toUpperCase() + '_' + trsName] = true;
+                                }
                             }
                         }
                         dataGroup[group]["Access_" + prog] = item;
-                    });
+
+                        uri = prog == prog_Web2 ? AccessReportErjUri : AccessReportUri;
+                        ajaxFunction(uri + prog + '/' + group + '/' + userName, 'GET', true).done(function (data) {
+                            for (var i = 0; i < data.length; i++) {
+                                if (data[i].Trs == true) {
+                                    item[access_RPRT + '_' + data[i].Code.toUpperCase()] = true;
+                                }
+                            }
+                            dataGroup[group]["Access_" + prog] = item;
+                        });
+                    }
                 }
             });
         }
@@ -643,11 +654,23 @@ function IsAccessTrs(prog, orgProg, group, trs, parent) {
     if (userName == user_Ace) {
         return true;
     }
+
+    GetAccess_Group(prog, group);
+    var groupAccess = dataGroup[group]["Access_" + prog];
+
+    if (groupAccess[prog_Afi.toUpperCase() + '_ADMIN'] && prog == prog_Web1)
+        return true;
+    else if (groupAccess[prog_Erj.toUpperCase() + '_ADMIN'] && prog == prog_Web2)
+        return true;
+    else if (orgProg.includes(prog_Acc) && groupAccess[prog_Acc.toUpperCase() + '_ADMIN'] && prog == prog_Web8)
+        return true;
+    else if (orgProg.includes(prog_Fct) && groupAccess[prog_Fct.toUpperCase() + '_ADMIN'] && prog == prog_Web8)
+        return true;
+    else if (orgProg.includes(prog_Inv) && groupAccess[prog_Inv.toUpperCase() + '_ADMIN'] && prog == prog_Web8)
+        return true;
     else {
 
-        GetAccess_Group(prog, group);
         try {
-            var groupAccess = dataGroup[group]["Access_" + prog];
             var param = orgProg.toUpperCase() + '_' + trs;
             if (param == ('ADMIN_' + orgProg)) {
                 return true;
@@ -659,7 +682,7 @@ function IsAccessTrs(prog, orgProg, group, trs, parent) {
                 return IsNull(groupAccess[param], false)
             }
         } catch (error) {
-            alert('IsAccountAccess : '+error)
+            alert('IsAccountAccess : ' + error)
             var a = error;
         }
     }
@@ -696,11 +719,11 @@ function IsAccess(prog, orgProg, group, trs, parent) {
 
 
 var accessMode_Public = [
-    { code: access_DOC, caption: "ثبت اسناد", prog: "", parent: "" },
+    { code: access_DOC, caption: "ثبت اسناد", prog: loginData.progAccess, parent: "" },
     { code: access_ADOC, caption: "اسناد حسابداری", prog: prog_Acc, parent: "" },
     { code: access_FSDOC, caption: "اسناد فروش", prog: prog_Fct, parent: "" },
     { code: access_FPDOC, caption: "اسناد خرید", prog: prog_Fct, parent: "" },
-    { code: access_RPRT, caption: "گزارشات", prog: "", parent: "" },
+    { code: access_RPRT, caption: "گزارشات", prog: loginData.progAccess, parent: "" },
     { code: "TChk_Sum", caption: "چک‌ها پرداختنی به تفکیک بانک", prog: prog_Acc, parent: access_RPRT },
     { code: "TChk", caption: "صورت خلاصه چک ها", prog: prog_Acc, parent: access_RPRT },
     { code: "TrzAcc", caption: "تراز حساب", prog: prog_Acc, parent: access_RPRT },
