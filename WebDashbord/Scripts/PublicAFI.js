@@ -727,6 +727,9 @@ function ReplaceTrs(trs) {
     else if (trs == "TrzFKala_Chart") {
         trs = "TrzFKala_S";
     }
+    else if (trs == "ErjDocB_Last") {
+        trs = "ErjDocErja";
+    }
     return trs;
 }
 

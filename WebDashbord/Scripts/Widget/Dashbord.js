@@ -139,12 +139,6 @@ function AppendBoxPush(uuid) {
         }
     }
 }
-function Car() {
-    this.x = 0;
-    this.y = 0;
-    this.w = 4;
-    this.h = 5;
-}
 
 
 function FindFreePosition(uuid, push = false) {
@@ -183,6 +177,8 @@ function FindFreePosition(uuid, push = false) {
     return position;
 }
 
+var settingObject = $('#settingObject');
+
 var listGroups = loginData.baseValue.groupsData;
 async function LoadDashbordData() {
     if (dashbordData_Save != null && dashbordData_Save != "[{}]" && dashbordData_Save.toString() != "null" && dashbordData_Save.toString() != "") {
@@ -211,20 +207,29 @@ async function LoadDashbordData() {
 
         }
         dataGroup = dataGroup;
-
-        /* for (var i = 0; i < userGroupAccess.length; i++) {
-             var objectGroup = dashbordData.filter(c => loginData.baseValue.groups.includes(c.baseValue.group));
-             for (var j = 0; j < objectGroup.length - 1; j++) {
-             }
-     
-             var baseValue = dashbordData[i].baseValue;
-             var groupAccess = dataGroup[baseValue.group]["Access_" + baseValue.ace];
-             var userGroupAccess = loginData.baseValue.groupsData;
-             if (Object.values(dashbordData[i]).length <= 0) {
-                 dashbordData.splice(i, 1);
-             }
-         }*/
     }
+    $("#TableDesktopItem").empty();
+    for (var i = 0; i < dashbordData.length; i++) {
+        AddIteminGrid(dashbordData[i]);
+    }
+   
+
+    settingObject.Setting(
+        {
+            id: null,
+            caption: "تنظیمات",
+            dataSetting: dataSettingDefult["all"],
+            externalModal: true,
+            baseValue: {
+                ace: ace
+            },
+        },
+    );
+    for (var i = 0; i < listGroups.length; i++) {
+        $('#GroupDesktopItem').append($('<option>', { value: ReplaceGroup(listGroups[i].Code), text: listGroups[i].Code + " - " + listGroups[i].Name }));
+    }
+    $('#GroupDesktopItem').val(loginData.baseValue.defultGroup);
+
 }
 LoadDashbordData();
 
@@ -281,22 +286,25 @@ async function CreateListDesktop(ace, group) {
             var item = accessMode[i];
             var prog = item.prog;
 
-            var aceProg = isErj == true && prog == prog_Erj ? prog_Web2 : aceProg;
-
             if (item.code == access_DOC || item.code == access_RPRT) {
                 var progs = prog.split('-');
                 for (var j = 0; j < progs.length; j++) {
+                    aceProg = progs[j] == prog_Erj ? prog_Web2 : ace;
                     var access = await IsAccess(aceProg, progs[j], group, item.code, item.parent);
                     accessPublic[progs[j].toUpperCase() + '_' + item.code] = access;
                 }
             }
             else {
+                aceProg = isErj == true && prog == prog_Erj ? prog_Web2 : ace;
+                if (aceProg == prog_Web2 ) {
+                    a = 10;
+                }
                 var access = await IsAccess(aceProg, item.prog, group, item.code, item.parent);
                 if (item.parent == "") {
                     accessPublic[item.code] = access;
                 }
                 else {
-                    access = accessPublic[item.prog.toUpperCase() + '_' + item.parent  ] && access;
+                    access = accessPublic[item.prog.toUpperCase() + '_' + item.parent] && access;
                 }
                 item["access"] = access;
 
@@ -343,13 +351,7 @@ $("#SaveItems").click(function () {
 
 
 
-var cols = '';
-$("#TableDesktopItem").empty();
 
-
-for (var i = 0; i < dashbordData.length; i++) {
-    AddIteminGrid(dashbordData[i]);
-}
 
 $("#AddItemDesktop").click(async function () {
     ViewLoading(true);
@@ -435,7 +437,6 @@ $("#AddItemDesktop").click(async function () {
 
 
 $('#modal-DesktopItem').on('show.bs.modal', function () {
-    cols = '';
     $("#TableDesktopItem").empty();
     for (var i = 0; i < dashbordData.length; i++) {
         var item = dashbordData[i];
@@ -454,20 +455,6 @@ $('#modal-DesktopItem').on('show.bs.modal', function () {
         $('#TableDesktopItem').append(col);
     }
 });
-
-var settingObject = $('#settingObject');
-
-settingObject.Setting(
-    {
-        id: null,
-        caption: "تنظیمات",
-        dataSetting: dataSettingDefult["all"],
-        externalModal: true,
-        baseValue: {
-            ace: ace
-        },
-    },
-);
 
 
 settingObject.click(function () {
@@ -505,11 +492,6 @@ for (var i = 0; i < listModeDesktop.length; i++) {
 }
 */
 
-
-for (var i = 0; i < listGroups.length; i++) {
-    $('#GroupDesktopItem').append($('<option>', { value: ReplaceGroup(listGroups[i].Code), text: listGroups[i].Code + " - " + listGroups[i].Name }));
-}
-$('#GroupDesktopItem').val(loginData.baseValue.defultGroup);
 
 
 
