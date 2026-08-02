@@ -180,8 +180,15 @@ function LoginUser(userName, password) {
                                 }
                                 ajaxFunction(loginData.apiAddress + '/api/Web_Data/ProgTrs/' + loginData.baseValue.ace, 'POST', ProgTrsObject).done(function (data) {
                                     p = '';
+                                    var progs = [];
+
                                     for (var i = 0; i < data.length; i++) {
                                         p += data[i].prog + '-';
+                                        progs.push({ code: data[i].prog, access: true });
+                                    }
+
+                                    if (data.length > 0) {
+                                        p = p.substring(0, p.length - 1)
                                     }
                                     loginData.progAccess = p;
                                     if (p.includes(loginData.master_ProgName) == false) {
@@ -190,6 +197,7 @@ function LoginUser(userName, password) {
                                     else {
                                         loginData.orgProgName = data[0].prog;
                                     }
+                                    loginData.accessProg = progs;
                                 });
 
                                 var GroupsObject = {
@@ -218,7 +226,7 @@ function LoginUser(userName, password) {
                                 });
 
 
-                                if (loginData.erj_Group != "" && loginData.erj_Group != null ) {
+                                if (loginData.erj_Group != "" && loginData.erj_Group != null) {
                                     var erjGroup = loginData.erj_Group.split("-");
                                     var appendGroup = "";
                                     for (var i = 0; i < erjGroup.length; i++) {
@@ -248,9 +256,9 @@ function LoginUser(userName, password) {
                                 }
 
 
-                              
 
-                              
+
+
 
                                 loginData.firstInputWeb = true;
                                 if (loginData.baseValue.groups != "") {

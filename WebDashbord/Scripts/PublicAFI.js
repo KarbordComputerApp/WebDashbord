@@ -581,7 +581,7 @@ function GetAccess_Account(prog) {
 //if (loginData.erj_Access != "")
 //    GetAccess_Group(prog_Web2, defultGroup);
 
-function GetAccess_Group(prog, group) {
+async function GetAccess_Group(prog, group) {
     if (dataGroup[group] == null) {
         dataGroup[group] = {};
     }
@@ -597,7 +597,7 @@ function GetAccess_Group(prog, group) {
             userModeErj = "ADMIN";
         }
         else {
-            ajaxFunction(AccessUri + prog + '/' + group + '/' + userName, 'GET', true).done(function (data) {
+            await ajaxFunction(AccessUri + prog + '/' + group + '/' + userName, 'GET', null, true).done(function (data) {
                 if (data.length > 0) {
                     var item = {};
                     if (data == "Not access to the group") {
@@ -615,12 +615,35 @@ function GetAccess_Group(prog, group) {
                         for (var i = 0; i < data.length; i++) {
                             if (data[i].TrsName != null) {
                                 var trsName = data[i].TrsName.toUpperCase();
-                                if (trsName == access_DOC || trsName == access_RPRT) {
-                                    item['_' + trsName] = true;
+                                item[data[i].OrgProgName.toUpperCase() + '_' + trsName] = true;
+
+                                /*if (item.code == access_DOC || item.code == access_RPRT) {
+                                    var progs = loginData.progAccess.split('-');
+                                    for (var i = 0; i < progs.length; i++) {
+                                        item[progs[i].toUpperCase() + '_' + trsName] = true;
+                                    }
                                 }
                                 else {
                                     item[data[i].OrgProgName.toUpperCase() + '_' + trsName] = true;
                                 }
+                                 if (trsName == access_DOC || trsName == access_RPRT) {
+                                     var progs = loginData.accessProg;
+                                     if (progs['Afi1'] == true) {
+                                         item[prog_Afi.toUpperCase() + '_' + trsName] = true;
+                                     }
+                                     if (progs['Acc5'] == true) {
+                                         item[prog_Acc.toUpperCase() + '_' + trsName] = true;
+                                     }
+                                     if (progs['Fct5'] == true) {
+                                         item[prog_Fct.toUpperCase() + '_' + trsName] = true;
+                                     }
+                                     if (progs['Inv5'] == true) {
+                                         item[prog_Inv.toUpperCase() + '_' + trsName] = true;
+                                     }
+                                     if (progs['Erj1'] == true) {
+                                         item[prog_Erj.toUpperCase() + '_' + trsName] = true;
+                                     }
+                                 }*/
                             }
                         }
                         dataGroup[group]["Access_" + prog] = item;
@@ -639,6 +662,7 @@ function GetAccess_Group(prog, group) {
             });
         }
     }
+    return true;
 
 }
 
@@ -649,42 +673,46 @@ function IsAccountAccess(prog, trs) {
     return accountAccess['*'] == null ? IsNull(accountAccess[trs.toUpperCase()], false) : true;
 }
 
-function IsAccessTrs(prog, orgProg, group, trs, parent) {
+async function IsAccessTrs(prog, orgProg, group, trs, parent) {
     trs = trs.toUpperCase();
     if (userName == user_Ace) {
         return true;
     }
-
-    GetAccess_Group(prog, group);
+    await GetAccess_Group(prog, group);
     var groupAccess = dataGroup[group]["Access_" + prog];
 
-    if (groupAccess[prog_Afi.toUpperCase() + '_ADMIN'] && prog == prog_Web1)
-        return true;
-    else if (groupAccess[prog_Erj.toUpperCase() + '_ADMIN'] && prog == prog_Web2)
-        return true;
-    else if (orgProg.includes(prog_Acc) && groupAccess[prog_Acc.toUpperCase() + '_ADMIN'] && prog == prog_Web8)
-        return true;
-    else if (orgProg.includes(prog_Fct) && groupAccess[prog_Fct.toUpperCase() + '_ADMIN'] && prog == prog_Web8)
-        return true;
-    else if (orgProg.includes(prog_Inv) && groupAccess[prog_Inv.toUpperCase() + '_ADMIN'] && prog == prog_Web8)
-        return true;
-    else {
+    if (prog == prog_Web1) {
+        if (groupAccess[prog_Afi.toUpperCase() + '_ADMIN'])
+            return true;
+    }
+    if (prog == prog_Web2) {
+        if (groupAccess[prog_Erj.toUpperCase() + '_ADMIN'])
+            return true;
+    }
+    if (prog == prog_Web8) {
+        if (orgProg == prog_Acc && groupAccess[prog_Acc.toUpperCase() + '_ADMIN'])
+            return true;
+        else if (orgProg == prog_Fct && groupAccess[prog_Fct.toUpperCase() + '_ADMIN'])
+            return true;
+        else if (orgProg == prog_Inv && groupAccess[prog_Inv.toUpperCase() + '_ADMIN'])
+            return true;
+    }
 
-        try {
-            var param = orgProg.toUpperCase() + '_' + trs;
-            if (param == ('ADMIN_' + orgProg)) {
-                return true;
-            }
-            else {
-                if (parent == access_RPRT) {
-                    param = access_RPRT + '_' + trs;
-                }
-                return IsNull(groupAccess[param], false)
-            }
-        } catch (error) {
-            alert('IsAccountAccess : ' + error)
-            var a = error;
+
+    try {
+        var param = orgProg.toUpperCase() + '_' + trs;
+        if (param == ('ADMIN_' + orgProg)) {
+            return true;
         }
+        else {
+            if (parent == access_RPRT) {
+                param = access_RPRT + '_' + trs;
+            }
+            return IsNull(groupAccess[param], false)
+        }
+    } catch (error) {
+        alert('IsAccountAccess : ' + error)
+        var a = error;
     }
 }
 
@@ -707,20 +735,57 @@ function ReplaceGroup(group) {
     return group < 10 ? "0" + group : group
 }
 
-function IsAccess(prog, orgProg, group, trs, parent) {
+async function IsAccess(prog, orgProg, group, trs, parent) {
     trs = ReplaceTrs(trs);
     var isAccount = parent == "" ? true : IsAccountAccess(prog, trs);
-    var isTrs = IsAccessTrs(prog, orgProg, group, trs, parent);
+    var isTrs = await IsAccessTrs(prog, orgProg, group, trs, parent);
     if (isTrs && isAccount) {
         return true;
     }
     return false;
 };
 
+//loginData.progAccess
+/*
+var accessMode_Public = [
+    { code: access_DOC, caption: "ثبت اسناد", prog: loginData.accessProg, parent: "" },
+    { code: access_ADOC, caption: "اسناد حسابداری", prog: [{ code: prog_Fct, access: true }], parent: "" },
+    { code: access_FSDOC, caption: "اسناد فروش", prog: [{ code: prog_Fct, access: true }], parent: "" },
+    { code: access_FPDOC, caption: "اسناد خرید", prog: [{ code: prog_Fct, access: true }], parent: "" },
+    { code: access_RPRT, caption: "گزارشات", prog: loginData.accessProg, parent: "" },
+    { code: "TChk_Sum", caption: "چک‌ها پرداختنی به تفکیک بانک", prog: [{ code: prog_Acc, access: true }], parent: access_RPRT },
+    { code: "TChk", caption: "صورت خلاصه چک ها", prog: [{ code: prog_Acc, access: true }], parent: access_RPRT },
+    { code: "TrzAcc", caption: "تراز حساب", prog: [{ code: prog_Acc, access: true }], parent: access_RPRT },
+    { code: "Dftr", caption: "دفتر حساب", prog: [{ code: prog_Acc, access: true }], parent: access_RPRT },
+    { code: "ADocR", caption: "دفتر روزنامه", prog: [{ code: prog_Acc, access: true }], parent: access_RPRT },
+    { code: "AGMkz", caption: "گردش مراکز هزینه", prog: [{ code: prog_Acc, access: true }], parent: access_RPRT },
+    { code: "AGOpr", caption: "گردش پروژه ها", prog: [{ code: prog_Acc, access: true }], parent: access_RPRT },
+    { code: "GrdZAcc", caption: "گردش زیر حساب ها", prog: [{ code: prog_Acc, access: true }], parent: access_RPRT },
+    { code: "KhlAcc", caption: "صورت خلاصه حساب ها", prog: [{ code: prog_Acc, access: true }], parent: access_RPRT },
+    { code: "KhlZAcc", caption: "صورت خلاصه زیر حساب ها", prog: [{ code: prog_Acc, access: true }], parent: access_RPRT },
+    { code: "TarazFasli_Chart", caption: "نمودار فروش", prog: [{ code: prog_Fct, access: true }], parent: access_RPRT },
+    { code: "TrzFKala_Chart", caption: "بیشترین فروش کالا", prog: [{ code: prog_Fct, access: true }], parent: access_RPRT },
+    { code: "TrzFCust_S", caption: "تراز فروش به خریداران", prog: [{ code: prog_Fct, access: true }], parent: access_RPRT },
+    { code: "TrzFCust_P", caption: "تراز خرید از فروشندگان", prog: [{ code: prog_Fct, access: true }], parent: access_RPRT },
+
+    //{ code: "TrzFCust_S", caption: "مانده حساب خریداران", prog: [{ code: prog_Fct, access: true }], parent: access_RPRT },
+    // { code: "TrzFCust_P", caption: "مانده حساب فروشندگان", prog: [{ code: prog_Fct, access: true }], parent: access_RPRT },
+    //{ code: "TrzFKala_S", caption: "بیشترین فروش کالا" , prog: [{ code: prog_Fct, access: true }], parent: access_RPRT},
+    { code: "TrzFKala_S", caption: "تراز فروش کالاها", prog: [{ code: prog_Fct, access: true }], parent: access_RPRT },
+    { code: "TrzFKala_P", caption: "تراز خرید کالاها", prog: [{ code: prog_Fct, access: true }], parent: access_RPRT },
+    { code: "FDocR_S", caption: "ریز گردش اسناد فروش", prog: [{ code: prog_Fct, access: true }], parent: access_RPRT },
+    { code: "FDocR_P", caption: "ریز گردش اسناد خرید", prog: [{ code: prog_Fct, access: true }], parent: access_RPRT },
+    { code: "Krdx", caption: "کاردکس کالا", prog: [{ code: prog_Inv, access: true }], parent: access_RPRT },
+    { code: "IDocR", caption: "ریز گردش اسناد انبارداری", prog: [{ code: prog_Inv, access: true }], parent: access_RPRT },
+    { code: "TrzIKala", caption: "موجودی کالا", prog: [{ code: prog_Inv, access: true }], parent: access_RPRT },
+    { code: "TrzIKalaExf", caption: "موجودی کالا به تفکیک ویژگی", prog: [{ code: prog_Inv, access: true }], parent: access_RPRT },
+    { code: "ErjDocK", caption: "فهرست پرونده ها", prog: [{ code: prog_Erj, access: true }], parent: access_RPRT },
+    { code: "ErjDocB_Last", caption: "لیست ارجاعات پرونده ها", prog: [{ code: prog_Erj, access: true }], parent: access_RPRT },
+];*/
 
 var accessMode_Public = [
     { code: access_DOC, caption: "ثبت اسناد", prog: loginData.progAccess, parent: "" },
-    { code: access_ADOC, caption: "اسناد حسابداری", prog: prog_Acc, parent: "" },
+    { code: access_ADOC, caption: "اسناد حسابداری", prog: prog_Fct, parent: "" },
     { code: access_FSDOC, caption: "اسناد فروش", prog: prog_Fct, parent: "" },
     { code: access_FPDOC, caption: "اسناد خرید", prog: prog_Fct, parent: "" },
     { code: access_RPRT, caption: "گزارشات", prog: loginData.progAccess, parent: "" },
@@ -738,10 +803,9 @@ var accessMode_Public = [
     { code: "TrzFKala_Chart", caption: "بیشترین فروش کالا", prog: prog_Fct, parent: access_RPRT },
     { code: "TrzFCust_S", caption: "تراز فروش به خریداران", prog: prog_Fct, parent: access_RPRT },
     { code: "TrzFCust_P", caption: "تراز خرید از فروشندگان", prog: prog_Fct, parent: access_RPRT },
-
-    //{ code: "TrzFCust_S", caption: "مانده حساب خریداران", prog: prog_Fct, parent: access_RPRT },
-    // { code: "TrzFCust_P", caption: "مانده حساب فروشندگان", prog: prog_Fct, parent: access_RPRT },
-    //{ code: "TrzFKala_S", caption: "بیشترین فروش کالا" , prog: prog_Fct, parent: access_RPRT},
+    //{ code: "TrzFCust_S", caption: "مانده حساب خریداران", prog:  prog_Fct, parent: access_RPRT },
+    // { code: "TrzFCust_P", caption: "مانده حساب فروشندگان", prog:  prog_Fct, parent: access_RPRT },
+    //{ code: "TrzFKala_S", caption: "بیشترین فروش کالا" , prog:  prog_Fct, parent: access_RPRT},
     { code: "TrzFKala_S", caption: "تراز فروش کالاها", prog: prog_Fct, parent: access_RPRT },
     { code: "TrzFKala_P", caption: "تراز خرید کالاها", prog: prog_Fct, parent: access_RPRT },
     { code: "FDocR_S", caption: "ریز گردش اسناد فروش", prog: prog_Fct, parent: access_RPRT },
@@ -753,6 +817,7 @@ var accessMode_Public = [
     { code: "ErjDocK", caption: "فهرست پرونده ها", prog: prog_Erj, parent: access_RPRT },
     { code: "ErjDocB_Last", caption: "لیست ارجاعات پرونده ها", prog: prog_Erj, parent: access_RPRT },
 ];
+loginData.progAccess
 
 if (hrefPage != urlPage_Login) {
 

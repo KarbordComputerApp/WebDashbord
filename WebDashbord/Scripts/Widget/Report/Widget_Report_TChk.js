@@ -68,7 +68,7 @@
                 pageCount: 0,
                 pageSize: 10,
                 keyField: 'CheckNo',
-                isTableFix: true,
+                isTableFix: false,
                 keyRow: [],
                 radif: true,
                 sumFields: ['Value'],

@@ -184,47 +184,49 @@ function FindFreePosition(uuid, push = false) {
 }
 
 var listGroups = loginData.baseValue.groupsData;
+async function LoadDashbordData() {
+    if (dashbordData_Save != null && dashbordData_Save != "[{}]" && dashbordData_Save.toString() != "null" && dashbordData_Save.toString() != "") {
+        var dashbordData = JSON.parse(dashbordData_Save);
+        dashbordData = dashbordData.filter(c => loginData.baseValue.groupsAccess.includes(c.baseValue.group));
+        Fix_UUid(dashbordData);
+        for (var i = 0; i < dashbordData.length; i++) {
+            var baseValue = dashbordData[i].baseValue;
+            await GetAccess_Group(baseValue.ace, baseValue.group);
+            GetParam(baseValue.ace, baseValue.group, baseValue.sal, false);
+            await CreateListDesktop(baseValue.ace, baseValue.group);
 
-if (dashbordData_Save != null && dashbordData_Save != "[{}]" && dashbordData_Save.toString() != "null" && dashbordData_Save.toString() != "") {
-    var dashbordData = JSON.parse(dashbordData_Save);
-    dashbordData = dashbordData.filter(c => loginData.baseValue.groupsAccess.includes(c.baseValue.group));
-    Fix_UUid(dashbordData);
-    for (var i = 0; i < dashbordData.length; i++) {
-        var baseValue = dashbordData[i].baseValue;
-        GetAccess_Group(baseValue.ace, baseValue.group);
-        GetParam(baseValue.ace, baseValue.group, baseValue.sal, false);
-        CreateListDesktop(baseValue.ace, baseValue.group);
-
-        if (loginData.erj_Access != "") {
-            var pos = loginData.erj_Group.search(baseValue.group);
-            if (pos == 0) {
-                GetAccess_Group(prog_Web2, baseValue.group);
-                //CreateListDesktop(prog_Web2, baseValue.group);
+            if (loginData.erj_Access != "") {
+                var pos = loginData.erj_Group.search(baseValue.group);
+                if (pos == 0) {
+                    await GetAccess_Group(prog_Web2, baseValue.group);
+                    //CreateListDesktop(prog_Web2, baseValue.group);
+                }
             }
-        }
 
-        var access = dataGroup[baseValue.group]["ListMode"];
-        var list = access.filter(c => c.code == dashbordData[i].id);
-        if (list.length == 0) {
-            dashbordData.splice(i, 1);
-        }
+            var access = dataGroup[baseValue.group]["ListMode"];
+            var list = access.filter(c => c.code == dashbordData[i].id);
+            if (list.length == 0) {
+                dashbordData.splice(i, 1);
+            }
 
+        }
+        dataGroup = dataGroup;
+
+        /* for (var i = 0; i < userGroupAccess.length; i++) {
+             var objectGroup = dashbordData.filter(c => loginData.baseValue.groups.includes(c.baseValue.group));
+             for (var j = 0; j < objectGroup.length - 1; j++) {
+             }
+     
+             var baseValue = dashbordData[i].baseValue;
+             var groupAccess = dataGroup[baseValue.group]["Access_" + baseValue.ace];
+             var userGroupAccess = loginData.baseValue.groupsData;
+             if (Object.values(dashbordData[i]).length <= 0) {
+                 dashbordData.splice(i, 1);
+             }
+         }*/
     }
-    dataGroup = dataGroup;
-
-    /* for (var i = 0; i < userGroupAccess.length; i++) {
-         var objectGroup = dashbordData.filter(c => loginData.baseValue.groups.includes(c.baseValue.group));
-         for (var j = 0; j < objectGroup.length - 1; j++) {
-         }
- 
-         var baseValue = dashbordData[i].baseValue;
-         var groupAccess = dataGroup[baseValue.group]["Access_" + baseValue.ace];
-         var userGroupAccess = loginData.baseValue.groupsData;
-         if (Object.values(dashbordData[i]).length <= 0) {
-             dashbordData.splice(i, 1);
-         }
-     }*/
 }
+LoadDashbordData();
 
 /*
 function SaveVariantDashbord() {
@@ -235,9 +237,9 @@ window.onbeforeunload = function () {
     SaveVariantDashbord();
 };*/
 
-function CreateListDesktop(ace, group) {
+async function CreateListDesktop(ace, group) {
     if (dataGroup[group] == null) {
-        GetAccess_Group(ace, group);
+        await GetAccess_Group(ace, group);
     }
     var listMode = dataGroup[group]["ListMode"];
 
@@ -278,20 +280,29 @@ function CreateListDesktop(ace, group) {
         for (var i = 0; i < accessMode.length; i++) {
             var item = accessMode[i];
             var prog = item.prog;
-            var aceProg = isErj && prog == prog_Erj ? prog_Web2 : aceProg;
 
-            var access = IsAccess(aceProg, item.prog, group, item.code, item.parent);
+            var aceProg = isErj == true && prog == prog_Erj ? prog_Web2 : aceProg;
 
-            if (item.parent == "") {
-                accessPublic[item.code] = access;
+            if (item.code == access_DOC || item.code == access_RPRT) {
+                var progs = prog.split('-');
+                for (var j = 0; j < progs.length; j++) {
+                    var access = await IsAccess(aceProg, progs[j], group, item.code, item.parent);
+                    accessPublic[progs[j].toUpperCase() + '_' + item.code] = access;
+                }
             }
             else {
-                access = accessPublic[item.parent] && access;
-            }
-            item["access"] = access;
+                var access = await IsAccess(aceProg, item.prog, group, item.code, item.parent);
+                if (item.parent == "") {
+                    accessPublic[item.code] = access;
+                }
+                else {
+                    access = accessPublic[item.prog.toUpperCase() + '_' + item.parent  ] && access;
+                }
+                item["access"] = access;
 
-            if (access && item.parent != "") {
-                listModeDesktop.push(item);
+                if (access && item.parent != "") {
+                    listModeDesktop.push(item);
+                }
             }
         }
         dataGroup[group]["ListMode"] = listModeDesktop;
@@ -479,7 +490,7 @@ function CreateListModeDesktop(group) {
             color = "aquamarine";
         } else if (listModeDesktop[i].prog == prog_Erj) {
             color = "white";
-        } 
+        }
         var option = $('<option>', { value: listModeDesktop[i].code, text: listModeDesktop[i].caption });
         option.css('background-color', color);
         $('#ModeDesktopItem').append(option);
@@ -512,7 +523,7 @@ function SetAce(ace, group) {
     return aceProg
 }
 
-$('#modal-DesktopNewItem').on('show.bs.modal', function () {
+$('#modal-DesktopNewItem').on('show.bs.modal', async function () {
     var group = ReplaceGroup(loginData.baseValue.defultGroup);
 
     /*var erjOnly = listGroups.where(c => c.Code == group);
@@ -522,7 +533,7 @@ $('#modal-DesktopNewItem').on('show.bs.modal', function () {
             aceProg = prog_Web2;
     }*/
     var aceProg = SetAce(ace, group);
-    CreateListDesktop(aceProg, group);
+    await CreateListDesktop(aceProg, group);
     CreateListModeDesktop(group);
     if (aceProg != prog_Web2) {
         $('#span_SalDesktopItem').show();
@@ -555,9 +566,9 @@ $("#ModeDesktopItem").change(function () {
 
 
 
-$("#GroupDesktopItem").change(function () {
+$("#GroupDesktopItem").change(async function () {
     var group = $(this).val();
-    CreateListDesktop(ace, group);
+    await CreateListDesktop(ace, group);
     CreateListModeDesktop(group);
     SetSalData(ace, group);
     //$("#CaptionItem").val($("#ModeDesktopItem option:selected").text() + ' - گروه ' + $('#GroupDesktopItem').val() + ' - سال ' + $('#SalDesktopItem option:selected').text());
