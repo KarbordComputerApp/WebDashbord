@@ -46,7 +46,7 @@
         divContent.append(divGrid);
         obj.element.append(divContent);
 
-        getRprtAllCols(o.baseValue.ace, o.baseValue.group, o.baseValue.sal, userName);
+        await getRprtAllCols(o.baseValue.ace, o.baseValue.group, o.baseValue.sal, userName);
         o.columns = getRprtCols(o.baseValue.group, o.baseValue.sal, o.rprtId, userName);
 
         var action = [];

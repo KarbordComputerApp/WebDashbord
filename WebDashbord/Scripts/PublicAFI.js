@@ -466,7 +466,7 @@ function IsNull(key, value) {
     return key == null ? value : key;
 }
 
-function getRprtAllCols(ace, group, sal, userName) {
+async function getRprtAllCols(ace, group, sal, userName) {
     if (dataGroup[group] == null) {
         dataGroup[group] = {};
     }
@@ -475,7 +475,7 @@ function getRprtAllCols(ace, group, sal, userName) {
     }
 
     if (dataGroup[group][sal]["Columns"] == null) {
-        ajaxFunction(RprtColsUri + ace + '/' + sal + '/' + group + '/all/' + userName, 'GET').done(function (data) {
+        await ajaxFunction(RprtColsUri + ace + '/' + sal + '/' + group + '/all/' + userName, 'GET' ,null, true).done(function (data) {
             //data = TranslateData(data);
             var defultColumn = data.filter(s => s.UserCode == "*Default*");
             var userColumn = data.filter(s => s.UserCode == userName);
@@ -577,92 +577,107 @@ function GetAccess_Account(prog) {
     }
 }
 
-//GetAccess_Group(ace, defultGroup);
-//if (loginData.erj_Access != "")
-//    GetAccess_Group(prog_Web2, defultGroup);
 
 async function GetAccess_Group(prog, group) {
-    if (dataGroup[group] == null) {
-        dataGroup[group] = {};
-    }
-    var erjOnly = loginData.baseValue.groupsData.where(c => c.ErjOnly == true && c.Code == group);
 
-    if (erjOnly.length > 0 && prog != prog_Web2) {
-        prog = prog_Web2;
-    }
+    var acountGroup = false;
 
-    if (dataGroup[group]["Access_" + prog] == null) {
-        if (userName == user_Ace) {
-            dataGroup[group]["Access_" + prog] = { "*": true };
-            userModeErj = "ADMIN";
+    if (prog == prog_Web1 && loginData.afi1_Group.includes(group)) {
+        acountGroup = true;
+    }
+    else if (prog == prog_Web2 && loginData.erj_Group.includes(group)) {
+        acountGroup = true;
+    }
+    else if (prog == prog_Web8 && loginData.afi8_Group.includes(group)) {
+        acountGroup = true;
+    }
+    if (acountGroup) {
+
+
+
+        if (dataGroup[group] == null) {
+            dataGroup[group] = {};
         }
-        else {
-            await ajaxFunction(AccessUri + prog + '/' + group + '/' + userName, 'GET', null, true).done(function (data) {
-                if (data.length > 0) {
-                    var item = {};
-                    if (data == "Not access to the group") {
-                        return showNotification("دسترسی ندارید", 0);
-                    }
-                    else {
 
-                        var modeErj = data.where(c => c.OrgProgName == prog_Erj && c.TrsName.toUpperCase() == "ADMIN");
-                        if (modeErj.length > 0)
-                            userModeErj = "ADMIN";
-                        else
-                            userModeErj = "USER";
+        var erjOnly = loginData.baseValue.groupsData.where(c => c.ErjOnly == true && c.Code == group);
 
+        if (erjOnly.length > 0 && prog != prog_Web2) {
+            prog = prog_Web2;
+        }
 
-                        for (var i = 0; i < data.length; i++) {
-                            if (data[i].TrsName != null) {
-                                var trsName = data[i].TrsName.toUpperCase();
-                                item[data[i].OrgProgName.toUpperCase() + '_' + trsName] = true;
-
-                                /*if (item.code == access_DOC || item.code == access_RPRT) {
-                                    var progs = loginData.progAccess.split('-');
-                                    for (var i = 0; i < progs.length; i++) {
-                                        item[progs[i].toUpperCase() + '_' + trsName] = true;
-                                    }
-                                }
-                                else {
-                                    item[data[i].OrgProgName.toUpperCase() + '_' + trsName] = true;
-                                }
-                                 if (trsName == access_DOC || trsName == access_RPRT) {
-                                     var progs = loginData.accessProg;
-                                     if (progs['Afi1'] == true) {
-                                         item[prog_Afi.toUpperCase() + '_' + trsName] = true;
-                                     }
-                                     if (progs['Acc5'] == true) {
-                                         item[prog_Acc.toUpperCase() + '_' + trsName] = true;
-                                     }
-                                     if (progs['Fct5'] == true) {
-                                         item[prog_Fct.toUpperCase() + '_' + trsName] = true;
-                                     }
-                                     if (progs['Inv5'] == true) {
-                                         item[prog_Inv.toUpperCase() + '_' + trsName] = true;
-                                     }
-                                     if (progs['Erj1'] == true) {
-                                         item[prog_Erj.toUpperCase() + '_' + trsName] = true;
-                                     }
-                                 }*/
-                            }
+        if (dataGroup[group]["Access_" + prog] == null) {
+            if (userName == user_Ace) {
+                dataGroup[group]["Access_" + prog] = { "*": true };
+                userModeErj = "ADMIN";
+            }
+            else {
+                await ajaxFunction(AccessUri + prog + '/' + group + '/' + userName, 'GET', null, true).done(function (data) {
+                    if (data.length > 0) {
+                        var item = {};
+                        if (data == "Not access to the group") {
+                            return showNotification("دسترسی ندارید", 0);
                         }
-                        dataGroup[group]["Access_" + prog] = item;
+                        else {
 
-                        uri = prog == prog_Web2 ? AccessReportErjUri : AccessReportUri;
-                        ajaxFunction(uri + prog + '/' + group + '/' + userName, 'GET', true).done(function (data) {
+                            var modeErj = data.where(c => c.OrgProgName == prog_Erj && c.TrsName.toUpperCase() == "ADMIN");
+                            if (modeErj.length > 0)
+                                userModeErj = "ADMIN";
+                            else
+                                userModeErj = "USER";
+
+
                             for (var i = 0; i < data.length; i++) {
-                                if (data[i].Trs == true) {
-                                    item[access_RPRT + '_' + data[i].Code.toUpperCase()] = true;
+                                if (data[i].TrsName != null) {
+                                    var trsName = data[i].TrsName.toUpperCase();
+                                    item[data[i].OrgProgName.toUpperCase() + '_' + trsName] = true;
+
+                                    /*if (item.code == access_DOC || item.code == access_RPRT) {
+                                        var progs = loginData.progAccess.split('-');
+                                        for (var i = 0; i < progs.length; i++) {
+                                            item[progs[i].toUpperCase() + '_' + trsName] = true;
+                                        }
+                                    }
+                                    else {
+                                        item[data[i].OrgProgName.toUpperCase() + '_' + trsName] = true;
+                                    }
+                                     if (trsName == access_DOC || trsName == access_RPRT) {
+                                         var progs = loginData.accessProg;
+                                         if (progs['Afi1'] == true) {
+                                             item[prog_Afi.toUpperCase() + '_' + trsName] = true;
+                                         }
+                                         if (progs['Acc5'] == true) {
+                                             item[prog_Acc.toUpperCase() + '_' + trsName] = true;
+                                         }
+                                         if (progs['Fct5'] == true) {
+                                             item[prog_Fct.toUpperCase() + '_' + trsName] = true;
+                                         }
+                                         if (progs['Inv5'] == true) {
+                                             item[prog_Inv.toUpperCase() + '_' + trsName] = true;
+                                         }
+                                         if (progs['Erj1'] == true) {
+                                             item[prog_Erj.toUpperCase() + '_' + trsName] = true;
+                                         }
+                                     }*/
                                 }
                             }
                             dataGroup[group]["Access_" + prog] = item;
-                        });
+
+                            uri = prog == prog_Web2 ? AccessReportErjUri : AccessReportUri;
+                            ajaxFunction(uri + prog + '/' + group + '/' + userName, 'GET', true).done(function (data) {
+                                for (var i = 0; i < data.length; i++) {
+                                    if (data[i].Trs == true) {
+                                        item[access_RPRT + '_' + data[i].Code.toUpperCase()] = true;
+                                    }
+                                }
+                                dataGroup[group]["Access_" + prog] = item;
+                            });
+                        }
                     }
-                }
-            });
+                });
+            }
         }
+        return true;
     }
-    return true;
 
 }
 
@@ -680,40 +695,42 @@ async function IsAccessTrs(prog, orgProg, group, trs, parent) {
     }
     await GetAccess_Group(prog, group);
     var groupAccess = dataGroup[group]["Access_" + prog];
-
-    if (prog == prog_Web1) {
-        if (groupAccess[prog_Afi.toUpperCase() + '_ADMIN'])
-            return true;
-    }
-    if (prog == prog_Web2) {
-        if (groupAccess[prog_Erj.toUpperCase() + '_ADMIN'])
-            return true;
-    }
-    if (prog == prog_Web8) {
-        if (orgProg == prog_Acc && groupAccess[prog_Acc.toUpperCase() + '_ADMIN'])
-            return true;
-        else if (orgProg == prog_Fct && groupAccess[prog_Fct.toUpperCase() + '_ADMIN'])
-            return true;
-        else if (orgProg == prog_Inv && groupAccess[prog_Inv.toUpperCase() + '_ADMIN'])
-            return true;
-    }
-
-
-    try {
-        var param = orgProg.toUpperCase() + '_' + trs;
-        if (param == ('ADMIN_' + orgProg)) {
-            return true;
+    if (groupAccess != null) {
+        if (prog == prog_Web1) {
+            if (groupAccess[prog_Afi.toUpperCase() + '_ADMIN'])
+                return true;
         }
-        else {
-            if (parent == access_RPRT) {
-                param = access_RPRT + '_' + trs;
+        if (prog == prog_Web2) {
+            if (groupAccess[prog_Erj.toUpperCase() + '_ADMIN'])
+                return true;
+        }
+        if (prog == prog_Web8) {
+            if (orgProg == prog_Acc && groupAccess[prog_Acc.toUpperCase() + '_ADMIN'])
+                return true;
+            else if (orgProg == prog_Fct && groupAccess[prog_Fct.toUpperCase() + '_ADMIN'])
+                return true;
+            else if (orgProg == prog_Inv && groupAccess[prog_Inv.toUpperCase() + '_ADMIN'])
+                return true;
+        }
+
+        try {
+            var param = orgProg.toUpperCase() + '_' + trs;
+            if (param == ('ADMIN_' + orgProg)) {
+                return true;
             }
-            return IsNull(groupAccess[param], false)
+            else {
+                if (parent == access_RPRT) {
+                    param = access_RPRT + '_' + trs;
+                }
+                return IsNull(groupAccess[param], false)
+            }
+        } catch (error) {
+            alert('IsAccountAccess : ' + error)
+            var a = error;
         }
-    } catch (error) {
-        alert('IsAccountAccess : ' + error)
-        var a = error;
     }
+    else
+        return false;
 }
 
 

@@ -354,7 +354,6 @@ $("#SaveItems").click(function () {
 
 
 $("#AddItemDesktop").click(async function () {
-    ViewLoading(true);
     var modeItem = $("#ModeDesktopItem").val();
     if (modeItem == "" || modeItem == null) {
         return showNotification('نوع را انتخاب کنید', 0);
@@ -371,6 +370,7 @@ $("#AddItemDesktop").click(async function () {
         return showNotification('گروه را انتخاب کنید', 0);
     }
 
+    ViewLoading(true);
     var salDesktopItem = "0000";
     var aceProg = ace;
 
