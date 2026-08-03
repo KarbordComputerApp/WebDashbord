@@ -475,7 +475,7 @@ function getRprtAllCols(ace, group, sal, userName) {
     }
 
     if (dataGroup[group][sal]["Columns"] == null) {
-        ajaxFunction(RprtColsUri + ace + '/' + sal + '/' + group + '/all/' + userName, 'GET' ,null, true).done(function (data) {
+        ajaxFunction(RprtColsUri + ace + '/' + sal + '/' + group + '/all/' + userName, 'GET' ).done(function (data) {
             //data = TranslateData(data);
             var defultColumn = data.filter(s => s.UserCode == "*Default*");
             var userColumn = data.filter(s => s.UserCode == userName);
