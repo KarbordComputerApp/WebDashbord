@@ -93,7 +93,7 @@
                 ActionClick: function (e, records) {
                 },
                 ExportData: function (e, records) {
-                    o.columns = records.columns;
+                    //o.columns = records.columns;
                     o.data = records.data;
                 },
             });
