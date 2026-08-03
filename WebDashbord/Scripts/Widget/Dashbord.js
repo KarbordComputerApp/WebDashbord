@@ -64,7 +64,7 @@ function unique(arr, key) {
     return a;
 }
 
-function Fix_UUid() {
+function Fix_UUid(dashbordData) {
     dashbordData.sort(function (a, b) {
         //return (a.y > b.y) || (a.x > b.x) ? 1 : -1
         return ((a.position.y * 10) + a.position.x) > ((b.position.y * 10) + b.position.x) ? 1 : -1
@@ -178,11 +178,11 @@ function FindFreePosition(uuid, push = false) {
 }
 
 var settingObject = $('#settingObject');
-
+var dashbordData;
 var listGroups = loginData.baseValue.groupsData;
 async function LoadDashbordData() {
     if (dashbordData_Save != null && dashbordData_Save != "[{}]" && dashbordData_Save.toString() != "null" && dashbordData_Save.toString() != "") {
-        var dashbordData = JSON.parse(dashbordData_Save);
+        dashbordData = JSON.parse(dashbordData_Save);
         dashbordData = dashbordData.filter(c => loginData.baseValue.groupsAccess.includes(c.baseValue.group));
         Fix_UUid(dashbordData);
         for (var i = 0; i < dashbordData.length; i++) {

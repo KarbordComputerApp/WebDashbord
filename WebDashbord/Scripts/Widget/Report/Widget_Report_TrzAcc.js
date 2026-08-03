@@ -21,7 +21,7 @@
         data: null
     },
 
-    _create: function () {
+    _create: async function () {
         var obj = this;
         var o = obj.options;
         var param = dataGroup[o.baseValue.group][o.baseValue.sal]["params"];
@@ -49,11 +49,29 @@
         getRprtAllCols(o.baseValue.ace, o.baseValue.group, o.baseValue.sal, userName);
         o.columns = getRprtCols(o.baseValue.group, o.baseValue.sal, o.rprtId, userName);
 
+        var action = [];
+
+        var access = await IsAccess(o.baseValue.ace, prog_Acc, o.baseValue.group, 'ADocR', access_RPRT);
+        if (access) {
+            action.push({ code: "ADocR", name: "دفتر روزنامه", icon: "/Content/img/view.svg" })
+        }
+
+        var access = await IsAccess(o.baseValue.ace, prog_Acc, o.baseValue.group, 'Dftr', access_RPRT);
+        if (access) {
+            action.push( { code: "Dftr", name: "دفتر حساب", icon: "/Content/img/view.svg" })
+        }
+
+        action.push({ code: "TrzAcc", name: "تراز زیر حساب ها", icon: "/Content/img/view.svg", visible: { key: "HasChild", value: 1, act: '==' } });
+
+        /*
+
         var action = [
             { code: "ADocR", name: "دفتر روزنامه", icon: "/Content/img/view.svg" },
             { code: "Dftr", name: "دفتر حساب", icon: "/Content/img/view.svg" },
             { code: "TrzAcc", name: "تراز زیر حساب ها", icon: "/Content/img/view.svg", visible: { key: "HasChild", value: 1, act: '==' } }
         ];
+        */
+
 
         divGrid.Table(
             {
