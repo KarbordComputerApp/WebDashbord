@@ -49,9 +49,7 @@
         getRprtAllCols(o.baseValue.ace, o.baseValue.group, o.baseValue.sal, userName);
         o.columns = getRprtCols(o.baseValue.group, o.baseValue.sal, o.rprtId, userName);
 
-        var action = [
-            { code: "IODoc", name: "نمایش سند", icon: "/Content/img/view.svg" },
-        ];
+        var action = [];//[            { code: "IODoc", name: "نمایش سند", icon: "/Content/img/view.svg" },        ];
 
         divGrid.Table(
             {

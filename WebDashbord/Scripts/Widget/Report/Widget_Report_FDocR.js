@@ -53,9 +53,7 @@
         o.columns = getRprtCols(o.baseValue.group, o.baseValue.sal, o.rprtId, userName);
 
         var caption_Forosh = o.isForosh == true ? "فروش" : "خرید";
-        var action = [
-            { code: "ADoc", name: "نمایش فاکتور " + caption_Forosh, icon: "/Content/img/view.svg" },
-        ];
+        var action = [];//   [{ code: "ADoc", name: "نمایش فاکتور", icon: "/Content/img/view.svg" },];
 
 
         divGrid.Table(

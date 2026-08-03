@@ -22,7 +22,7 @@
         data: null
     },
 
-    _create: function () {
+    _create: async function () {
         var obj = this;
         var o = obj.options;
         var mode_Forosh = o.isForosh == true ? "S" : "P";
@@ -54,9 +54,12 @@
 
         var caption_Forosh = o.isForosh == true ? "فروش" : "خرید";
 
-        var action = [
-            { code: "FDocR_" + mode_Forosh, name: "ریز گردش اسناد " + caption_Forosh, icon: "/Content/img/view.svg" },
-        ];
+        var action = [];
+
+        var access = await IsAccess(o.baseValue.ace, prog_Fct, o.baseValue.group, "FDocR_" + mode_Forosh, access_RPRT);
+        if (access) {
+            action.push({ code: "FDocR_" + mode_Forosh, name: "ریز گردش اسناد " + caption_Forosh, icon: "/Content/img/view.svg" })
+        }
 
         divGrid.Table(
             {

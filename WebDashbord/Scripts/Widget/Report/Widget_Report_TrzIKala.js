@@ -21,7 +21,7 @@
         data: null
     },
 
-    _create: function () {
+    _create: async function () {
         var obj = this;
         var o = obj.options;
         var param = dataGroup[o.baseValue.group][o.baseValue.sal]["params"];
@@ -49,10 +49,18 @@
         getRprtAllCols(o.baseValue.ace, o.baseValue.group, o.baseValue.sal, userName);
         o.columns = getRprtCols(o.baseValue.group, o.baseValue.sal, o.rprtId, userName);
 
-        var action = [
-            { code: "Krdx", name: "کاردکس", icon: "/Content/img/view.svg" },
-            { code: "IDocR", name: "ریز گردش اسناد انبارداری", icon: "/Content/img/view.svg" },
-        ];
+        var action = [];
+
+        var access = await IsAccess(o.baseValue.ace, prog_Inv, o.baseValue.group, 'Krdx', access_RPRT);
+        if (access) {
+            action.push({ code: "Krdx", name: "کاردکس", icon: "/Content/img/view.svg" })
+        }
+
+        var access = await IsAccess(o.baseValue.ace, prog_Inv, o.baseValue.group, 'IDocR', access_RPRT);
+        if (access) {
+            action.push({ code: "IDocR", name: "ریز گردش اسناد انبارداری", icon: "/Content/img/view.svg" })
+        }
+
 
         divGrid.Table(
             {

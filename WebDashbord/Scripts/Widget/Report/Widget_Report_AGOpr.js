@@ -22,7 +22,7 @@
         data: null
     },
 
-    _create: function () {
+    _create: async function () {
         var obj = this;
         var o = obj.options;
         var param = dataGroup[o.baseValue.group][o.baseValue.sal]["params"];
@@ -52,9 +52,12 @@
 
         //o.columns = getRprtCols(o.rprtId, sessionStorage.userName);
 
-        var action = [
-            { code: "Dftr", name: "دفتر حساب", icon: "/Content/img/view.svg" },
-        ];
+        var action = [];
+
+        var access = await IsAccess(o.baseValue.ace, prog_Acc, o.baseValue.group, 'Dftr', access_RPRT);
+        if (access) {
+            action.push({ code: "Dftr", name: "دفتر حساب", icon: "/Content/img/view.svg" })
+        }
 
         divGrid.Table(
             {

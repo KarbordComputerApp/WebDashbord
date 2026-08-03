@@ -50,9 +50,8 @@
         getRprtAllCols(o.baseValue.ace, o.baseValue.group, o.baseValue.sal, userName);
         o.columns = getRprtCols(o.baseValue.group, o.baseValue.sal, o.rprtId, userName);
 
-        var action = [
-           // { code: "ADocR", name: "دفتر روزنامه", icon: "/Content/img/view.svg" },
-        ];
+        var action = []; // { code: "ADocR", name: "دفتر روزنامه", icon: "/Content/img/view.svg" },
+      
 
         divGrid.Table(
             {
