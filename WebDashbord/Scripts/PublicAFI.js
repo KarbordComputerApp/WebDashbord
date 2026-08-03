@@ -466,7 +466,7 @@ function IsNull(key, value) {
     return key == null ? value : key;
 }
 
-async function getRprtAllCols(ace, group, sal, userName) {
+function getRprtAllCols(ace, group, sal, userName) {
     if (dataGroup[group] == null) {
         dataGroup[group] = {};
     }
@@ -475,7 +475,7 @@ async function getRprtAllCols(ace, group, sal, userName) {
     }
 
     if (dataGroup[group][sal]["Columns"] == null) {
-        await ajaxFunction(RprtColsUri + ace + '/' + sal + '/' + group + '/all/' + userName, 'GET' ,null, true).done(function (data) {
+        ajaxFunction(RprtColsUri + ace + '/' + sal + '/' + group + '/all/' + userName, 'GET' ,null, true).done(function (data) {
             //data = TranslateData(data);
             var defultColumn = data.filter(s => s.UserCode == "*Default*");
             var userColumn = data.filter(s => s.UserCode == userName);
