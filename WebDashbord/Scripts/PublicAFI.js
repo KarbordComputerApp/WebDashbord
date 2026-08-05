@@ -203,10 +203,18 @@ if (loginData.apiAddress != null) {
     SetUrl(loginData.apiAddress);
 }
 
-function ChangeDatabase(lockNumber, ace, group, sal, auto) {
+function ChangeDatabaseConfig(lockNumber) {
+    ajaxFunction(changeDatabaseConfigUri + '/' + lockNumber + '/true', 'GET', null, true).done(function (data) {
+        if (data == 'OK') {
+            return showNotification(translate('خطا در بازسازی اطلاعات'), 0);
+        } else {
+            return showNotification(translate('بازسازی اطلاعات با موفقیت انجام شد'), 1);
+        }
+    });
+}
 
-
-    ajaxFunction(ChangeDatabaseUri + ace + '/' + sal + '/' + group + '/' + auto + '/' + lockNumber, 'GET', null, true).done(function (data) {
+async function ChangeDatabase(lockNumber, ace, group, sal, auto) {
+    await ajaxFunction(ChangeDatabaseUri + ace + '/' + sal + '/' + group + '/' + auto + '/' + lockNumber, 'GET', null, true).done(function (data) {
         ViewLoading(false);
         if (data == "OK") {
             showNotification(translate('بازسازی اطلاعات با موفقیت انجام شد'), 1);
@@ -564,6 +572,12 @@ async function GetParam(ace, group, sal, refresh, async = false) {
     if (dataGroup[group][sal] == null) {
         dataGroup[group][sal] = {};
     }
+    if (dataGroup[group][sal].replaceDatabase == null)  {
+        dataGroup[group][sal].replaceDatabase = false;
+        await ChangeDatabase(loginData.lockNumber, ace, group, sal, true);
+        dataGroup[group][sal].replaceDatabase = true;
+    }
+
     if (dataGroup[group][sal][param] == null || refresh == true) {
         await ajaxFunction(ParamUri + ace + '/' + sal + '/' + group, 'GET', null, async).done(function (data) {
             var item = { "data": data };
@@ -833,7 +847,7 @@ var accessMode_Public = [
 
 var accessMode_Public = [
     { code: access_DOC, caption: "ثبت اسناد", prog: loginData.progAccess, parent: "" },
-    { code: access_ADOC, caption: "اسناد حسابداری", prog: ace == prog_Web1 ? prog_Afi:  prog_Fct, parent: "" },
+    { code: access_ADOC, caption: "اسناد حسابداری", prog: ace == prog_Web1 ? prog_Afi : prog_Fct, parent: "" },
     { code: access_FSDOC, caption: "اسناد فروش", prog: ace == prog_Web1 ? prog_Afi : prog_Fct, parent: "" },
     { code: access_FPDOC, caption: "اسناد خرید", prog: ace == prog_Web1 ? prog_Afi : prog_Fct, parent: "" },
     { code: access_RPRT, caption: "گزارشات", prog: loginData.progAccess, parent: "" },

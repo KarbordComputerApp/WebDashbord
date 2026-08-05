@@ -188,7 +188,7 @@ async function LoadDashbordData() {
         for (var i = 0; i < dashbordData.length; i++) {
             var baseValue = dashbordData[i].baseValue;
             await GetAccess_Group(baseValue.ace, baseValue.group);
-            GetParam(baseValue.ace, baseValue.group, baseValue.sal, false);
+            await GetParam(baseValue.ace, baseValue.group, baseValue.sal, false);
             await CreateListDesktop(baseValue.ace, baseValue.group);
 
             if (loginData.erj_Access != "") {
@@ -603,29 +603,16 @@ function SetSalData(ace, group) {
 
 
 $("#B_ChangeDatabase").hide();
+$("#B_ChangeDatabaseConfig").hide();
 if (userName == user_Ace) {
     $("#B_ChangeDatabase").show();
+    $("#B_ChangeDatabaseConfig").show();
 }
-$("#B_ChangeDatabase").click(function () {
-    var group = $('#GroupDesktopItem').val();
-    var sal = $('#SalDesktopItem').val();
-    var salDisplay = $('#SalDesktopItem').is(":visible");
-    if (salDisplay == false) {
-        sal = "0000";
-    }
 
-    if (group == '0' || group == null)
-        return showNotification(translate('گروه را انتخاب کنید'), 0);
-
-   
-
-    if (sal == '0' || sal == null)
-        return showNotification(translate('سال را انتخاب کنید'), 0);
-
-
+$("#B_ChangeDatabaseConfig").click(function () {
     Swal.fire({
-        title: translate('بازسازی بانک اطلاعاتی'),
-        text: translate("آیا اطلاعات گروه") + ' ' + group + ' ' + translate("سال") + ' ' + sal + translate("بازسازی شود ؟"),
+        title: 'بازسازی اطلاعات سیستم',
+        text: "آیا اطلاعات بازسازی شود ؟",
         type: 'warning',
         showCancelButton: true,
         cancelButtonColor: '#3085d6',
@@ -637,8 +624,72 @@ $("#B_ChangeDatabase").click(function () {
         if (result.value) {
 
             Swal.fire({
-                title: translate('تایید نهایی'),
-                text: translate("در زمان بازسازی کاربران دیگر دچار اختلال می شوند . آیا بازسازی انجام شود ؟"),
+                title: 'تایید نهایی',
+                text: "در زمان بازسازی کاربران دیگر دچار اختلال می شوند . آیا بازسازی انجام شود ؟",
+                type: 'warning',
+                showCancelButton: true,
+                cancelButtonColor: '#3085d6',
+                cancelButtonText: text_No,
+                allowOutsideClick: false,
+                confirmButtonColor: '#d33',
+                confirmButtonText: text_Yes
+            }).then((result) => {
+                if (result.value) {
+                    ajaxFunction(ChangeDatabaseConfigUri + '/' + loginData.lockNumber + '/false', 'GET', null, true).done(function (data) {
+                        ViewLoading(false);
+                        if (data == "OK") {
+                            showNotification('بازسازی اطلاعات با موفقیت انجام شد', 1);
+                        }
+                        else if (data == "UseLog") {
+                            showNotification('اطلاعات در حال بازسازی است. لطفا منتظر بمانید', 2);
+                        }
+                        else {
+                            if (data.search("لطفا منتظر بمانید") > 0)
+                                return showNotification(data, 0);
+                            else
+                                return showNotification('خطا در بازسازی اطلاعات' + ' ' + " <br /> <br />" + data, 0);
+                        }
+                    });
+                }
+            })
+        }
+    });
+});
+
+
+$("#B_ChangeDatabase").click(function () {
+    var group = $('#GroupDesktopItem').val();
+    var sal = $('#SalDesktopItem').val();
+    var salDisplay = $('#SalDesktopItem').is(":visible");
+    if (salDisplay == false) {
+        sal = "0000";
+    }
+
+    if (group == '0' || group == null)
+        return showNotification('گروه را انتخاب کنید', 0);
+
+   
+
+    if (sal == '0' || sal == null)
+        return showNotification('سال را انتخاب کنید', 0);
+
+
+    Swal.fire({
+        title: 'بازسازی بانک اطلاعاتی',
+        text: "آیا اطلاعات گروه" + ' ' + group + ' ' + "سال" + ' ' + sal + "بازسازی شود ؟",
+        type: 'warning',
+        showCancelButton: true,
+        cancelButtonColor: '#3085d6',
+        cancelButtonText: text_No,
+        allowOutsideClick: false,
+        confirmButtonColor: '#d33',
+        confirmButtonText: text_Yes
+    }).then((result) => {
+        if (result.value) {
+
+            Swal.fire({
+                title: 'تایید نهایی',
+                text: "در زمان بازسازی کاربران دیگر دچار اختلال می شوند . آیا بازسازی انجام شود ؟",
                 type: 'warning',
                 showCancelButton: true,
                 cancelButtonColor: '#3085d6',
