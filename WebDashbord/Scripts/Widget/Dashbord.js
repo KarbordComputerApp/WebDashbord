@@ -602,6 +602,60 @@ function SetSalData(ace, group) {
 
 
 
+$("#B_ChangeDatabase").hide();
+if (userName == user_Ace) {
+    $("#B_ChangeDatabase").show();
+}
+$("#B_ChangeDatabase").click(function () {
+    var group = $('#GroupDesktopItem').val();
+    var sal = $('#SalDesktopItem').val();
+    var salDisplay = $('#SalDesktopItem').is(":visible");
+    if (salDisplay == false) {
+        sal = "0000";
+    }
+
+    if (group == '0' || group == null)
+        return showNotification(translate('گروه را انتخاب کنید'), 0);
+
+   
+
+    if (sal == '0' || sal == null)
+        return showNotification(translate('سال را انتخاب کنید'), 0);
+
+
+    Swal.fire({
+        title: translate('بازسازی بانک اطلاعاتی'),
+        text: translate("آیا اطلاعات گروه") + ' ' + group + ' ' + translate("سال") + ' ' + sal + translate("بازسازی شود ؟"),
+        type: 'warning',
+        showCancelButton: true,
+        cancelButtonColor: '#3085d6',
+        cancelButtonText: text_No,
+        allowOutsideClick: false,
+        confirmButtonColor: '#d33',
+        confirmButtonText: text_Yes
+    }).then((result) => {
+        if (result.value) {
+
+            Swal.fire({
+                title: translate('تایید نهایی'),
+                text: translate("در زمان بازسازی کاربران دیگر دچار اختلال می شوند . آیا بازسازی انجام شود ؟"),
+                type: 'warning',
+                showCancelButton: true,
+                cancelButtonColor: '#3085d6',
+                cancelButtonText: text_No,
+                allowOutsideClick: false,
+                confirmButtonColor: '#d33',
+                confirmButtonText: text_Yes
+            }).then((result) => {
+                if (result.value) {
+                    ChangeDatabase(loginData.lockNumber, salDisplay ? ace : prog_Web2, group, sal, false);
+                }
+            })
+        }
+    });
+});
+
+
 /*
 var ViewModel = function () {
     var self = this;

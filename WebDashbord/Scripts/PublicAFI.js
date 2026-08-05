@@ -203,6 +203,32 @@ if (loginData.apiAddress != null) {
     SetUrl(loginData.apiAddress);
 }
 
+function ChangeDatabase(lockNumber, ace, group, sal, auto) {
+
+
+    ajaxFunction(ChangeDatabaseUri + ace + '/' + sal + '/' + group + '/' + auto + '/' + lockNumber, 'GET', null, true).done(function (data) {
+        ViewLoading(false);
+        if (data == "OK") {
+            showNotification(translate('بازسازی اطلاعات با موفقیت انجام شد'), 1);
+        } else {
+
+            if (data.search(translate("لطفا منتظر بمانید")) > 0) {
+                return showNotification(data, 0);
+            }
+            else if (data == "UseLog") {
+                showNotification(translate('اطلاعات در حال بازسازی است. لطفا منتظر بمانید'), 2);
+            }
+            else {
+                if (ace == prog_Web8) {
+                    return showNotification(translate('اشکال در ایجاد بانک اطلاعاتی . مطمئن باشید که سال مالی') + ' ' + sal + ' ' + translate('برای تمام سیستم ها ایجاد کرده اید') + " <br /> <br />" + data, 0);
+                } else {
+                    return showNotification(translate('خطا در بازسازی اطلاعات') + " <br /> <br />" + data, 0);
+                }
+            }
+        }
+    });
+
+}
 
 function ViewLoading(show) {
     var display = $('#loadingsite').css('display');
@@ -475,7 +501,7 @@ function getRprtAllCols(ace, group, sal, userName) {
     }
 
     if (dataGroup[group][sal]["Columns"] == null) {
-        ajaxFunction(RprtColsUri + ace + '/' + sal + '/' + group + '/all/' + userName, 'GET' ).done(function (data) {
+        ajaxFunction(RprtColsUri + ace + '/' + sal + '/' + group + '/all/' + userName, 'GET').done(function (data) {
             //data = TranslateData(data);
             var defultColumn = data.filter(s => s.UserCode == "*Default*");
             var userColumn = data.filter(s => s.UserCode == userName);
@@ -581,6 +607,11 @@ function GetAccess_Account(prog) {
 async function GetAccess_Group(prog, group) {
 
     var acountGroup = false;
+    var erjOnly = loginData.baseValue.groupsData.where(c => c.ErjOnly == true && c.Code == group);
+    if (erjOnly.length > 0 && prog != prog_Web2) {
+        prog = prog_Web2;
+    }
+
 
     if (prog == prog_Web1 && loginData.afi1_Group.includes(group)) {
         acountGroup = true;
@@ -591,18 +622,15 @@ async function GetAccess_Group(prog, group) {
     else if (prog == prog_Web8 && loginData.afi8_Group.includes(group)) {
         acountGroup = true;
     }
+
+
+
     if (acountGroup) {
 
 
 
         if (dataGroup[group] == null) {
             dataGroup[group] = {};
-        }
-
-        var erjOnly = loginData.baseValue.groupsData.where(c => c.ErjOnly == true && c.Code == group);
-
-        if (erjOnly.length > 0 && prog != prog_Web2) {
-            prog = prog_Web2;
         }
 
         if (dataGroup[group]["Access_" + prog] == null) {
@@ -805,35 +833,35 @@ var accessMode_Public = [
 
 var accessMode_Public = [
     { code: access_DOC, caption: "ثبت اسناد", prog: loginData.progAccess, parent: "" },
-    { code: access_ADOC, caption: "اسناد حسابداری", prog: prog_Fct, parent: "" },
-    { code: access_FSDOC, caption: "اسناد فروش", prog: prog_Fct, parent: "" },
-    { code: access_FPDOC, caption: "اسناد خرید", prog: prog_Fct, parent: "" },
+    { code: access_ADOC, caption: "اسناد حسابداری", prog: ace == prog_Web1 ? prog_Afi:  prog_Fct, parent: "" },
+    { code: access_FSDOC, caption: "اسناد فروش", prog: ace == prog_Web1 ? prog_Afi : prog_Fct, parent: "" },
+    { code: access_FPDOC, caption: "اسناد خرید", prog: ace == prog_Web1 ? prog_Afi : prog_Fct, parent: "" },
     { code: access_RPRT, caption: "گزارشات", prog: loginData.progAccess, parent: "" },
-    { code: "TChk_Sum", caption: "چک‌ها پرداختنی به تفکیک بانک", prog: prog_Acc, parent: access_RPRT },
-    { code: "TChk", caption: "صورت خلاصه چک ها", prog: prog_Acc, parent: access_RPRT },
-    { code: "TrzAcc", caption: "تراز حساب", prog: prog_Acc, parent: access_RPRT },
-    { code: "Dftr", caption: "دفتر حساب", prog: prog_Acc, parent: access_RPRT },
-    { code: "ADocR", caption: "دفتر روزنامه", prog: prog_Acc, parent: access_RPRT },
-    { code: "AGMkz", caption: "گردش مراکز هزینه", prog: prog_Acc, parent: access_RPRT },
-    { code: "AGOpr", caption: "گردش پروژه ها", prog: prog_Acc, parent: access_RPRT },
-    { code: "GrdZAcc", caption: "گردش زیر حساب ها", prog: prog_Acc, parent: access_RPRT },
-    { code: "KhlAcc", caption: "صورت خلاصه حساب ها", prog: prog_Acc, parent: access_RPRT },
-    { code: "KhlZAcc", caption: "صورت خلاصه زیر حساب ها", prog: prog_Acc, parent: access_RPRT },
-    { code: "TarazFasli_Chart", caption: "نمودار فروش", prog: prog_Fct, parent: access_RPRT },
-    { code: "TrzFKala_Chart", caption: "بیشترین فروش کالا", prog: prog_Fct, parent: access_RPRT },
-    { code: "TrzFCust_S", caption: "تراز فروش به خریداران", prog: prog_Fct, parent: access_RPRT },
-    { code: "TrzFCust_P", caption: "تراز خرید از فروشندگان", prog: prog_Fct, parent: access_RPRT },
-    //{ code: "TrzFCust_S", caption: "مانده حساب خریداران", prog:  prog_Fct, parent: access_RPRT },
-    // { code: "TrzFCust_P", caption: "مانده حساب فروشندگان", prog:  prog_Fct, parent: access_RPRT },
-    //{ code: "TrzFKala_S", caption: "بیشترین فروش کالا" , prog:  prog_Fct, parent: access_RPRT},
-    { code: "TrzFKala_S", caption: "تراز فروش کالاها", prog: prog_Fct, parent: access_RPRT },
-    { code: "TrzFKala_P", caption: "تراز خرید کالاها", prog: prog_Fct, parent: access_RPRT },
-    { code: "FDocR_S", caption: "ریز گردش اسناد فروش", prog: prog_Fct, parent: access_RPRT },
-    { code: "FDocR_P", caption: "ریز گردش اسناد خرید", prog: prog_Fct, parent: access_RPRT },
-    { code: "Krdx", caption: "کاردکس کالا", prog: prog_Inv, parent: access_RPRT },
-    { code: "IDocR", caption: "ریز گردش اسناد انبارداری", prog: prog_Inv, parent: access_RPRT },
-    { code: "TrzIKala", caption: "موجودی کالا", prog: prog_Inv, parent: access_RPRT },
-    { code: "TrzIKalaExf", caption: "موجودی کالا به تفکیک ویژگی", prog: prog_Inv, parent: access_RPRT },
+    { code: "TChk_Sum", caption: "چک‌ها پرداختنی به تفکیک بانک", prog: ace == prog_Web1 ? prog_Afi : prog_Acc, parent: access_RPRT },
+    { code: "TChk", caption: "صورت خلاصه چک ها", prog: ace == prog_Web1 ? prog_Afi : prog_Acc, parent: access_RPRT },
+    { code: "TrzAcc", caption: "تراز حساب", prog: ace == prog_Web1 ? prog_Afi : prog_Acc, parent: access_RPRT },
+    { code: "Dftr", caption: "دفتر حساب", prog: ace == prog_Web1 ? prog_Afi : prog_Acc, parent: access_RPRT },
+    { code: "ADocR", caption: "دفتر روزنامه", prog: ace == prog_Web1 ? prog_Afi : prog_Acc, parent: access_RPRT },
+    { code: "AGMkz", caption: "گردش مراکز هزینه", prog: ace == prog_Web1 ? prog_Afi : prog_Acc, parent: access_RPRT },
+    { code: "AGOpr", caption: "گردش پروژه ها", prog: ace == prog_Web1 ? prog_Afi : prog_Acc, parent: access_RPRT },
+    { code: "GrdZAcc", caption: "گردش زیر حساب ها", prog: ace == prog_Web1 ? prog_Afi : prog_Acc, parent: access_RPRT },
+    { code: "KhlAcc", caption: "صورت خلاصه حساب ها", prog: ace == prog_Web1 ? prog_Afi : prog_Acc, parent: access_RPRT },
+    { code: "KhlZAcc", caption: "صورت خلاصه زیر حساب ها", prog: ace == prog_Web1 ? prog_Afi : prog_Acc, parent: access_RPRT },
+    { code: "TarazFasli_Chart", caption: "نمودار فروش", prog: ace == prog_Web1 ? prog_Afi : prog_Fct, parent: access_RPRT },
+    { code: "TrzFKala_Chart", caption: "بیشترین فروش کالا", prog: ace == prog_Web1 ? prog_Afi : prog_Fct, parent: access_RPRT },
+    { code: "TrzFCust_S", caption: "تراز فروش به خریداران", prog: ace == prog_Web1 ? prog_Afi : prog_Fct, parent: access_RPRT },
+    { code: "TrzFCust_P", caption: "تراز خرید از فروشندگان", prog: ace == prog_Web1 ? prog_Afi : prog_Fct, parent: access_RPRT },
+    //{ code: "TrzFCust_S", caption: "مانده حساب خریداران", prog:  ace == prog_Web1 ? prog_Afi : prog_Fct, parent: access_RPRT },
+    // { code: "TrzFCust_P", caption: "مانده حساب فروشندگان", prog:  ace == prog_Web1 ? prog_Afi : prog_Fct, parent: access_RPRT },
+    //{ code: "TrzFKala_S", caption: "بیشترین فروش کالا" , prog:  ace == prog_Web1 ? prog_Afi : prog_Fct, parent: access_RPRT},
+    { code: "TrzFKala_S", caption: "تراز فروش کالاها", prog: ace == prog_Web1 ? prog_Afi : prog_Fct, parent: access_RPRT },
+    { code: "TrzFKala_P", caption: "تراز خرید کالاها", prog: ace == prog_Web1 ? prog_Afi : prog_Fct, parent: access_RPRT },
+    { code: "FDocR_S", caption: "ریز گردش اسناد فروش", prog: ace == prog_Web1 ? prog_Afi : prog_Fct, parent: access_RPRT },
+    { code: "FDocR_P", caption: "ریز گردش اسناد خرید", prog: ace == prog_Web1 ? prog_Afi : prog_Fct, parent: access_RPRT },
+    { code: "Krdx", caption: "کاردکس کالا", prog: ace == prog_Web1 ? prog_Afi : prog_Inv, parent: access_RPRT },
+    { code: "IDocR", caption: "ریز گردش اسناد انبارداری", prog: ace == prog_Web1 ? prog_Afi : prog_Inv, parent: access_RPRT },
+    { code: "TrzIKala", caption: "موجودی کالا", prog: ace == prog_Web1 ? prog_Afi : prog_Inv, parent: access_RPRT },
+    { code: "TrzIKalaExf", caption: "موجودی کالا به تفکیک ویژگی", prog: ace == prog_Web1 ? prog_Afi : prog_Inv, parent: access_RPRT },
     { code: "ErjDocK", caption: "فهرست پرونده ها", prog: prog_Erj, parent: access_RPRT },
     { code: "ErjDocB_Last", caption: "لیست ارجاعات پرونده ها", prog: prog_Erj, parent: access_RPRT },
 ];
