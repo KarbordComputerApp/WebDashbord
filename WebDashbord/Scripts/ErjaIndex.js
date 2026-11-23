@@ -58,7 +58,7 @@
     var ErjDocAttach_DelUri = server + '/api/Web_Data/ErjDocAttach_Del/'; // حذف پیوست
     var Doc_DeleteUri = server + '/api/ErjDocH/TestDoc_Delete/'; // آدرس تست حذف
 
-    TestUser();
+    // TestUser();
 
     //self.AzDate = ko.observable(shamsiDate.substring(0, 4) - 1 + '/01/01');
     //self.TaDate = ko.observable(shamsiDate);

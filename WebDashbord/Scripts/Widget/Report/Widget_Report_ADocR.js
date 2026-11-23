@@ -62,7 +62,7 @@
                 pageCount: 0,
                 pageSize: 10,
                 keyField: 'AccCode',
-                isTableFix: true,
+                isTableFix: false,
                 keyRow: null,
                 radif: true,
                 sumFields: ['Bede', 'Best', 'MonBede', 'MonBest', 'MonTotal'],

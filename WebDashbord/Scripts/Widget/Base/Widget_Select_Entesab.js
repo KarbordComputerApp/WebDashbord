@@ -25,12 +25,12 @@ $.widget("ui.Select_Entesab", {
         var obj = this;
         var o = obj.options;
         o.o = o;
-        var divObject = $('<div class="input-group" style="margin-bottom:' + margin_Input +';">');
+        var divObject = $('<div class="input-group" style="margin-bottom:' + margin_Input + ';">');
         var divBtn = $('<div class="input-group-addon">');
         var aBtn = $('<a style="padding-right: 5px;padding-left: 5px;" class="dropdown-toggle" data-toggle="modal" data-backdrop="static" data-keyboard="false" title="انتخاب"><i class="bi bi-search"></i></a>');
         //var aBtn = $('<a class="dropdown-toggle">');
-       // var iconBtn = $('<img src="/Content/img/list/SearchKala.png" class="icon" height="20" width="20" title="انتخاب">');
-       // aBtn.append(iconBtn);
+        // var iconBtn = $('<img src="/Content/img/list/SearchKala.png" class="icon" height="20" width="20" title="انتخاب">');
+        // aBtn.append(iconBtn);
         divBtn.append(aBtn);
 
         var divInput = $('<div class="form-group form-float" style="margin-bottom: 5px;">');
@@ -61,27 +61,37 @@ $.widget("ui.Select_Entesab", {
         var o = obj.options;
         var modal = o.modalElement;
 
-        await obj._GetData(false);
+        if (o.data.length == 0) {
+            await obj._GetData(false);
+        }
         obj._CreateGrid();
 
-        // table select
-        var bodySelect = modal.find('.tBodySelect');
-        if (bodySelect.length > 0) {
-            bodySelect.empty();
-        }
+
         var listSelect = o.selected;
         if (listSelect.length > 0) {
-            for (var i = 0; i < listSelect.length; i++) {
-                var _tr = $('<tr>');
-                var value = listSelect[i].code;
-                _tdCode = $('<td data-name="code" data-value="' + value + '">' + value + '</td>');
-                _tr.append(_tdCode);
-                if (o.keyCaption != "") {
-                    value = listSelect[i].name;
-                    _tdName = $('<td data-name="name" data-value="' + value + '" class="ellipsis">' + value + '</td>');
-                    _tr.append(_tdName);
+            if (isMobile) {
+                for (var i = 0; i < listSelect.length; i++) {
+                    o.data.find(c => c[o.keyField] == listSelect[i].code).selected = 1;
                 }
-                bodySelect.append(_tr);
+            }
+            else {
+                // table select
+                var bodySelect = modal.find('.tBodySelect');
+                if (bodySelect.length > 0) {
+                    bodySelect.empty();
+                }
+                for (var i = 0; i < listSelect.length; i++) {
+                    var _tr = $('<tr>');
+                    var value = listSelect[i].code;
+                    _tdCode = $('<td data-name="code" data-value="' + value + '">' + value + '</td>');
+                    _tr.append(_tdCode);
+                    if (o.keyCaption != "") {
+                        value = listSelect[i].name;
+                        _tdName = $('<td data-name="name" data-value="' + value + '" class="ellipsis">' + value + '</td>');
+                        _tr.append(_tdName);
+                    }
+                    bodySelect.append(_tr);
+                }
             }
         }
         modal.modal('show');
@@ -102,7 +112,7 @@ $.widget("ui.Select_Entesab", {
         o.classModal = 'K_Modal' + f_Select + (o.externalModal == true ? '_' + obj.uuid : '');
         _modal = $('<div class="modal fade ' + o.classModal + '" tabindex="-1" role="dialog" aria-labelledby="formModal" aria-hidden="true">');
         o.modalElement = _modal;
-        dialog = $('<div class="modal-dialog" style="max-width:1000px"></div>');
+        dialog = $('<div class="modal-dialog" ' + (isMobile ? '' : 'style="max-width:1000px"') + '></div>');
         _modal.append(dialog);
         content = $('<div class="modal-content"></div>');
 
@@ -121,12 +131,11 @@ $.widget("ui.Select_Entesab", {
         //body
         _body = $('<div class="modal-body">');
         _divRow = $('<div class="row">');
-        _divGrid = $('<div class="col-md-7 K_DivGrid">');
+        _divGrid = $('<div class="' + (isMobile ? 'col-md-12' : 'col-md-7') + ' K_DivGrid">');
         _divGridSelect = $('<div class="col-md-5 K_DivGridSelect">');
 
 
         _divRowSelect = $('<div class="row">');
-
         _divColSelect = $('<div class="col-md-1">');
         _divCentered = $('<div class="row centered">');
         _divHeightSelect = $('<div style="height:130px; width:20px"></div>');
@@ -135,7 +144,7 @@ $.widget("ui.Select_Entesab", {
         _aAddAll.append(_imgAdd);
         _divHeightSelect1 = $('<div style="height:60px"></div>');
         _aDelAll = $('<a style="height:18px;padding-right: 3px;">');
-        _imgDell = $('<i class="bi bi-chevron-double-right"></i>'); 
+        _imgDell = $('<i class="bi bi-chevron-double-right"></i>');
         _aDelAll.append(_imgDell);
         _divCentered.append(_divHeightSelect);
         _divCentered.append(_aAddAll);
@@ -167,11 +176,12 @@ $.widget("ui.Select_Entesab", {
         _divTableSelect.append(_tableSelect);
         _divColSelect.append(_divTableSelect);
         _divRowSelect.append(_divColSelect);
-
         _divGridSelect.append(_divRowSelect);
 
         _divRow.append(_divGrid);
-        _divRow.append(_divGridSelect);
+        if (!isMobile) {
+            _divRow.append(_divGridSelect);
+        }
         _body.append(_divRow);
 
         //end body
@@ -195,7 +205,7 @@ $.widget("ui.Select_Entesab", {
             obj.element.append(_modal);
         }
 
-      
+
 
         //end modal
 
@@ -212,7 +222,7 @@ $.widget("ui.Select_Entesab", {
             obj._DelAll();
         });
 
-        _aRefresh.click(function (e) {
+        _aRefresh.click(async function (e) {
             Swal.fire({
                 title: mes_Refresh,
                 text: translate("لیست " + o.caption) + " " + translate("به روز رسانی شود ؟"),
@@ -224,7 +234,7 @@ $.widget("ui.Select_Entesab", {
                 confirmButtonText: text_Yes
             }).then((result) => {
                 if (result.value) {
-                    obj._GetData(true);
+                    obj._Refresh();
                 }
             })
         });
@@ -235,28 +245,47 @@ $.widget("ui.Select_Entesab", {
 
     },
 
-    _SetResultModal: function (record) {
+    _SetResultModal: function () {
         var obj = this;
         var o = obj.options;
         var modal = o.modalElement;
-        var tr = modal.find('.tBodySelect tr');
-        var inputRes =  $(obj.bindings[0]).find('.InputRes');
-        res = tr.length > 0 ? tr.length + " مورد انتخاب شده" : "همه موارد";
+        var inputRes = $(obj.bindings[0]).find('.InputRes');
 
-        listRes = [];
-        stringRes = '';
-        for (var i = 0; i < tr.length; i++) {
-            var td = $(tr[i]).find('td');
-            var code = $(td[0]).attr('data-value');
-            var name = td.length > 1 ? $(td[1]).attr('data-value') : code;
-            listRes.push({ "code": code, "name": name });
-            stringRes += code + "*";
+        if (isMobile) {
+            //var selected = o.objGrid.Table("GetDataSelected");
+            var selected = o.data.where(c => c.selected == 1);
+            res = selected.length > 0 ? selected.length + " مورد انتخاب شده" : "همه موارد";
+            listRes = [];
+            stringRes = '';
+            for (var i = 0; i < selected.length; i++) {
+                listRes.push({ "code": selected[i][o.keyField], "name": selected[i][o.keyCaption] });
+                stringRes += selected[i][o.keyField] + "*";
+            }
+            stringRes = stringRes.substring(0, stringRes.length - 1);
+            o.selected = listRes;
+            var list = { data: listRes, dataString: stringRes };
+            $(inputRes).val(res);
+            obj._trigger("Select", null, list);
+        } else {
+            var tr = modal.find('.tBodySelect tr');
+
+            res = tr.length > 0 ? tr.length + " مورد انتخاب شده" : "همه موارد";
+            listRes = [];
+            stringRes = '';
+            for (var i = 0; i < tr.length; i++) {
+                var td = $(tr[i]).find('td');
+                var code = $(td[0]).attr('data-value');
+                var name = td.length > 1 ? $(td[1]).attr('data-value') : code;
+                listRes.push({ "code": code, "name": name });
+                stringRes += code + "*";
+            }
+            stringRes = stringRes.substring(0, stringRes.length - 1);
+            o.selected = listRes;
+            var list = { data: listRes, dataString: stringRes };
+            $(inputRes).val(res);
+            obj._trigger("Select", null, list);
         }
-        stringRes = stringRes.substring(0, stringRes.length - 1);
-        o.selected = listRes;
-        var list = { data: listRes, dataString: stringRes };
-        $(inputRes).val(res);
-        obj._trigger("Select", null, list);
+
     },
 
     _CreateGrid: function () {
@@ -280,21 +309,49 @@ $.widget("ui.Select_Entesab", {
             { code: "AddRowEntesab", name: "افزودن", icon: "/Content/img/list/streamline-icon-navigation-next.png" }
         ];
 
-
-        if (o.filter != null) {
-            o.data = baseData[o.baseValue.group][o.baseValue.sal][o.id].filter(item => {
-                for (var i = 0; i < o.filter.length; i++) {
-                    if (o.filter[i].act == '<=') {
-                        return item[o.filter[i].key] <= o.filter[i].value == true
+        if (o.data.length == 0) {
+            if (o.filter != null) {
+                var d = baseData[o.baseValue.group][o.baseValue.sal][o.id].filter(item => {
+                    for (var i = 0; i < o.filter.length; i++) {
+                        if (o.filter[i].act == '<=') {
+                            return item[o.filter[i].key] <= o.filter[i].value == true
+                        }
+                        else
+                            return item[o.filter[i].key].toString().startsWith(o.filter[i].value) == true
                     }
-                    else
-                        return item[o.filter[i].key].toString().startsWith(o.filter[i].value) == true
-                }
-            });
+                });
+                o.data = structuredClone(d);
+            }
+            else {
+                var d = baseData[o.baseValue.group][o.baseValue.sal][o.id];
+                o.data = structuredClone(d);
+            }
         }
-        else
-            o.data = baseData[o.baseValue.group][o.baseValue.sal][o.id];
 
+        var viewData = isMobile ? _viewDataLow : _viewDataFull;
+        o.striped = isMobile ? false : o.striped;
+
+        var dataLowTemplate = [
+            '<div class="boxgridmobile">' +
+            '    <div class="form-inline">' +
+            '        <h6 data-name="' + o.keyCaption + '" style="padding-left: 5px;">{0}</h6>' +
+            '       (<h6 data-name="' + o.keyField +'">{1}</h6>)' +
+            '       <input data-key="' + o.keyField +'" data-value="{1}" mode="checkbox"  type="checkbox" style="margin: 0px;position: absolute;left: 15px;">' +
+            '    </div>' +
+            '   <p data-name="Spec">{2}</p>' +
+            '</div>'
+        ];
+
+        if (o.id == "Status") {
+            dataLowTemplate = [
+                '<div class="boxgridmobile">' +
+                '    <div class="form-inline">' +
+                '        <h6 data-name="' + o.keyField + '" style="padding-left: 5px;">{0}</h6>' +
+                '       <input data-key="' + o.keyField + '" data-value="{0}" mode="checkbox"  type="checkbox" style="margin: 0px;position: absolute;left: 15px;">' +
+                '    </div>' +
+                '</div>'
+            ];
+        }
 
 
         divGrid.Table(
@@ -314,17 +371,17 @@ $.widget("ui.Select_Entesab", {
                 striped: o.striped,
                 action: action,
                 actionDropdown: false,
+                viewData: viewData,
+                viewDataLowTemplate: dataLowTemplate,
                 ActionClick: function (e, item) {
                     if (item.actionName == "AddRowEntesab") {
                         obj._AddRowEntesab(item.data);
                     }
-
                 },
             },
         );
 
         divGrid.Table("RefreshTable");
-
     },
 
     _AddRowEntesab: function (record) {
@@ -390,19 +447,22 @@ $.widget("ui.Select_Entesab", {
         var obj = this;
         var o = obj.options;
         await GetData(o, refresh, o.param);
+        var d = baseData[o.baseValue.group][o.baseValue.sal][o.id];
+        o.data = structuredClone(d);
+    },
+
+
+    _Refresh: async function () {
+        var obj = this;
+        var o = obj.options;
+        await obj._GetData(true);
+        o.objGrid.Table("option", "data", o.data);
+        o.objGrid.Table("RefreshTable");
     },
 
 
     _Button: function (name, item) {
         this._trigger(name, null, item);
-    },
-
-    RefreshData: function () {
-        obj = this;
-        var o = obj.options;
-        //o.objGrid.Table("RefreshTable");
-
-        //obj._CreateGrid();
     },
 
 });

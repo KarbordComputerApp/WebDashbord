@@ -25,7 +25,7 @@
     var StatusUri = server + '/api/Web_Data/Status/'; // آدرس وضعیت 
 
 
-    TestUser();
+    // TestUser();
     getParamInv();
     self.AzDate = ko.observable(sessionStorage.BeginDateInv);
     self.TaDate = ko.observable(sessionStorage.EndDateInv);

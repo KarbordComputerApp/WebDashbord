@@ -867,6 +867,8 @@
     <Content Include="Content\css\jquery-ui.css" />
     <Content Include="Content\js\jquery-ui.js" />
     <Content Include="Content\js\jquery.min.js" />
+    <Content Include="Content\js\jquery.signalR-2.4.3.js" />
+    <Content Include="Content\js\jquery.signalR-2.4.3.min.js" />
     <Content Include="Content\js\jquery.unobtrusive-ajax.min.js" />
     <Content Include="Content\js\knockout-3.5.0.js" />
     <Content Include="Content\js\sweet2.js" />

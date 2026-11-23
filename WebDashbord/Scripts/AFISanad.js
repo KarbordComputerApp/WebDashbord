@@ -17,7 +17,7 @@
 
     useSanadOtherUser = localStorage.getItem("TestUseSanadHesab" + sessionStorage.SerialNumber);
 
-    TestUser();
+    // TestUser();
     var viewAction = false;
     var resTestNew = false;
 

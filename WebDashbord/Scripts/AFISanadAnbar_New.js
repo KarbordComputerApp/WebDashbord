@@ -48,7 +48,7 @@ var ViewModel = function () {
     $('#textnumberSanad').hide();
     $('#finalSave_Title').attr('hidden', '');
 
-    TestUser();
+    // TestUser();
 
 
 

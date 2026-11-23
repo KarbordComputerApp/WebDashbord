@@ -16,11 +16,11 @@ namespace WebDashbord.Controllers.Unit
     public class UnitPublic
 
     {
-        public static string titleVer = "ورژن تست";
-        public static string titleVerNumber = "22"; 
+       // public static string titleVer = "ورژن تست";
+        //public static string titleVerNumber = "22"; 
 
-        //public static string titleVer = "ورژن";
-        //public static string titleVerNumber = "1041";
+        public static string titleVer = "ورژن";
+        public static string titleVerNumber = "1001";
 
         //public static string MAC;
         //public static string IP4;

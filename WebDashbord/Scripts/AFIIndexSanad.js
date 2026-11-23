@@ -116,7 +116,7 @@
     //sessionStorage.NEW_ADOC == "true" ? $("#AddNewSanad").show() : $("#AddNewSanad").hide();
     sessionStorage.NEW_ADOC == "true" ? $("#AddNewSanad").show() : $("#AddNewSanad").hide();
 
-    TestUser();
+    // TestUser();
 
     var ADocHUri = server + '/api/ADocData/ADocH/'; // آدرس لیست سند ها 
     var ADocHiUri = server + '/api/AFI_ADocHi/'; // آدرس هدر های سند 

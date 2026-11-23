@@ -11,7 +11,7 @@
     var TestMkz_DeleteUri = server + '/api/Web_Data/TestMkz_Delete/'; // آدرس تست حذف 
     var TestMkzUri = server + '/api/Web_Data/TestMkz/'; // آدرس تست  
 
-    TestUser();
+    // TestUser();
 
 
 

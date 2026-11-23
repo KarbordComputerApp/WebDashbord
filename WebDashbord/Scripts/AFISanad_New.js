@@ -7,7 +7,7 @@ var cols;
 
 var ViewModel = function () {
     var self = this;
-    TestUser();
+    // TestUser();
     var viewAction = false;
     var resTestNew = false;
     var flagFinalSave = false;

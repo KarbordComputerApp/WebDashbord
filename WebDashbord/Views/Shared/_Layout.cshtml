@@ -90,8 +90,8 @@
     <nav class="navbar">
         <div class="container-fluid">
             <div class="navbar-header">
-                <a href="javascript:void(0);" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse"
-                   aria-expanded="false"></a>
+               <!-- <a href="javascript:void(0);" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse"
+                   aria-expanded="false"></a>-->
                 <a href="javascript:void(0);" class="bars"></a>
                 <a class="navbar-brand">
 
@@ -100,8 +100,6 @@
                 </a>
             </div>
             <div class="collapse navbar-collapse" id="navbar-collapse">
-
-
                 <ul class="pull-right" id="navbar_Buttom" style="padding-right: 0px;">
                     <li>
                         <p class="topobject" id="dateTimeHome">تاریخ سرور</p>
@@ -145,14 +143,12 @@
 
                 <ul class="nav navbar-nav navbar-right topobject" id="navbar_Menu">
                     <li class="dropdown user_profile pull-left">
-                        <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" style="margin-left: 40px;margin-top: 0px;">
-
+                        <a href="javascript:void(0);" id="btn_profile" class="dropdown-toggle" data-toggle="dropdown" role="button" style="margin-left: 40px;margin-top: -4px;">
                             <div class="form-inline">
                                 <img src="~/Content/img/list/profile.png" width="32" height="32" alt="User" style="border: #ec8121 2px solid;" />
                                 <span id="userNameFa" class="topobject" style="margin-left: 5px;margin-right: 5px;"></span>
                                 <i class="bi bi-caret-down-fill topobject" style="font-size: 12px;"></i>
                             </div>
-
                         </a>
                         <ul class="dropdown-menu pullDown" style="margin-left: 10px; width:250px">
                             <li class="body">
@@ -176,25 +172,6 @@
                                                     </div>
                                                 </div>
                                             </div>
-
-                                            <!--<div class="col-sm-12">
-                                                <div class="form-group form-float">
-                                                    <div class="form-line date fix">
-                                                        <input type="text" id="group_TitleMenu" class="form-control float" readonly>
-                                                        <label class="form-label">گروه</label>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="col-sm-12">
-                                                <div class="form-group form-float">
-                                                    <div class="form-line date fix">
-                                                        <input type="text" id="sal_TitleMenu" class="form-control float" readonly>
-                                                        <label class="form-label" ">سال</label>
-                                                    </div>
-                                                </div>
-                                            </div>-->
-
                                             <div class="col-sm-12">
                                                 <button type="button" id="LogOut" class="btn btn-primary btn-block" style="background-color: #eb8121 !important;">خروج</button>
                                             </div>
@@ -202,34 +179,9 @@
                                         </div>
                                     </li>
                                 </ul>
-                                <!--
-                                 <ul class="user_dw_menu">
-                                          <li>
-                                              <a href="javascript:void(0);">
-                                                  <i class="material-icons">person</i>پروفایل
-                                              </a>
-                                          </li>
-                                          <li>
-                                              <a href="javascript:void(0);">
-                                                  <i class="material-icons">feedback</i>بازخورد
-                                              </a>
-                                          </li>
-                                          <li>
-                                              <a href="javascript:void(0);">
-                                                  <i class="material-icons">help</i>راهنما
-                                              </a>
-                                          </li>
-                                          <li>
-                                              <a id="LogOut">
-                                                  <i class="material-icons">power_settings_new</i>خروج
-                                              </a>
-                                          </li>
-                                </ul>-->
                             </li>
                         </ul>
-
                     </li>
-
 
                     <li style="color: #e77e22;font-size: 35px;margin-top: -2px;margin-right: 8px;" class="pull-left">|</li>
                     <li class="pull-left" id="addObject">
@@ -244,16 +196,8 @@
                         </a>
                     </li>
 
-                    <!--<li class="pull-left" id="P_Home">
-                        <a href="/Home/Index" class="dropdown-toggle" data-close="true" title="خانه" style="padding-left: 5px;margin-top: 5px;">
-                            <i class="bi bi-house-door topobject" style="top: -15px;position: relative;"></i>
-                        </a>
-                    </li>-->
-
                     <li class="dropdown pull-left">
                         <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" id="Btn_ShowMessage" title="پیام ها" style="padding-left: 5px;margin-top: 5px;">
-                            <!--<span class="label-count bg-orange"></span>-->
-
                             <i class="bi bi-bell topobject" style="top: -15px;position: relative;"></i>
 
                         </a>
@@ -269,13 +213,6 @@
                         </ul>
                     </li>
 
-                    <!--
-                    <li class="dropdown pull-left" id="P_Box">
-                        <a href="/Home/Box" title="اعلامیه">
-                            <img id="" src="~/Content/img/email.png" width="23" height="25" style="margin-top: 1px;" />
-                        </a>
-                    </li>-->
-
                     <li class="dropdown pull-left notification" id="P_NotificationErja">
                         <a href="/ERJ/Erja" title="ارجاعات پرونده دریافتی" style="margin-top: 5px;">
                             <i class="bi bi-bell topobject" style="top: -15px;position: relative;"></i>
@@ -283,22 +220,11 @@
                         </a>
                     </li>
 
-                    <!--  <li class="dropdown pull-left" id="P_AccessRefresh" title="بازخوانی دسترسی ها">
-                          <a id="AccessRefresh" style="margin-top: 5px;">
-                              <img src="~/Content/img/account-convert.png" width="20" height="20" style="margin-top: 3px;" />
-                          </a>
-                      </li>-->
-                    <!--<li class="dropdown pull-left" id="P_Tiket" title="تیکت پشتیبانی">
-                        <a id="btn_Tiket">
-                            <img src="~/Content/img/ticket-account.png" width="24" height="24" style="margin-top: 0px;" />
-                        </a>
-                    </li>-->
-                    <li class="dropdown pull-left" id="P_ContactUs" title="تماس با ما">
+                   <!-- <li class="dropdown pull-left" id="P_ContactUs" title="تماس با ما">
                         <a id="btn_App" href="https://karbordcomputer.com/contact-us/" target="_blank" style="padding-left: 5px;margin-top: 5px;">
                             <i class="bi bi-telephone-outbound topobject" style="top: -15px;position: relative;"></i>
                         </a>
                     </li>
-
 
                     <li class="dropdown pull-left" id="P_App" title="دریافت نسخه اندروید">
                         <a id="btn_App" href="https://cafebazaar.ir/app/com.karbord.karbordapp" target="_blank" style="margin-top: 5px;">
@@ -311,7 +237,7 @@
                             <img src="~/Content/img/keyboard.png" width="32" style="margin-top: 10px;" />
                         </a>
                     </li>
-
+-->
                 </ul>
             </div>
         </div>
@@ -336,7 +262,7 @@
                             <span id="titleVerNumber" style="padding-right:5px">@(WebDashbord.Controllers.Unit.UnitPublic.titleVerNumber)</span>
                             <br />
                             <!--<span id="titleVer">ورژن سرویس : 521</span>-->
-                            <span id="titleVer">ورژن سرویس</span><span> : 1043 </span>
+                            <span id="titleVer">ورژن سرویس</span><span> : 1044 </span>
                             <span id="titleVerNumber" style="padding-right:5px"></span>
                             <br />
                             <!--<span data-bind="text:translate('ورژن دی ال ال') + ' : '"></span>
@@ -1334,6 +1260,7 @@
 
 
     <script src="~/Content/new/js/app.min.js"></script>
+    <script src="~/Content/js/jquery.signalR-2.4.3.min.js"></script>
 
     <!--<script src="~/Content/new/js/jquery-ui.js"></script>-->
     <!--<script src="~/Content/js/jquery-3.6.0.min.js"></script>-->

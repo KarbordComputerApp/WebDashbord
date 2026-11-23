@@ -11,8 +11,8 @@
         var o = obj.options;
         var divObject = $('<div class="form-group form-float" style="margin-bottom:' + margin_Input+';">'); 
         var divInput = $('<div class="form-line focused fix">');
-        var _input = $(' <input type="text" data_type="' + o.dataType + '" class="form-control ' + o.dataType + '" ' + (o.maxlength > 0 ? ' maxlength = "' + o.maxlength + '"' : "") + '>');
-        var label = $('<label class="form-label active"">' + o.caption + '</label>');
+        var _input = $(' <input name="' + o.caption +'"  type="text" data_type="' + o.dataType + '" class="form-control ' + o.dataType + '" ' + (o.maxlength > 0 ? ' maxlength = "' + o.maxlength + '"' : "") + '>');
+        var label = $('<label for="' + o.caption +'" class="form-label active"">' + o.caption + '</label>');
 
 
         divInput.append(_input);
@@ -165,7 +165,7 @@ $.widget("ui.ComboBox", {
         var divObject = $('<div class="form-inline" style="margin-bottom:' + o.margin +';">');
         var span = $('<span class="col-md-' + (12 - o.sizeSelect) + '">' + o.caption + '</span>');
         var divSelect = $('<div class="form-group  col-md-' + o.sizeSelect + '">');
-        var _select = $('<select>');
+        var _select = $('<select name="' + o.caption + '">');
         for (var i = 0; i < o.items.length; i++) {
             _select.append(new Option(o.items[i].value, o.items[i].key));
         }

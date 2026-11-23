@@ -508,7 +508,10 @@ $.widget("ui.D_ADocR", {
         var o = obj.options;
         var setting = GetSetting(o);
 
-        var divReport = $('<div style="padding: 10px;">');
+        var divReport = $('<div style="padding: 5px;">');
+        var divLoading = CreateLoading();
+        //divLoading.css("display", "unset");
+        divReport.append(divLoading);
 
         divReport.Report_ADocR({
             uuid: o.uuid,

@@ -10,11 +10,11 @@ var LoginTestUri;
 //localStorage.removeItem("Karbord_LoginData");
 
 var AccountUri = loginData.apiAccount + 'Account/'; // آدرس حساب
-
+/*
 if (loginData.machineId == null) {
     var d = new Date();
     loginData.machineId = d.getDate() + d.getTime();
-}
+}*/
 
 if (loginData.account_UserName == "") {
     $('#modal-service').modal('show');
@@ -25,6 +25,8 @@ $("#LoginAccount").click(function () {
     var passAccount = $("#passAccount").val();
     LoginAccount(userAccount, passAccount, true);
 });
+
+getIP();
 
 function LoginAccount(userAccount, passAccount, flagMessage = false) {
     if (userAccount == "" || userAccount == null) {
@@ -78,7 +80,6 @@ function LoginAccount(userAccount, passAccount, flagMessage = false) {
 
             $('#modal-service').modal('hide');
             if (flagMessage) {
-                //getIP();
                 return showNotification(translate('اتصال برقرار شد'), 1);
             }
         }
@@ -120,6 +121,7 @@ function LoginUser(userName, password) {
                 pass: password,
                 param1: user_Param1,
                 param2: user_Param2,
+                machineId: loginData.machineId 
             }
             ajaxFunction(loginUri, 'POST', LoginObject, true).done(function (data) {
                 if (data.length == 1) {
@@ -136,10 +138,10 @@ function LoginUser(userName, password) {
                         var LoginTestObject = {
                             MachineId: loginData.machineId,
                             IPWan: loginData.ip,
-                            Country: loginData.country,
-                            City: loginData.city,
+                            Country: "",
+                            City: "",
                             UserCode: loginData.userName,
-                            ProgName: loginData.ace,
+                            ProgName: loginData.baseValue.ace,
                             ProgVer: loginData.version,
                             ProgCaption: "وب : " + loginData.progCaption,
                             FlagTest: 0,
@@ -313,13 +315,24 @@ function LoginUser(userName, password) {
     sessionStorage.Login = "OK";
     //getLoginData(userName, password);
 }
-
+/*
 function getIP() {
     ajaxFunctionAccount('http://ip-api.com/json/', 'GET').done(function (data) {
         loginData.ip = data.query;
         loginData.country = data.country;
         loginData.city = data.city;
     });
+}*/
+
+function getIP() {
+    fetch("https://api.ipify.org?format=json")
+        .then(response => response.json())
+        .then(data => {
+            loginData.ip = data.ip;
+        })
+        .catch(
+            error => console.error("خطا:", error)
+        );
 }
 
 
@@ -546,6 +559,7 @@ $("#Login_LogOutUser").click(function () {
     m_id = loginData.lastMachineId.CompName.split('-');
     user = $("#user").val();
     var LogOutObject = {
+        MachineIdBrowser: loginData.machineId,
         MachineId: m_id[0],
         UserCode: loginData.userName,
         ProgName: ace

@@ -13,7 +13,7 @@
     var TestZAccUri = server + '/api/Web_Data/TestZAcc/'; // آدرس تست  
     var ZGruUri = server + '/api/Web_Data/ZGru/'; // آدرس گروه زیر حساب 
 
-    TestUser();
+    // TestUser();
 
     var zGruCode = '';
 

@@ -140,8 +140,8 @@ $.widget("ui.Select", {
                 confirmButtonText: text_Yes
             }).then((result) => {
                 if (result.value) {
-                    obj._GetData(true);
-                }
+                    obj._Refresh();
+                                    }
             })
         });
     },
@@ -177,6 +177,17 @@ $.widget("ui.Select", {
         else
             o.data = baseData[o.baseValue.group][o.baseValue.sal][o.id];
 
+        var viewData = isMobile ? _viewDataLow : _viewDataFull;
+        //viewData = _viewDataLow;
+        var dataLowTemplate = [
+            '<div class="boxgridmobile">'+
+            '    <div class="form-inline">' +
+            '        <h6 data-name="Name" style="padding-left: 5px;">{0}</h6>' +
+            '       (<h6 data-name="Code">{1}</h6>)' +
+            '    </div>' +
+            '   <p data-name="Spec">{2}</p>' +
+            '</div>' 
+        ]
 
         modalBody.Table(
             {
@@ -192,6 +203,8 @@ $.widget("ui.Select", {
                 keyField: o.keyField,
                 isTableFix: false,
                 height: '350px',
+                viewData: viewData,
+                viewDataLowTemplate: dataLowTemplate,
                 Select: function (e, record) {
                     obj._SetResultModal(record);
                 },
@@ -232,6 +245,16 @@ $.widget("ui.Select", {
         this._trigger(name, null, item);
     },
 
+    _Refresh: async function () {
+        var obj = this;
+        var o = obj.options;
+        await obj._GetData(true);
+
+        var modal = o.modalElement;
+        var modalBody = modal.find('.modal-body');
+        modalBody.Table("option", "data", o.data);
+        modalBody.Table("RefreshTable");
+    },
 
 });
 

@@ -55,7 +55,7 @@ var ViewModel = function () {
     $('#textnumberfactor').hide();
     $('#finalSave_Title').attr('hidden', '');
 
-    TestUser();
+    // TestUser();
 
 
     var codeCust = '';

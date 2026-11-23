@@ -11,7 +11,7 @@
     var TestArz_DeleteUri = server + '/api/Web_Data/TestArz_Delete/'; // آدرس تست حذف 
     var TestArzUri = server + '/api/Web_Data/TestArz/'; // آدرس تست  
 
-    TestUser();
+    // TestUser();
 
     Prog = localStorage.getItem('ProgAccess');
 

@@ -18,7 +18,7 @@
     self.sortType = "ascending";
     self.currentColumn = ko.observable("");
 
-    TestUser();
+    // TestUser();
 
     getParamAcc();
 

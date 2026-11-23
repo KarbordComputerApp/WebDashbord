@@ -49,6 +49,29 @@
 
         var action = [];//   [{ code: "ADoc", name: "نمایش سند", icon: "/Content/img/view.svg" },];
 
+
+
+        var dataLowTemplate =
+           [ '<div class="boxgridmobile">' +
+            '    <div class="form-inline">' +
+            '        <h6 data-name="AccName" style="padding-left: 5px;">{0}</h6>' +
+            '       (<h6 data-name="AccCode">{1}</h6>)' +
+            '    </div>' +
+            '   <p data-name="MonTotal" data-type="' + type_Currency + '" style="direction: ltr;text-align:end;" >مانده : {2}</p>' +
+            '   <p data-name="MonTotal" data-type="' + type_Currency + '" style="direction: ltr;text-align:end;" >{2}</p>' +
+            '   <p data-name="MonTotal" data-type="' + type_Currency + '" style="direction: ltr;text-align:end;" >{2}</p>' +
+            '</div>'];
+
+        dataLowTemplate = [
+            '<td style="width:0px"><h5 data-name="AccCode">{0}</h5></td>',
+            '<td style="padding: 10px;" ><h5 data-name="AccName" style="word-break: break-word;white-space: normal;">{0}</h5></td>',
+            '<td style="width:0px"><h5 data-name="MonTotal" data-type="' + type_Currency + '" style="direction: ltr;text-align:end;">{0}</h5></td>',
+        ]
+       
+
+
+
+
         divGrid.Table(
             {
                 id: o.rprtId,
@@ -75,11 +98,8 @@
                 showInBoxControl: true,
                 viewData: o.viewData,
                 deghat: param.Deghat == "" ? 0 : parseInt(param.Deghat),
-                viewDataLowTemplate: [
-                    '<td style="width:0px"><h5 data-name="AccCode">{0}</h5></td>',
-                    '<td style="padding: 10px;" ><h5 data-name="AccName" style="word-break: break-word;white-space: normal;">{0}</h5></td>',
-                    '<td style="width:0px"><h5 data-name="MonTotal" data-type="' + type_Currency + '" style="direction: ltr;text-align:end;">{0}</h5></td>',
-                ],
+                viewDataLowTemplate: dataLowTemplate,
+
 
                 ActionHeadClick: function (e, records) {
                     var name = records.actionName;

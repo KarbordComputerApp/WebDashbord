@@ -128,7 +128,7 @@
         list_StatusSelect = ["موقت", "تایید"];
     }
 
-    TestUser();
+    // TestUser();
 
 
     $("#textTotal").text('');

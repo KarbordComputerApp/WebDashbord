@@ -34,7 +34,7 @@
     self.DocAttachList = ko.observableArray([]); // لیست پیوست
     self.JaneshinList = ko.observableArray([]); // لیست جانشین
 
-    TestUser();
+    // TestUser();
 
     var ErjUsersUri = server + '/api/Web_Data/Web_ErjUsers/'; // آدرس کاربران زمان ارجاع
 
@@ -2241,7 +2241,7 @@
                     //AlertErja();
                 });
             }
-            TestUser();
+            // TestUser();
             $('#modal-ErjDocErja').modal('show');
         }
     }
@@ -3378,7 +3378,7 @@
             //AlertErja();
             getDocB_Last();
             self.sortTableDocB_Last();
-            TestUser();
+            // TestUser();
         });
 
     }

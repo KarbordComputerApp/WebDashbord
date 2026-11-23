@@ -761,7 +761,7 @@ var ViewModel = function () {
     self.IDoc_linkto_FDocList = ko.observableArray([]);
     self.StatusFactor = ko.observable();
 
-    TestUser();
+    // TestUser();
 
     var FDocHUri = server + '/api/FDocData/FDocH/'; // آدرس کسورات و افزایشات 
     var FDocHCountUri = server + '/api/FDocData/FDocH/'; // تعداد رکورد های فاکتور 

@@ -58,7 +58,7 @@
 
         var access = await IsAccess(o.baseValue.ace, prog_Acc, o.baseValue.group, 'Dftr', access_RPRT);
         if (access) {
-            action.push( { code: "Dftr", name: "دفتر حساب", icon: "/Content/img/view.svg" })
+            action.push({ code: "Dftr", name: "دفتر حساب", icon: "/Content/img/view.svg" })
         }
 
         action.push({ code: "TrzAcc", name: "تراز زیر حساب ها", icon: "/Content/img/view.svg", visible: { key: "HasChild", value: 1, act: '==' } });
@@ -71,7 +71,29 @@
             { code: "TrzAcc", name: "تراز زیر حساب ها", icon: "/Content/img/view.svg", visible: { key: "HasChild", value: 1, act: '==' } }
         ];
         */
+        var dataLowTemplate = null;
 
+        /*[
+                '<div class="boxgridmobile">' +
+                '    <div class="form-inline">' +
+                '        <h6 data-name="AccName" style="padding-left: 5px;">{0}</h6>' +
+                '       (<h6 data-name="AccCode">{1}</h6>)' +
+                '    </div>' +
+                '   <div class="detailbody"></div >' + 
+               '   <p data-name="Bede" data-type="' + type_Currency + '" style="direction: ltr;text-align:end;" ><span>مانده : <span>{2}</p>' +
+                '   <p data-name="Best" data-type="' + type_Currency + '" style="direction: ltr;text-align:end;" >{2}</p>' +
+                '   <p data-name="MonTotal" data-type="' + type_Currency + '" style="direction: ltr;text-align:end;" >{2}</p>' +
+                '</div>'
+            ];*/
+
+
+        /*  [
+              '<td style="width:0px"><h5 data-name="AccCode">{0}</h5></td>',
+              '<td style="padding: 10px;" ><h5 data-name="AccName" style="word-break: break-word;white-space: normal;">{0}</h5></td>',
+              //'<td style="width:0px"><p data-name="Bede" data-type="' + type_Currency +'" style="direction: ltr">{0}</p></td>',
+              //'<td style="width:0px"><p data-name="Best" data-type="' + type_Currency +'" style="direction: ltr">{0}</p></td>',
+              '<td style="width:0px"><h5 data-name="MonTotal" data-type="' + type_Currency + '" style="direction: ltr;text-align:end;">{0}</h5></td>',
+          ]*/
 
         divGrid.Table(
             {
@@ -99,13 +121,8 @@
                 showInBoxControl: true,
                 viewData: o.viewData,
                 deghat: param.Deghat == "" ? 0 : parseInt(param.Deghat),
-                viewDataLowTemplate: [
-                    '<td style="width:0px"><h5 data-name="AccCode">{0}</h5></td>',
-                    '<td style="padding: 10px;" ><h5 data-name="AccName" style="word-break: break-word;white-space: normal;">{0}</h5></td>',
-                    //'<td style="width:0px"><p data-name="Bede" data-type="' + type_Currency +'" style="direction: ltr">{0}</p></td>',
-                    //'<td style="width:0px"><p data-name="Best" data-type="' + type_Currency +'" style="direction: ltr">{0}</p></td>',
-                    '<td style="width:0px"><h5 data-name="MonTotal" data-type="' + type_Currency + '" style="direction: ltr;text-align:end;">{0}</h5></td>',
-                ],
+                viewDataLowTemplate: dataLowTemplate,
+                headFieldLowTemplate: ['AccName', 'AccCode'],
                 ActionHeadClick: function (e, records) {
                     var name = records.actionName;
                     var items = records.data;
@@ -137,7 +154,7 @@
                     }
                 },
                 ExportData: function (e, records) {
-                 //   o.columns = records.columns;
+                    //   o.columns = records.columns;
                     o.data = records.data;
                 },
             },

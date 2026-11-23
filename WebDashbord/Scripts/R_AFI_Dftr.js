@@ -65,7 +65,7 @@
         $('#tatarikh').change();
     });
 
-    TestUser();
+    // TestUser();
 
     var MkzCode = '';
     var counterMkz = 0;

@@ -40,6 +40,8 @@
         var obj = this;
         var o = obj.options;
         o.allData = [];
+        //o.allData = structuredClone(o.data);
+
         for (var i = 0; i < o.data.length; i++) {
             o.allData.add(o.data[i]);
         }
@@ -123,7 +125,7 @@
         var _divInline = $('<div class="form-inline">');
         var _label = $('<label>نمایش</label>');
         var _divSelect = $('<div class="form-group" style="text-align: center;width: 46px;margin-left: 5px;margin-right: 5px;">');
-        var _selectSizePage = $('<select class="selectorange">');
+        var _selectSizePage = $('<select class="selectorange" >');
         for (var i = 1; i <= 10; i++) {
             var _option = $('<option value="' + i + '0">' + i + '0</option>');
             _selectSizePage.append(_option);
@@ -389,6 +391,7 @@
 
         var temp = o.viewDataLowTemplate;
         var table = $(obj.bindings[0]).find('.K_DataGrid');
+        var _columns = o.columns.filter(c => c['Visible'] == 1);
 
         body = table.find('tbody');
         if (body.length > 0) {
@@ -398,29 +401,127 @@
         last = list.length < last ? list.length : (list.length == 0 ? 0 : last);
 
         for (var i = first; i < last; i++) {
-            var _tr = $('<tr>');
-            for (var j = 0; j < temp.length; j++) {
-
-                var objects = $(temp[j]).find("[data-name]");
-                var value = [];
-                for (var k = 0; k < objects.length; k++) {
-                    var _name = $(objects[k]).attr("data-name");
-                    var _type = $(objects[k]).attr("data-type");
-                    var valueData = list[i][_name];
-                    if (_type == type_Currency) {
-                        valueData = NumberToNumberString(parseFloat(valueData))
+            var color = "";
+            if (o.keyRow != null) {
+                var colored = [];
+                for (var j = 0; j < o.keyRow.length; j++) {
+                    if (o.keyRow[j].act == "==") {
+                        colored[j] = list[i][o.keyRow[j].column] == o.keyRow[j].value;
                     }
-                    else if (_type == "img_bank") {
-                        valueData = GetIconBank(valueData)
-                    } else if (_type == "img_cust") {
-                        valueData = GetIconCustomer(valueData)
+                    if (o.keyRow[j].act == ">") {
+                        colored[j] = list[i][o.keyRow[j].column] > o.keyRow[j].value;
                     }
-                    value[k] = valueData;
                 }
-                tdValue = temp[j].format(value[0], value[1], value[2], value[3], value[4], value[5], value[6], value[7], value[8], value[9]);
-                var td = $(tdValue);
-                _tr.append(td);
+
+                if (o.keyRow.length == 1) {
+                    color = colored[0] ? ('background-color : ' + color_RowKey) : '';
+                } else if (o.keyRow.length == 2) {
+                    color = colored[0] && colored[1] ? ('background-color : ' + color_RowKey) : '';
+                }
+                else if (o.keyRow.length == 3) {
+                    color = colored[0] && colored[1] && colored[2] ? ('background-color : ' + color_RowKey) : '';
+                }
+                else if (o.keyRow.length == 4) {
+                    color = colored[0] && colored[1] && colored[2] && colored[3] ? ('background-color : ' + color_RowKey) : '';
+                }
+
             }
+
+            var _tr = $('<tr style="' + color + '">');
+
+            if (temp == null) {
+                /*
+                    '<div class="boxgridmobile">' +
+                    '    <div class="form-inline">' +
+                    '        <h6 data-name="AccName" style="padding-left: 5px;">{0}</h6>' +
+                    '       (<h6 data-name="AccCode">{1}</h6>)' +
+                    '    </div>' +
+                    '   <div class="detailbody"></div >' +
+                    '   <p data-name="Bede" data-type="' + type_Currency + '" style="direction: ltr;text-align:end;" ><span>مانده : <span>{2}</p>' +
+                    '   <p data-name="Best" data-type="' + type_Currency + '" style="direction: ltr;text-align:end;" >{2}</p>' +
+                    '   <p data-name="MonTotal" data-type="' + type_Currency + '" style="direction: ltr;text-align:end;" >{2}</p>' +
+                    '</div>'
+*/
+                var headField = o.headFieldLowTemplate;
+                var boxGrid = $('<div class="boxgridmobile">');
+                var divRowHead = $('<div class="form-inline">');
+                for (var j = 0; j < headField.length; j++) {
+                    var _col = _columns.filter(c => c.Code == headField[j]);
+                    var visible = _col.length > 0;
+                    if (_col.length > 0) {
+                        _col[0].head = true;
+                    }
+                     if (visible) {
+                        var valueData = list[i][headField[j]];
+                        var h6 = null;
+                        if (j == 0) {
+                            h6 = $('<h6 data-name="' + headField[j] + '" style="padding-left: 5px;">' + valueData+'</h6>');
+                            divRowHead.append(h6);
+                        }
+                        else if (j == 1) {
+                            h6 = $('<span>(</span><h6 data-name="' + headField[j] + '">' + valueData +'</h6><span>)</span>');
+                        }
+                        divRowHead.append(h6);
+                    }
+                }
+
+                boxGrid.append(divRowHead);
+
+                divRowHead = $('<div class="form-inline">');
+
+                for (var j = 0; j < _columns.length; j++) {
+                    if (_columns[j].head != true) {
+                        var value = list[i][_columns[j].Code];
+                        var valueShow = _columns[j].Type == type_Currency ? NumberToNumberString(parseFloat(value.toFixed(o.deghat))) : _columns[j].Type == type_Boolean ? '' : value;
+                        var p = $('<p data-name="' + _columns[j].Code + '" data-type="' + _type + '" style="direction: ltr;text-align:end;padding-left: 8px;" ><span>' + _columns[j].Name + ' : </span><span>' + valueShow+'<span></p>');
+                        divRowHead.append(p);
+                        boxGrid.append(divRowHead);
+                    }
+                   // var value = list[i][_columns[j].Code];
+                    //var valueShow = _columns[j].Type == type_Currency ? NumberToNumberString(parseFloat(value.toFixed(o.deghat))) : _columns[j].Type == type_Boolean ? '' : value;
+                   // var divRowHead = $('<div class="detailbody">');
+                    //var divRowHead = $('<p data-name="Bede" data-type="' + type_Currency + '" style="direction: ltr;text-align:end;" ><span>مانده : <span>{2}</p>');
+                   // _tr.append(boxGrid);
+                }
+                _tr.append(boxGrid);
+
+            } else {
+                for (var j = 0; j < temp.length; j++) {
+                    var objects = $(temp[j]).find("[data-name]");
+                    var value = [];
+                    for (var k = 0; k < objects.length; k++) {
+                        var _name = $(objects[k]).attr("data-name");
+                        var _type = $(objects[k]).attr("data-type");
+                        var valueData = list[i][_name];
+                        if (_type == type_Currency) {
+                            valueData = NumberToNumberString(parseFloat(valueData))
+                        }
+                        else if (_type == "img_bank") {
+                            valueData = GetIconBank(valueData)
+                        } else if (_type == "img_cust") {
+                            valueData = GetIconCustomer(valueData)
+                        }
+                        value[k] = valueData;
+                    }
+                    tdValue = temp[j].format(value[0], value[1], value[2], value[3], value[4], value[5], value[6], value[7], value[8], value[9]);
+                    var td = $(tdValue);
+                    _tr.append(td);
+                }
+            }
+
+            var _input = $(_tr).find("input");
+            var s = list[i].selected == 1;
+            _input.prop('checked', s);
+            _input.click(function (e) {
+                var input = $(this);
+                var code = input.attr("data-key");
+                var value = input.attr("data-value");
+                input.is(':checked') == true ? selected = 1 : selected = 0;
+                o.allData.find(c => c[code] == value).selected = selected;
+            });
+
+
+            var objects = $(temp).find("[data-name]");
 
             // var td = '<td style="width:0px"><center><img src="' + GetIconBank(data[i].Bank) + '" width="35" /><p style="color: darkgray;">' + data[i].Shobe + '</p></center>';
             // var td[1] = $('<td><div><h5 style="padding-right:5px">' + data[i].TrafName + '</h5><h5 style="padding-right:5px;padding-top: 10px;">چک : ' + data[i].CheckNo + '</h5></div></td>')
@@ -1271,10 +1372,12 @@
         obj = this;
         var o = obj.options;
         o.allData = [];
+        // o.allData = structuredClone(o.data);
         for (var i = 0; i < o.data.length; i++) {
-            o.allData.add(o.data[i]);
+            o.allData.push(o.data[i]);
         }
         obj._FirstPage();
+
 
         // حذف مقادیری جستجو در اتصاب
         var inputsSearch = $(obj.bindings[0]).find('.K_DataGrid tfoot tr input');
@@ -1285,10 +1388,18 @@
         if (o.sumFields.length > 0) obj._Sum();
     },
 
+    GetDataSelected: function () {
+        obj = this;
+        var o = obj.options;
+        var a = baseData["97"]["1384"]["Mkz"]
+        return o.allData.where(c => c.selected == 1);
+    },
+
     ChangeViewData: function () {
         obj = this;
         var o = obj.options;
         o.allData = [];
+        //o.allData = structuredClone(o.data);
         for (var i = 0; i < o.data.length; i++) {
             o.allData.add(o.data[i]);
         }

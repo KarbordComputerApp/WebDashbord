@@ -35,7 +35,52 @@ mode_TrzFKala_S = mode_TrzFKala_S == null ? 0 : mode_TrzFKala_S;
 
 
 
-TestUser();
+$(window).resize(function () {
+    ChangeMobile();
+});
+
+
+
+
+
+
+/*
+function CreateLiNavbar(id_Li, id_a, title ,img  ) {
+    var li = '<li class="dropdown pull-left" id="' + id_Li + '" title="' + title+'">' +
+        ' <a id="' + id_a + '" class="dropdown-toggle" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#modal-' + id_a+'" style="margin-top: 5px;">' +
+        ' <img src="~/Content/img/keyboard.png" width="32" style="margin-top: 10px;" />' +
+        ' </a>' +
+        '</li>';
+    return $(li);
+}*/
+
+var navbar_Menu = $("#navbar_Menu");
+//$("#navbar_Menu").remove();
+
+function ChangeMobile() {
+    if (isMobile) {
+        $(".theme-red .navbar .topobject").css("color", "white");
+        $("#btn_profile").css("margin-top", "-4px");
+        $("#navbar_Menu").css("height", "55px");
+        $(".navbar > .container .navbar-brand, .navbar > .container-fluid .navbar-brand").css("width", "auto");
+        $(".navbar-header").css("width", "stretch");
+        $(".navbar-header").css("border-top-left-radius", "0px");
+        $(".navbar-header").append(navbar_Menu);
+        positionGrid_Defult = { x: 0, y: 0, w: 1, h: 1 };
+    }
+    else {
+        $("#btn_profile").css("margin-top", "0px");
+        $(".theme-red .navbar .topobject").css("color", "#3f4853");
+        $(".navbar-header").css("width", "60px");
+        $(".navbar-header").css("border-top-left-radius", "50px");
+        $(".navbar-collapse").append(navbar_Menu);
+        positionGrid_Defult = { x: 0, y: 0, w: 4, h: 5 };
+    }
+}
+ChangeMobile();
+
+
+// TestUser();
 //localStorage.removeItem("Karbord_DashbordData");
 var dashbordData_Save = localStorage.getItem("Karbord_DashbordData");
 
@@ -43,14 +88,13 @@ var dashbordData_Save = localStorage.getItem("Karbord_DashbordData");
 //dashbordData_Save = `[{"id":"TrzAcc-1","valueControl":{"mode":0,"fromDate":"1384/01/01","modeItem":"S"},"position":{"x":0,"y":0,"w":4,"h":3},"caption":"تراز حساب - گروه 97 - سال 1384","visible":true,"baseValue":{"ace":"Web8","group":"97","sal":"1384"}}]`
 
 
-let grid = GridStack.init({
+grid = GridStack.init({
     cellHeight: 'initial', // start square but will set to % of window width later
     cellHeight: 'initial', // start square but will set to % of window width later
     animate: true, // show immediate (animate: true is nice for user dragging though)
     disableOneColumnMode: !isMobile, // will manually do 1 column
     lazyLoad: true,
 });
-
 
 function unique(arr, key) {
     var u = {}, a = [];
@@ -204,15 +248,16 @@ async function LoadDashbordData() {
             if (list.length == 0) {
                 dashbordData.splice(i, 1);
             }
+            AddIteminGrid(dashbordData[i]);
 
         }
         dataGroup = dataGroup;
     }
     $("#TableDesktopItem").empty();
     for (var i = 0; i < dashbordData.length; i++) {
-        AddIteminGrid(dashbordData[i]);
+        //AddIteminGrid(dashbordData[i]);
     }
-   
+
 
     settingObject.Setting(
         {
@@ -296,7 +341,7 @@ async function CreateListDesktop(ace, group) {
             }
             else {
                 aceProg = isErj == true && prog == prog_Erj ? prog_Web2 : ace;
-                if (aceProg == prog_Web2 ) {
+                if (aceProg == prog_Web2) {
                     a = 10;
                 }
                 var access = await IsAccess(aceProg, item.prog, group, item.code, item.parent);
@@ -668,7 +713,7 @@ $("#B_ChangeDatabase").click(function () {
     if (group == '0' || group == null)
         return showNotification('گروه را انتخاب کنید', 0);
 
-   
+
 
     if (sal == '0' || sal == null)
         return showNotification('سال را انتخاب کنید', 0);

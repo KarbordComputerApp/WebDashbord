@@ -24,7 +24,7 @@
 
     self.DocAttachList = ko.observableArray([]); // لیست پیوست
 
-    TestUser();
+    // TestUser();
 
     var ErjCustUri = server + '/api/Web_Data/ErjCust/'; // آدرس مشتریان
 

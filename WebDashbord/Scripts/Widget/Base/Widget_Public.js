@@ -53,7 +53,7 @@ const length_Float = 19;
 const length_Date = 10;
 const length_Max = 250;
 
-const positionGrid_Defult = { x: 0, y: 0, w: 4, h: 5 };
+var positionGrid_Defult = { x: 0, y: 0, w: 4, h: 5 };
 
 function PositionGrid_Defult_Fun() {
     this.x = positionGrid_Defult.x;
@@ -660,7 +660,7 @@ function BoxDashbord_Create(obj, divHead, divBody) {
     if (o.headButton != null) {
         for (var i = 0; i < o.headButton.length; i++) {
             var btn;
-            if (o.headButton[i] == f_Print) {
+            if (o.headButton[i] == f_Print && !isMobile) {
                 btn = $('<a action-name="' + o.headButton[i] + '" style="padding-left: 5px;" title="چاپ"><span class="bi bi-printer"></a>');
             }
             else if (o.headButton[i] == f_Columns) {
@@ -669,7 +669,7 @@ function BoxDashbord_Create(obj, divHead, divBody) {
             else if (o.headButton[i] == f_Refresh) {
                 btn = $('<a action-name="' + o.headButton[i] + '" style="padding-left: 5px;" title="بروز رسانی"><span class="bi bi-arrow-repeat"></a>');
             }
-            else if (o.headButton[i] == f_Setting && o.uuid > 0) {
+            else if (o.headButton[i] == f_Setting && o.uuid > 0 && !isMobile) {
                 btn = $('<a action-name="' + o.headButton[i] + '" style="padding-left: 5px;" title="تنظیمات"><span class="bi bi-gear"></a>');
             }
             if (btn != null) {
@@ -679,10 +679,13 @@ function BoxDashbord_Create(obj, divHead, divBody) {
     }
 
     var b_Close = $('<a action-name="Close" style="padding-left: 5px;" title="بستن"><i class="bi bi-x-lg"></a>');
-    var b_Maximum = $('<a action-name="Maximum" style="padding-left: 5px;" title="تغییر سایز"><i class="bi bi-window"></a>');
 
 
-    div.append(b_Maximum);
+    if (!isMobile) {
+        var b_Maximum = $('<a action-name="Maximum" style="padding-left: 5px;" title="تغییر سایز"><i class="bi bi-window"></a>');
+        div.append(b_Maximum);
+    }
+
     div.append(b_Close);
 
     var groupData = loginData.baseValue.groupsData.find(c => c.Code == o.baseValue.group);
@@ -1095,6 +1098,11 @@ function CreateObjectSetting(obj) {
     else
         data = dataSettingDefult[o.rprtId];
 
+    if (isMobile) {
+        if (data.filter(c => c.code == "ViewData").length > 0) {
+            data.filter(c => c.code == "ViewData")[0].value = 1;
+        }
+    }
     o.dataSetting = data;
     _div.Setting(
         {
@@ -1150,6 +1158,11 @@ function GetSetting(o) {
     else
         data = dataSettingDefult[o.id];
 
+    if (isMobile) {
+        if (data.filter(c => c.code == "ViewData").length > 0) {
+            data.filter(c => c.code == "ViewData")[0].value = 1;
+        }
+    }
     o.dataSetting = data;
 
 
@@ -1299,3 +1312,17 @@ function CreateListModeForosh(isForosh) {
     return itemsModeCode;
 }
 
+
+function CreateLoading() {
+    var divLoading = $('<div class="page-loader-widget" style="display: none;">');
+    var divLoader = $('<div class="loader">');
+    var divBody = $('<div class="m-t-30">');
+    var img = $('<img class="loading-img-spin" src="/Content/loading1.png" width="20" height="20" alt="admin">');
+    var p = $('<p>لطفا منتظر بمانید</p>');
+
+    divBody.append(img);
+    divLoader.append(divBody);
+    divLoader.append(p);
+    divLoading.append(divLoader);
+    return divLoading;
+}

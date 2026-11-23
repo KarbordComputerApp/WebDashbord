@@ -20,7 +20,7 @@
     var DelKalaImageUri = server + '/api/Web_Data/DelKalaImage/'; // حذف عکس
 
     var addImage = false;
-    TestUser();
+    // TestUser();
 
 
     validation = CheckAccess('NEW_KALA', Fct_or_Inv);// New Kala

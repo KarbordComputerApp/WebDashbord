@@ -71,7 +71,7 @@
         $('#tatarikh').change();
     });
 
-    TestUser();
+    // TestUser();
 
     self.InvCode = ko.observable();
     var allSearchKala = true;

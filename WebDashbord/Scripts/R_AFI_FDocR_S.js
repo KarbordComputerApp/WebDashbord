@@ -120,7 +120,7 @@
 
     self.SettingColumnList = ko.observableArray([]); // لیست ستون ها
 
-    TestUser();
+    // TestUser();
 
     var rprtId = 'FDocR_S';
     var columns = [

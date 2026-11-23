@@ -24,7 +24,7 @@
 
     var altitude = 0;
     var latitude = 0;
-    TestUser();
+    // TestUser();
 
 
     var rprtId = 'Cust';

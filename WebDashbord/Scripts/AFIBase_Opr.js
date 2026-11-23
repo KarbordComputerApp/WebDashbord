@@ -11,7 +11,7 @@
     var TestOpr_DeleteUri = server + '/api/Web_Data/TestOpr_Delete/'; // آدرس تست حذف 
     var TestOprUri = server + '/api/Web_Data/TestOpr/'; // آدرس تست  
 
-    TestUser();
+    // TestUser();
 
     Prog = localStorage.getItem('ProgAccess');
 

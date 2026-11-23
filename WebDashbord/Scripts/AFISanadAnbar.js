@@ -18,7 +18,7 @@
 
     useSanadOtherUser = localStorage.getItem("TestUse" + sessionStorage.ModeCode + sessionStorage.SerialNumber);
 
-    TestUser();
+    // TestUser();
 
     var flaglog = "Y";
 

@@ -56,7 +56,7 @@
         }
     }
 
-    TestUser();
+    // TestUser();
 
     var onlyGroupErj = localStorage.getItem('onlyGroupErj');
     function SetGroupData() {

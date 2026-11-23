@@ -40,13 +40,15 @@ if (hrefWindows[3] != "") {
 }
 
 var isMobile = window.innerWidth <= 768;
+if (grid != null) grid.opts.disableOneColumnMode = isMobile;
+
 window.onresize = () => {
-    if (window.innerWidth <= 768) {// switch to mobile
+    if (window.innerWidth <= 768) // switch to mobile
         isMobile = true;
-        grid.opts.disableOneColumnMode = true;
-    } else {
+    else
         isMobile = false;
-        grid.opts.disableOneColumnMode = false;
+    if (grid != null) {
+        grid.opts.disableOneColumnMode = isMobile;
     }
 }
 
@@ -74,6 +76,7 @@ var loginDataDefult =
     city: "",
     version: sessionStorage.ver,
 };
+//localStorage.removeItem("Karbord_LoginData");
 
 var loginData_Save = localStorage.getItem("Karbord_LoginData");
 if (loginData_Save != null && loginData_Save != "[{}]" && loginData_Save.toString() != "null" && loginData_Save.toString() != "") {
@@ -90,9 +93,10 @@ if (loginData_Save != null && loginData_Save != "[{}]" && loginData_Save.toStrin
             var userNameFa = loginData.userNameFa;
             var companyName = loginData.companyName;
             var password = loginData.password;
+            defultGroup = loginData.baseValue.defultGroup;
+
             account_UserName = loginData.account_UserName;
             account_Password = loginData.account_Password;
-            defultGroup = loginData.baseValue.defultGroup;
 
             $('#userNameFa').text(userNameFa);
             $('#coName_TitleMenu').val(companyName);
@@ -451,23 +455,109 @@ var data_string = width_height + client_width_height + ratio_width_height + touc
 */
 
 
+function GetDashbordId() {
+    var key = "Karbord_DashbordId";
+    var dashbordId = localStorage.getItem(key);
+    if (!dashbordId) {
+        dashbordId = crypto.randomUUID().replace(/-/g, '').substring(0, 30);
+        localStorage.setItem(key, dashbordId);
+    }
+    loginData.machineId = dashbordId
+    return dashbordId;
+}
 
+GetDashbordId();
+CreateSignalR();
+function CreateSignalR() {
+    if (server != null) {
+        var script = document.createElement("script");
+        script.src = server + "/signalr/hubs";
+        document.head.appendChild(script);
+        script.onload = function () {
+            if (account_UserName != null) {
+                ActiveSignalR(account_UserName, account_Password);
+            }
+        }
+    }
+};
+function ActiveSignalR(userName, pass) {
+    $.connection.hub.url = server + "/signalr";
+    $.connection.hub.logging = true;
+    signalHub = $.connection.signalHub;
+    signalHub.client.newMessage = function (message) {
+        SignalMessage(message);
+    };
+    return $.connection.hub.start()
+        .done(function () {
+            console.log("Connected:", $.connection.hub.id);
+            signalHub.server.joinUser(userName, pass)
+                .done(function () {
+                    console.log("JoinUser successful");
+                })
+                .fail(function (error) {
+                    console.error("JoinUser failed:", error);
+                });
+        })
+        .fail(function (error) {
+            console.error("SignalR connection failed:", error);
+        });
+}
+/*
+function ActiveSignalR(userName, pass, machineId) {
+    $.connection.hub.url = server + "/signalr";
 
+    $.connection.hub.start({
+        transport: ['longPolling']
+    }).done(function () {
+        console.log("Connected:", $.connection.hub.id);
+    }).fail(function (error) {
+        console.log("Error:", error);
+    });
 
+    signalHub = $.connection.signalHub;
+    signalHub.client.newMessage = function (message) {
+        SignalMessage(message);
+    };
+
+    $.connection.hub.start().done(function () {
+        signalHub.server.joinUser(userName, pass, machineId);
+    }).fail(function (error) {
+        console.error("SignalR connection failed:", error);
+    });
+}*/
+
+function SignalMessage(message) {
+    if (message.MachineId != loginData.machineId) {
+        if (message.ModeNoti == "LoginUser") {
+           
+        }
+        if (message.ModeNoti == "LogOutUser") {
+            if (loginData.userName == message.UserName && hrefPage != urlPage_Login) {
+                userName = '';
+                loginData.userName = "";
+                loginData.password = "";
+                publicData.listForms = "";
+                SaveVariant();
+                window.location.href = urlPage_Login;
+            }
+        }
+    }
+
+}
 
 if (loginData.logoutmin != 0) {
     setInterval(LogOut, loginData.logoutmin * 60000);
 }
+
 function LogOut() {
     if (userName != '' && userName != null && hrefPage != urlPage_Login) {
         var LogOutObject = {
+            MachineIdBrowser: loginData.machineId,
             MachineId: loginData.machineId,
             UserCode: userName,
             ProgName: ace
         };
         ajaxFunction(LogOutUri, 'POST', LogOutObject).done(function (data) {
-            //RemoveUseSanad(ace, sal, '', 0);
-            //RemoveUseSanad(aceErj, salErj, '', 0);
             userName = '';
             loginData.userName = "";
             loginData.password = "";
@@ -572,7 +662,7 @@ async function GetParam(ace, group, sal, refresh, async = false) {
     if (dataGroup[group][sal] == null) {
         dataGroup[group][sal] = {};
     }
-    if (dataGroup[group][sal].replaceDatabase == null)  {
+    if (dataGroup[group][sal].replaceDatabase == null) {
         dataGroup[group][sal].replaceDatabase = false;
         await ChangeDatabase(loginData.lockNumber, ace, group, sal, true);
         dataGroup[group][sal].replaceDatabase = true;
@@ -908,7 +998,8 @@ function showLoad() {
 
 }
 
-if (loginData.apiAddress != null) {
+/*
+if (loginData.apiAddress != null ) {
     var dict = localStorage.getItem('dict');
     if (dict != null)
         dict = JSON.parse(dict);
@@ -925,7 +1016,8 @@ if (loginData.apiAddress != null) {
             dict = JSON.parse(a);
         });
     }
-}
+}*/
+
 loginData.ModeInsertSanad = "New";
 var ModeInsertSanad = "New";
 
@@ -983,12 +1075,14 @@ $("#SelectLang").change(function () {
     location.reload();
 });
 
-
+function translate(text) {
+    return text;
+}
 
 //lang = 'fa';
 
 //dir_lang = 'rtl';
-
+/*
 function translate(text) {
     if (lang == 'fa' || lang == null || dict == null)
         return text
@@ -1019,6 +1113,7 @@ function TranslateData(data) {
         return tempData;
     }
 }
+*/
 
 var mes_Refresh = translate('تایید به روز رسانی');
 var mes_Delete = translate('تایید حذف');
@@ -1429,13 +1524,6 @@ function getSelectedText() {
 }
 
 
-
-//var MachineId = localStorage.getItem("MachineIdKarbord");
-if (loginData.machineIdKarbord == null) {
-    var d = new Date();
-    id = d.getDate() + d.getTime();
-    loginData.machineIdKarbord = id;
-}
 
 
 
@@ -3058,13 +3146,13 @@ function getTimeServer() {
     }
 }
 
-if (userName != '' && userName != null)
-    setInterval(TestUser, 60000);
+//if (userName != '' && userName != null)
+// setInterval(TestUser, 60000);
 
 function TestUser() {
     if (userName != "" && userName != null && hrefPage != urlPage_Login) {
         var LoginTestObject = {
-            MachineId: loginData.machineIdKarbord,
+            MachineId: loginData.machineId,
             IPWan: loginData.ip,
             Country: loginData.country,
             City: loginData.city,

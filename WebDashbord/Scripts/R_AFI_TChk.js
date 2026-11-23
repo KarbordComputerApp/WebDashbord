@@ -22,7 +22,7 @@
     self.TaShomarh = ko.observable();
     self.AccCode = ko.observable();
 
-    TestUser();
+    // TestUser();
 
     getParamAcc();
 
